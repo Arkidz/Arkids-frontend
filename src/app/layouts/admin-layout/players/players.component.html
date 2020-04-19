@@ -1,0 +1,316 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title ">Player List</h4>
+                        <p class="card-category"> List of players.</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class=" text-primary">
+                                    <th> # </th>
+                                    <th> Short Name </th>
+                                    <th> Full Name </th>
+                                    <th> Mobile </th>
+                                    <th> EmailId </th>
+                                    <th> Reg Date </th>
+                                    <th> Last Login </th>
+                                    <th> Status </th>
+                                    <th> Action </th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let player of playerList; let i=index;">
+                                        <td> {{player.id}} </td>
+                                        <td> {{player.shortName}} </td>
+                                        <td> {{player.firstName + ' ' + player.lastName}} </td>
+                                        <td> {{player.mobile}} </td>
+                                        <td> {{player.emailId}} </td>
+                                        <td> {{player.regDate | date:'dd-MM-yyyy'}} </td>
+                                        <td> {{player.lastLogin | date:'dd-MM-yyyy hh:mm:ss a'}} </td>
+                                        <td> {{player.status}} </td>
+                                        <td>
+                                            <!-- <button class="bnt btn-danger mrg5">Delete</button> -->
+                                            <button class="bnt btn-info" data-toggle="modal" data-target="#playerEdit">Edit</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Player Edit Popup Modal -->
+<div class="modal modal-angular fade" id="playerEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <div class="separator"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-success">
+                                <h4 class="card-title">Player Edit</h4>
+                            </div>
+                            <div class="card-body">
+                                <div>
+                                    <!-- firstName & Last Name -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <!-- <label>firstName Name</label> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="First Name" type="text"
+                                                    [(ngModel)]="playerObj.firstName"
+                                                    [formControl]="playerForm.controls['firstName']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="playerForm.controls['firstName'].hasError('required') && playerForm.controls['firstName'].touched">
+                                                    First Name is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!playerForm.controls['firstName'].hasError('required') && !playerForm.controls['firstName'].valid && playerForm.controls['firstName'].touched">
+                                                    Please Enter valid First Name.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <!-- <label>lastName Name</label> -->
+                                        <div class="col-md-6">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Last Name" type="text"
+                                                    [(ngModel)]="playerObj.lastName"
+                                                    [formControl]="playerForm.controls['lastName']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="playerForm.controls['lastName'].hasError('required') && playerForm.controls['lastName'].touched">
+                                                    Last Name is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!playerForm.controls['lastName'].hasError('required') && !playerForm.controls['lastName'].valid && playerForm.controls['lastName'].touched">
+                                                    Please Enter valid Last Name.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- shortName  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- <label>Short Name</label> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Short Name" type="text"
+                                                    [(ngModel)]="playerObj.shortName"
+                                                    [formControl]="playerForm.controls['shortName']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="playerForm.controls['shortName'].hasError('required') && playerForm.controls['shortName'].touched">
+                                                    shortName is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!playerForm.controls['shortName'].hasError('required') && !playerForm.controls['shortName'].valid && playerForm.controls['shortName'].touched">
+                                                    Please Enter valid shortName.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- email-id  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Email-Id" type="text"
+                                                    [(ngModel)]="playerObj.emailId"
+                                                    [formControl]="playerForm.controls['emailId']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="playerForm.controls['emailId'].hasError('required') && playerForm.controls['emailId'].touched">
+                                                    email-Id is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!playerForm.controls['emailId'].hasError('required') && !playerForm.controls['emailId'].valid && playerForm.controls['emailId'].touched">
+                                                    Please Enter valid email-Id.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- password  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Password" type="password"
+                                                    [(ngModel)]="playerObj.password"
+                                                    [formControl]="playerForm.controls['password']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="playerForm.controls['password'].hasError('required') && playerForm.controls['password'].touched">
+                                                    password is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!playerForm.controls['password'].hasError('required') && !playerForm.controls['password'].valid && playerForm.controls['password'].touched">
+                                                    Please Enter valid password.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- mobile  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- <label>Mobile Name</label> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Mobile Number" type="text"
+                                                    [(ngModel)]="playerObj.mobile"
+                                                    [formControl]="playerForm.controls['mobile']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="playerForm.controls['mobile'].hasError('required') && playerForm.controls['mobile'].touched">
+                                                    mobile number is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!playerForm.controls['mobile'].hasError('required') && !playerForm.controls['mobile'].valid && playerForm.controls['mobile'].touched">
+                                                    Please Enter valid mobile number.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Address  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Address" type="text"
+                                                    [(ngModel)]="playerObj.address"
+                                                    [formControl]="playerForm.controls['address']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="playerForm.controls['address'].hasError('required') && playerForm.controls['address'].touched">
+                                                    Address is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!playerForm.controls['address'].hasError('required') && !playerForm.controls['address'].valid && playerForm.controls['address'].touched">
+                                                    Please Enter valid Address.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- idOfProof  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Id Of Proof" type="text"
+                                                    [(ngModel)]="playerObj.idOfProof"
+                                                    [formControl]="playerForm.controls['idOfProof']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="playerForm.controls['idOfProof'].hasError('required') && playerForm.controls['idOfProof'].touched">
+                                                    idOfProof is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!playerForm.controls['idOfProof'].hasError('required') && !playerForm.controls['idOfProof'].valid && playerForm.controls['idOfProof'].touched">
+                                                    Please Enter valid idOfProof.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- remark  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Remark" type="text"
+                                                    [(ngModel)]="playerObj.remark"
+                                                    [formControl]="playerForm.controls['remark']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="playerForm.controls['remark'].hasError('required') && playerForm.controls['remark'].touched">
+                                                    Remark is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!playerForm.controls['remark'].hasError('required') && !playerForm.controls['remark'].valid && playerForm.controls['remark'].touched">
+                                                    Please Enter valid Remark.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- referedBy  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>Refrence By : </label>
+                                            <select [(ngModel)]="playerObj.referedBy" class="form-control"
+                                                [formControl]="playerForm.controls['referedBy']">
+                                                <option>Admin</option>
+                                                <option>User</option>
+                                            </select>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="playerForm.controls['referedBy'].hasError('required') && playerForm.controls['referedBy'].touched">
+                                                    referedBy is required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- profession  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Profession" type="text"
+                                                    [(ngModel)]="playerObj.profession"
+                                                    [formControl]="playerForm.controls['profession']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="playerForm.controls['profession'].hasError('required') && playerForm.controls['profession'].touched">
+                                                    Profession is required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- aboutMe  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="About Me" type="text"
+                                                    [(ngModel)]="playerObj.aboutMe"
+                                                    [formControl]="playerForm.controls['aboutMe']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="playerForm.controls['aboutMe'].hasError('required') && playerForm.controls['aboutMe'].touched">
+                                                    About Me is required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- status -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>Status : </label>
+                                            <input placeholder="Status" type="checkbox" [(ngModel)]="playerObj.status">
+                                        </div>
+                                    </div>
+                                    <!-- save button - [disabled]="!loginForm.valid" -->
+                                    <button mat-raised-button type="submit" class="btn btn-success"
+                                        (click)="onSubmit()">Save</button>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

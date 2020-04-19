@@ -1,0 +1,226 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title ">Users</h4>
+                        <button class="btn btn-info pull-right mrgtop" data-toggle="modal" data-target="#userAdd">
+                            Add
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class=" text-primary">
+                                    <th> # </th>
+                                    <th> First Name </th>
+                                    <th> Last Name </th>
+                                    <th> User Name </th>
+                                    <th> Mobile </th>
+                                    <th> User Type </th>
+                                    <th> Status </th>
+                                    <th> Action </th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let game of userList; let i=index;">
+                                        <td> {{game.id}} </td>
+                                        <td> {{game.uFname}} </td>
+                                        <td> {{game.uLName}} </td>
+                                        <td> {{game.username}} </td>
+                                        <td> {{game.uMobile}} </td>
+                                        <td> {{game.uType}} </td>
+                                        <td> {{game.uStatus?'Active':'Inactive'}} </td>
+                                        <td>
+                                            <button class="bnt btn-info mrg5">Edit</button>
+                                            <button class="bnt btn-danger">Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- username add Popup Modal -->
+<div class="modal modal-angular fade" id="userAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <!-- <h4 class="margin-top">
+                Add username
+            </h4> -->
+                <div class="separator"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-success">
+                                <h4 class="card-title">New User</h4>
+                            </div>
+                            <div class="card-body">
+                                <div>
+                                    <!-- uFname  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- <label>uFname Name</label> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="First Name" type="text"
+                                                    [(ngModel)]="userObj.uFname"
+                                                    [formControl]="userForm.controls['uFname']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="userForm.controls['uFname'].hasError('required') && userForm.controls['uFname'].touched">
+                                                    First Name is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!userForm.controls['uFname'].hasError('required') && !userForm.controls['uFname'].valid && userForm.controls['uFname'].touched">
+                                                    Please Enter valid First Name.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- uLName  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- <label>uLName Name</label> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Last Name" type="text"
+                                                    [(ngModel)]="userObj.uLName"
+                                                    [formControl]="userForm.controls['uLName']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="userForm.controls['uLName'].hasError('required') && userForm.controls['uLName'].touched">
+                                                    Last Name is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!userForm.controls['uLName'].hasError('required') && !userForm.controls['uLName'].valid && userForm.controls['uLName'].touched">
+                                                    Please Enter valid Last Name.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- username  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- <label>username Name</label> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="User Name" type="text"
+                                                    [(ngModel)]="userObj.username"
+                                                    [formControl]="userForm.controls['username']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="userForm.controls['username'].hasError('required') && userForm.controls['username'].touched">
+                                                    username is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!userForm.controls['username'].hasError('required') && !userForm.controls['username'].valid && userForm.controls['username'].touched">
+                                                    Please Enter valid username.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- email  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- <label>username Name</label> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Email Id" type="text"
+                                                    [(ngModel)]="userObj.email">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <!-- password  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- <label>username Name</label> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Password Name" type="text"
+                                                    [(ngModel)]="userObj.password"
+                                                    [formControl]="userForm.controls['password']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="userForm.controls['password'].hasError('required') && userForm.controls['password'].touched">
+                                                    password is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!userForm.controls['password'].hasError('required') && !userForm.controls['password'].valid && userForm.controls['password'].touched">
+                                                    Please Enter valid password.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- uMobile  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- <label>uMobile Name</label> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Mobile Number" type="text"
+                                                    [(ngModel)]="userObj.uMobile"
+                                                    [formControl]="userForm.controls['uMobile']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="userForm.controls['uMobile'].hasError('required') && userForm.controls['uMobile'].touched">
+                                                    uMobile number is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!userForm.controls['uMobile'].hasError('required') && !userForm.controls['uMobile'].valid && userForm.controls['uMobile'].touched">
+                                                    Please Enter valid uMobile number.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- uType  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>User Type : </label>
+                                            <!-- <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="uType Number" type="text"
+                                                    [(ngModel)]="userObj.uType"
+                                                    [formControl]="userForm.controls['uType']">
+                                            </mat-form-field> -->
+                                            <select [(ngModel)]="userObj.uType" class="form-control"
+                                                [formControl]="userForm.controls['uType']">
+                                                <option>Admin</option>
+                                                <option>User</option>
+                                            </select>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="userForm.controls['uType'].hasError('required') && userForm.controls['uType'].touched">
+                                                    uType number is required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- gstin no -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>uStatus : </label>
+                                            <input placeholder="uStatus" type="checkbox" [(ngModel)]="userObj.uStatus">
+                                        </div>
+                                    </div>
+                                    <!-- save button - [disabled]="!loginForm.valid" -->
+                                    <button mat-raised-button type="submit" class="btn btn-success"
+                                        (click)="onSubmit()">Save</button>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

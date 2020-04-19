@@ -1,0 +1,103 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title ">Sub-zones</h4>
+                        <button class="btn btn-info pull-right mrgtop" data-toggle="modal" data-target="#gameAdd">
+                            Add
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class=" text-primary">
+                                    <th> # </th>
+                                    <th> Name </th>
+                                    <th> Status </th>
+                                    <th> Action </th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let game of gameZoneList; let i=index;">
+                                        <td> {{game.gzCode}} </td>
+                                        <td> {{game.gzName}} </td>
+                                        <td> {{game.gzStatus?'Active':'Inactive'}} </td>
+                                        <td>
+                                            <button class="bnt btn-info mrg5">Edit</button>
+                                            <button class="bnt btn-danger">Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- gamezone add Popup Modal -->
+<div class="modal modal-angular fade" id="gameAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <!-- <h4 class="margin-top">
+                Add GameZone
+            </h4> -->
+                <div class="separator"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-success">
+                                <h4 class="card-title">New Sub-Zone</h4>
+                            </div>
+                            <div class="card-body">
+                                <div>
+                                    <!-- gamezone name -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- <label>GameZone Name</label> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Gamezone Name" type="text"
+                                                    [(ngModel)]="gameZoneObj.gzName"
+                                                    [formControl]="gzForm.controls['gzName']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="gzForm.controls['gzName'].hasError('required') && gzForm.controls['gzName'].touched">
+                                                    Gamezone Name is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!gzForm.controls['gzName'].hasError('required') && !gzForm.controls['gzName'].valid && gzForm.controls['gzName'].touched">
+                                                    Please Enter valid Gamezone Name.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- gstin no -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>Status : </label>
+                                            <input placeholder="Status" type="checkbox"
+                                                [(ngModel)]="gameZoneObj.gzStatus">
+                                        </div>
+                                    </div>
+                                    <!-- save button - [disabled]="!loginForm.valid" -->
+                                    <button mat-raised-button type="submit" class="btn btn-success"
+                                        (click)="onSubmit()">Save</button>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

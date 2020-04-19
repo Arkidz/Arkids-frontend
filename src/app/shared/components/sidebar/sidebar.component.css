@@ -1,0 +1,19 @@
+.sidebar .logo-img { max-height: 200px !important; width: auto !important;}
+.logoimg { width: 185px !important; height: 110px !important; }
+.sidebar .logo .simple-text { padding: 40px 0px !important; }
+.logo { padding: 40px 0px !important; }
+.logo .simple-text { padding: 40px 0px !important; }
+
+.sidebar .logo-img img {
+    width: auto !important;
+    top: 0px !important;
+    position: absolute;
+}
+
+/* .sidebar .logo {
+    padding: 40px 0px !important;
+    margin: 0;
+    display: block;
+    position: relative;
+    z-index: 4;
+}  */
