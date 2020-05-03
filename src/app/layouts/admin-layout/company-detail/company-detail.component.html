@@ -129,21 +129,21 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- gstin no -->
+                            <!-- GSTIN no -->
                             <div class="row">
                                 <div class="col-md-12">
                                     <mat-form-field class="example-full-width">
                                         <input matInput placeholder="GSTIN Number" type="text"
-                                            [(ngModel)]="companyObj.gstin"
-                                            [formControl]="companyForm.controls['gstin']">
+                                            [(ngModel)]="companyObj.GSTIN"
+                                            [formControl]="companyForm.controls['GSTIN']">
                                     </mat-form-field>
                                     <div class="text-danger">
                                         <small class="text-danger"
-                                            *ngIf="companyForm.controls['gstin'].hasError('required') && companyForm.controls['gstin'].touched">
+                                            *ngIf="companyForm.controls['GSTIN'].hasError('required') && companyForm.controls['GSTIN'].touched">
                                             Company GSTIN Number is required.
                                         </small>
                                         <small class="text-danger"
-                                            *ngIf="!companyForm.controls['gstin'].hasError('required') && !companyForm.controls['gstin'].valid && companyForm.controls['gstin'].touched">
+                                            *ngIf="!companyForm.controls['GSTIN'].hasError('required') && !companyForm.controls['GSTIN'].valid && companyForm.controls['GSTIN'].touched">
                                             Please Enter valid Company GSTIN Number.
                                         </small>
                                     </div>
@@ -153,17 +153,29 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <mat-form-field class="example-full-width">
-                                        <input matInput placeholder="SocialMeadia Link" type="text"
-                                            [(ngModel)]="companyObj.socialLinks">
+                                        <input matInput placeholder="FaceBook Link" type="text"
+                                            [(ngModel)]="companyObj.fblink">
                                     </mat-form-field>
                                 </div>
                             </div>
-                            <!-- gstin no -->
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label>Status (Active/Inactive) : </label> 
-                                    <input placeholder="SocialMeadia Link" type="checkbox"
-                                        [(ngModel)]="companyObj.status">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Instagram Link" type="text"
+                                            [(ngModel)]="companyObj.instalink">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!-- GSTIN no -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Status (Active/Inactive) : </label>
+                                    <!-- <input placeholder="SocialMeadia Link" type="checkbox"> -->
+                                    <select class="form-control" [(ngModel)]="companyObj.coStatus">
+                                        <option selected disabled>Select</option>
+                                        <option value="Active">Active</option>
+                                        <option value="InActive">InActive</option>
+                                    </select>
                                 </div>
                             </div>
                             <!-- save button - [disabled]="!loginForm.valid" -->

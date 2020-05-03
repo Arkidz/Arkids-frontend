@@ -1,0 +1,65 @@
+import { Component, OnInit } from '@angular/core';
+import { VariableService } from 'src/app/core/services/variable.service';
+import { APIService } from 'src/app/core/services/api.service';
+import { MethodUtilityService } from 'src/app/core/services/Method-utility.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-change-password',
+  templateUrl: './change-password.component.html',
+  styleUrls: ['./change-password.component.scss']
+})
+export class ChangePasswordComponent implements OnInit {
+
+  changePassObj: any = {};
+  changePassForm: FormGroup;
+  username = '';
+  conf_password = '';
+
+  constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
+
+  ngOnInit() {
+    this.applyLoginValidation();
+    this.getUser();
+  }
+
+  applyLoginValidation() {
+    this.changePassForm = new FormGroup({
+      old_password: new FormControl('', [Validators.required, Validators.pattern(VariableService.ONLY_SPACE_NOT_ALLOW)]),
+      new_password: new FormControl('', [Validators.required, Validators.pattern(VariableService.PATTERN_FOR_PASSWORD)]),
+      conf_password: new FormControl('', [Validators.required]),
+    });
+  }
+
+  getUser() {
+    const details = localStorage.getItem(VariableService.USER_DATA);
+    if (details !== null) {
+      const userDetails = JSON.parse(details);
+      console.log('this.userDetails : ', userDetails);
+      this.username = userDetails['username'];
+    }
+    console.log('get company list : ', this.username);
+  }
+
+  changePassword() {
+    this.changePassObj.username = this.username;
+    console.log('this.changePassObj : ', this.changePassObj);
+    if (this.changePassForm.valid) {
+      console.log('submit change password ');
+      this.apiService.postMethodAPI(true, VariableService.API_CHANGE_PASSWORD, this.changePassObj, (response) => {
+        console.log('change password response : ', response);
+        this.applyLoginValidation();
+        this.changePassObj = {};
+        this.conf_password = '';
+      });
+    }
+  }
+  /***
+   * {
+username
+old_password
+new_password
+}
+   */
+
+}

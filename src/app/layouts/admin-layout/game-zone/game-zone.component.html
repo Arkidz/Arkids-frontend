@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-header card-header-danger">
                         <h4 class="card-title ">Sub-zones</h4>
-                        <button class="btn btn-info pull-right mrgtop" data-toggle="modal" data-target="#gameAdd">
+                        <button class="btn btn-info pull-right mrgtop" (click)="openModel()">
                             Add
                         </button>
                     </div>
@@ -20,15 +20,26 @@
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let game of gameZoneList; let i=index;">
-                                        <td> {{game.gzCode}} </td>
+                                        <td> {{i+1}} </td>
                                         <td> {{game.gzName}} </td>
-                                        <td> {{game.gzStatus?'Active':'Inactive'}} </td>
+                                        <td> {{game.gzStatus?game.gzStatus:'-'}} </td>
                                         <td>
-                                            <button class="bnt btn-info mrg5">Edit</button>
-                                            <button class="bnt btn-danger">Delete</button>
+                                            <button class="bnt btn-info mrg5" (click)="editZone(game)" title="Edit">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            </button>
+                                            <button class="bnt btn-danger" (click)="deleteZone(game)" title="Delete">
+                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
+                                <tfoot>
+                                    <tr *ngIf="gameZoneList && gameZoneList.length <= 0" class="text-center">
+                                        <td colspan="4">
+                                            <span>Sub-zone Records Not Found!</span>
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -44,7 +55,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close" aria-label="Close" (click)="reset()"><span
                         aria-hidden="true">&times;</span></button>
                 <!-- <h4 class="margin-top">
                 Add GameZone
@@ -54,7 +65,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header card-header-success">
-                                <h4 class="card-title">New Sub-Zone</h4>
+                                <h4 class="card-title">{{title}}</h4>
                             </div>
                             <div class="card-body">
                                 <div>
@@ -83,13 +94,19 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label>Status : </label>
-                                            <input placeholder="Status" type="checkbox"
-                                                [(ngModel)]="gameZoneObj.gzStatus">
+                                            <!-- <input placeholder="Status" type="checkbox" > -->
+                                            <select [(ngModel)]="gameZoneObj.gzStatus" class="form-control">
+                                                <option selected>Select</option>
+                                                <option value="Active">Active</option>
+                                                <option value="InActive">InActive</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <!-- save button - [disabled]="!loginForm.valid" -->
                                     <button mat-raised-button type="submit" class="btn btn-success"
-                                        (click)="onSubmit()">Save</button>
+                                        (click)="onSubmit()">
+                                        {{gamezoneId?'Update':'Save'}}
+                                    </button>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>

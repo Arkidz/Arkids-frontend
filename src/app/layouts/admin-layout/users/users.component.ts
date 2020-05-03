@@ -4,6 +4,8 @@ import { VariableService } from 'src/app/core/services/variable.service';
 import { Users } from 'src/app/core/models/users.model';
 import { APIService } from 'src/app/core/services/api.service';
 import { MethodUtilityService } from 'src/app/core/services/Method-utility.service';
+import { UserType } from 'src/app/core/models/userType.model';
+declare var $: any;
 
 @Component({
   selector: 'app-users',
@@ -14,16 +16,20 @@ export class UsersComponent implements OnInit {
 
   // uType = new Users();
   userObj: any = {};
-  userList: Users[] = [
-    { id: 1, uType: "admin", username: "one", email: 'a@gm.co', password: '123', uFname: 'f', uLName: 'l', uMobile: '12345678', uStatus: true },
-    { id: 2, uType: "user", username: "two", email: 'b@gm.co', password: '123', uFname: 'a', uLName: 'b', uMobile: '32323232', uStatus: false }
-  ];
+  userList: Users[] = [];
+  userTypeList: UserType[] = [];
+  // [{ id: 1, uType: "admin", username: "one", email: 'a@gm.co', password: '123', uFname: 'f', uLName: 'l', uMobile: '12345678', uStatus: true },
+  // { id: 2, uType: "user", username: "two", email: 'b@gm.co', password: '123', uFname: 'a', uLName: 'b', uMobile: '32323232', uStatus: false }];
   userForm: FormGroup;
   createError = '';
+  userId = '';
+  title = 'New User';
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
   ngOnInit() {
     this.applyLoginValidation();
+    this.getUserList();
+    this.getUserType();
   }
 
   applyLoginValidation() {
@@ -38,40 +44,111 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  onSubmit() {
-    this.userObj.uStatus = this.userObj.uStatus.toString();
-    console.log(this.userObj);
-    console.log('this.userForm.valid : ', this.userForm.valid)
-    console.log('this.userForm.valid : ', this.userForm)
-    // if (this.userForm.valid) {
-    this.apiService.postMethod(VariableService.API_CREATE_USER, this.userObj, (response) => {
-      console.log('user create response : ', response);
+  getUserList() {
+    this.apiService.postMethodAPI(false, VariableService.API_GET_USER, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
-        if (response['status'] === 'SUCCESS') {
-          console.log(response['data']);
-        } else {
-          this.createError = response['message'];
-        }
+        this.userList = response['rows'];
       } else {
-        this.createError = 'Response is null';
+        this.userList = [];
+      }
+      console.log('response : ', this.userList);
+    });
+  }
+
+  getUserType() {
+    this.apiService.postMethodAPI(false, VariableService.API_GET_USERTYPE, {}, (response) => {
+      if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+        this.userTypeList = response['rows'];
+      } else {
+        this.userTypeList = [];
+      }
+      console.log('userTypeList response : ', this.userTypeList);
+    });
+  }
+
+  onSubmit() {
+    // if (this.userObj.uStatus) { this.userObj.uStatus = this.userObj.uStatus.toString(); }
+    console.log(this.userObj);
+    if (this.userForm.valid) {
+      if (this.userId) {
+        this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_USER, this.userObj, this.userId, (response) => {
+          console.log('User update response : ', response);
+          if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+            console.log(response);
+            this.reset();
+          } else {
+            this.createError = 'UserType Update Fails';
+          }
+        });
+      } else {
+        this.apiService.postMethodAPI(true, VariableService.API_CREATE_USER, this.userObj, (response) => {
+          console.log('user create response : ', response);
+          if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+            console.log(response);
+            this.reset();
+          } else {
+            this.createError = 'User Insert Fails';
+          }
+        }
+        );
       }
     }
-    );
-    // }
-    /*
- {
-   "username": "abhay",
-   "email":"abhaysuchak4590@gmail.com",
-   "uFname": "test",
-   "uLName": "test",
-   "uType": "test",
-   "uStatus": "test",
-   "uuMobile": "test",
-   "password": "Abhay@123"
+  }
+  /*
+{
+ "username": "abhay",
+ "email":"abhaysuchak4590@gmail.com",
+ "uFname": "test",
+ "uLName": "test",
+ "uType": "test",
+ "uStatus": "test",
+ "uuMobile": "test",
+ "password": "Abhay@123"
 }
 {"status":"SUCCESS","message":"User save success","data":true}
- */
+*/
 
+  openModel() {
+    $('#userAdd').modal({ keyboard: false, backdrop: 'static' });
+  }
+
+  reset() {
+    this.title = 'New User Type';
+    $('#userAdd').modal('hide');
+    this.userObj = {};
+    this.userId = '';
+    this.getUserList();
+    this.applyLoginValidation();
+  }
+
+  editUser(data) {
+    this.userId = data.id;
+    this.userObj.username = data.username;
+    this.userObj.email = data.email;
+    this.userObj.uFname = data.uFname;
+    this.userObj.uLName = data.uLName;
+    this.userObj.uType = data.uType;
+    this.userObj.uStatus = data.uStatus;
+    this.userObj.uMobile = data.uMobile;
+    this.userObj.password = data.password;
+    $('#userAdd').modal('show');
+    this.title = 'Edit User';
+  }
+
+  deleteUser(data) {
+    if (confirm('Are you sure want to delete record')) {
+      if (data.id) {
+        this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_USER, data.id, (response) => {
+          console.log('User delete response : ', response);
+          if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+            console.log(response);
+            this.reset();
+          } else {
+            this.createError = 'User Delete Fails';
+          }
+        });
+      }
+    }
   }
 
 }

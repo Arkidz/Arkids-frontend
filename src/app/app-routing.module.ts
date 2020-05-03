@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { AdminGuard } from './core/gaurds/admin.guard';
 
 
 const routes: Routes = [
@@ -11,7 +12,7 @@ const routes: Routes = [
   },
   // { path: 'login', loadChildren: './layouts/login/login.module#LoginModule' },
   {
-    path: 'admin', component: AdminLayoutComponent,
+    path: 'admin', component: AdminLayoutComponent, canActivate: [AdminGuard],
     children: [{
       path: '',
       loadChildren: () => import('./layouts/admin-layout/admin-layout.module').then(a => a.AdminLayoutModule)

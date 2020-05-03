@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { ROUTES } from '../sidebar/sidebar.component';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { Router } from '@angular/router';
+import { VariableService } from 'src/app/core/services/variable.service';
 
 @Component({
     selector: 'app-navbar',
@@ -14,6 +15,7 @@ export class NavbarComponent implements OnInit {
     mobile_menu_visible: any = 0;
     private toggleButton: any;
     private sidebarVisible: boolean;
+    userDetails: any;
 
     constructor(location: Location, private element: ElementRef, private router: Router) {
         this.location = location;
@@ -32,6 +34,21 @@ export class NavbarComponent implements OnInit {
                 this.mobile_menu_visible = 0;
             }
         });
+        this.getUserDetail();
+    }
+
+    // getLoginser detail
+    getUserDetail() {
+        const details = localStorage.getItem(VariableService.USER_DATA);
+        if (details !== null) {
+            this.userDetails = JSON.parse(details);
+        }
+        console.log('this.userDetails : ', this.userDetails);
+    }
+
+    logout() {
+        localStorage.removeItem(VariableService.USER_DATA);
+        this.router.navigate([VariableService.LOGIN]);
     }
 
     sidebarOpen() {

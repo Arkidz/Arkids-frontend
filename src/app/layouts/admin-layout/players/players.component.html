@@ -5,7 +5,9 @@
                 <div class="card">
                     <div class="card-header card-header-danger">
                         <h4 class="card-title ">Player List</h4>
-                        <p class="card-category"> List of players.</p>
+                        <!-- <button class="btn btn-info pull-right mrgtop" (click)="openModel()">
+                            Add
+                        </button> -->
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -14,8 +16,8 @@
                                     <th> # </th>
                                     <th> Short Name </th>
                                     <th> Full Name </th>
-                                    <th> Mobile </th>
-                                    <th> EmailId </th>
+                                    <th> mobileno </th>
+                                    <th> email </th>
                                     <th> Reg Date </th>
                                     <th> Last Login </th>
                                     <th> Status </th>
@@ -23,20 +25,46 @@
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let player of playerList; let i=index;">
-                                        <td> {{player.id}} </td>
-                                        <td> {{player.shortName}} </td>
-                                        <td> {{player.firstName + ' ' + player.lastName}} </td>
-                                        <td> {{player.mobile}} </td>
-                                        <td> {{player.emailId}} </td>
+                                        <td> {{i + 1}} </td>
+                                        <td> {{player.shortname?player.shortname:'-'}} </td>
+                                        <td> {{(player.fname?player.fname:' ') + ' ' + (player.lname?player.lname:' ')}}
+                                        </td>
+                                        <td> {{player.mobilenono}} </td>
+                                        <td> {{player.email}} </td>
                                         <td> {{player.regDate | date:'dd-MM-yyyy'}} </td>
                                         <td> {{player.lastLogin | date:'dd-MM-yyyy hh:mm:ss a'}} </td>
-                                        <td> {{player.status}} </td>
                                         <td>
-                                            <!-- <button class="bnt btn-danger mrg5">Delete</button> -->
-                                            <button class="bnt btn-info" data-toggle="modal" data-target="#playerEdit">Edit</button>
+                                            <span class="label label-success">
+                                                {{player.status?player.status:'-'}}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button class="bnt btn-primary mrg5" (click)="refillWallet(player)"
+                                                title="Refill Wallet">
+                                                <i class="fa fa-money" aria-hidden="true"></i></button>
+                                            <button class="bnt btn-primary mrg5" (click)="walletHistory(player)"
+                                                title="Wallet  History">
+                                                <i class="fa fa-address-card" aria-hidden="true"></i>
+                                            </button>
+                                            <button class="bnt btn-warning mrg5" (click)="gamesHistory(player)"
+                                                title="Game Played History">
+                                                <i class="fa fa-history" aria-hidden="true"></i></button>
+                                            <button class="bnt btn-info mrg5" (click)="editPlayer(player)"
+                                                title="Edit Player">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                            <button class="bnt btn-danger" (click)="deletePlayer(player)"
+                                                title="Delete Player">
+                                                <i class="fa fa-trash" aria-hidden="true"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>
+                                <tfoot>
+                                    <tr *ngIf="playerList && playerList.length <= 0" class="text-center">
+                                        <td colspan="9">
+                                            <span>Player Records Not Found!</span>
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -52,73 +80,73 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close" aria-label="Close" (click)="reset()"><span
                         aria-hidden="true">&times;</span></button>
                 <div class="separator"></div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header card-header-success">
-                                <h4 class="card-title">Player Edit</h4>
+                                <h4 class="card-title">{{title}}</h4>
                             </div>
                             <div class="card-body">
                                 <div>
-                                    <!-- firstName & Last Name -->
+                                    <!-- fname & Last Name -->
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <!-- <label>firstName Name</label> -->
+                                            <!-- <label>fname Name</label> -->
                                             <mat-form-field class="example-full-width">
                                                 <input matInput placeholder="First Name" type="text"
-                                                    [(ngModel)]="playerObj.firstName"
-                                                    [formControl]="playerForm.controls['firstName']">
+                                                    [(ngModel)]="playerObj.fname"
+                                                    [formControl]="playerForm.controls['fname']" readonly>
                                             </mat-form-field>
                                             <div class="text-danger">
                                                 <small class="text-danger"
-                                                    *ngIf="playerForm.controls['firstName'].hasError('required') && playerForm.controls['firstName'].touched">
+                                                    *ngIf="playerForm.controls['fname'].hasError('required') && playerForm.controls['fname'].touched">
                                                     First Name is required.
                                                 </small>
                                                 <small class="text-danger"
-                                                    *ngIf="!playerForm.controls['firstName'].hasError('required') && !playerForm.controls['firstName'].valid && playerForm.controls['firstName'].touched">
+                                                    *ngIf="!playerForm.controls['fname'].hasError('required') && !playerForm.controls['fname'].valid && playerForm.controls['fname'].touched">
                                                     Please Enter valid First Name.
                                                 </small>
                                             </div>
                                         </div>
-                                        <!-- <label>lastName Name</label> -->
+                                        <!-- <label>lname Name</label> -->
                                         <div class="col-md-6">
                                             <mat-form-field class="example-full-width">
                                                 <input matInput placeholder="Last Name" type="text"
-                                                    [(ngModel)]="playerObj.lastName"
-                                                    [formControl]="playerForm.controls['lastName']">
+                                                    [(ngModel)]="playerObj.lname"
+                                                    [formControl]="playerForm.controls['lname']" readonly>
                                             </mat-form-field>
                                             <div class="text-danger">
                                                 <small class="text-danger"
-                                                    *ngIf="playerForm.controls['lastName'].hasError('required') && playerForm.controls['lastName'].touched">
+                                                    *ngIf="playerForm.controls['lname'].hasError('required') && playerForm.controls['lname'].touched">
                                                     Last Name is required.
                                                 </small>
                                                 <small class="text-danger"
-                                                    *ngIf="!playerForm.controls['lastName'].hasError('required') && !playerForm.controls['lastName'].valid && playerForm.controls['lastName'].touched">
+                                                    *ngIf="!playerForm.controls['lname'].hasError('required') && !playerForm.controls['lname'].valid && playerForm.controls['lname'].touched">
                                                     Please Enter valid Last Name.
                                                 </small>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- shortName  -->
+                                    <!-- shortname  -->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <!-- <label>Short Name</label> -->
                                             <mat-form-field class="example-full-width">
                                                 <input matInput placeholder="Short Name" type="text"
-                                                    [(ngModel)]="playerObj.shortName"
-                                                    [formControl]="playerForm.controls['shortName']">
+                                                    [(ngModel)]="playerObj.shortname"
+                                                    [formControl]="playerForm.controls['shortname']" readonly>
                                             </mat-form-field>
                                             <div class="text-danger">
                                                 <small class="text-danger"
-                                                    *ngIf="playerForm.controls['shortName'].hasError('required') && playerForm.controls['shortName'].touched">
-                                                    shortName is required.
+                                                    *ngIf="playerForm.controls['shortname'].hasError('required') && playerForm.controls['shortname'].touched">
+                                                    shortname is required.
                                                 </small>
                                                 <small class="text-danger"
-                                                    *ngIf="!playerForm.controls['shortName'].hasError('required') && !playerForm.controls['shortName'].valid && playerForm.controls['shortName'].touched">
-                                                    Please Enter valid shortName.
+                                                    *ngIf="!playerForm.controls['shortname'].hasError('required') && !playerForm.controls['shortname'].valid && playerForm.controls['shortname'].touched">
+                                                    Please Enter valid shortname.
                                                 </small>
                                             </div>
                                         </div>
@@ -128,16 +156,16 @@
                                         <div class="col-md-12">
                                             <mat-form-field class="example-full-width">
                                                 <input matInput placeholder="Email-Id" type="text"
-                                                    [(ngModel)]="playerObj.emailId"
-                                                    [formControl]="playerForm.controls['emailId']">
+                                                    [(ngModel)]="playerObj.email"
+                                                    [formControl]="playerForm.controls['email']" readonly>
                                             </mat-form-field>
                                             <div class="text-danger">
                                                 <small class="text-danger"
-                                                    *ngIf="playerForm.controls['emailId'].hasError('required') && playerForm.controls['emailId'].touched">
+                                                    *ngIf="playerForm.controls['email'].hasError('required') && playerForm.controls['email'].touched">
                                                     email-Id is required.
                                                 </small>
                                                 <small class="text-danger"
-                                                    *ngIf="!playerForm.controls['emailId'].hasError('required') && !playerForm.controls['emailId'].valid && playerForm.controls['emailId'].touched">
+                                                    *ngIf="!playerForm.controls['email'].hasError('required') && !playerForm.controls['email'].valid && playerForm.controls['email'].touched">
                                                     Please Enter valid email-Id.
                                                 </small>
                                             </div>
@@ -149,7 +177,7 @@
                                             <mat-form-field class="example-full-width">
                                                 <input matInput placeholder="Password" type="password"
                                                     [(ngModel)]="playerObj.password"
-                                                    [formControl]="playerForm.controls['password']">
+                                                    [formControl]="playerForm.controls['password']" readonly>
                                             </mat-form-field>
                                             <div class="text-danger">
                                                 <small class="text-danger"
@@ -163,22 +191,21 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- mobile  -->
+                                    <!-- mobileno  -->
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <!-- <label>Mobile Name</label> -->
                                             <mat-form-field class="example-full-width">
                                                 <input matInput placeholder="Mobile Number" type="text"
-                                                    [(ngModel)]="playerObj.mobile"
-                                                    [formControl]="playerForm.controls['mobile']">
+                                                    [(ngModel)]="playerObj.mobileno"
+                                                    [formControl]="playerForm.controls['mobileno']" readonly>
                                             </mat-form-field>
                                             <div class="text-danger">
                                                 <small class="text-danger"
-                                                    *ngIf="playerForm.controls['mobile'].hasError('required') && playerForm.controls['mobile'].touched">
+                                                    *ngIf="playerForm.controls['mobileno'].hasError('required') && playerForm.controls['mobileno'].touched">
                                                     mobile number is required.
                                                 </small>
                                                 <small class="text-danger"
-                                                    *ngIf="!playerForm.controls['mobile'].hasError('required') && !playerForm.controls['mobile'].valid && playerForm.controls['mobile'].touched">
+                                                    *ngIf="!playerForm.controls['mobileno'].hasError('required') && !playerForm.controls['mobileno'].valid && playerForm.controls['mobileno'].touched">
                                                     Please Enter valid mobile number.
                                                 </small>
                                             </div>
@@ -190,7 +217,7 @@
                                             <mat-form-field class="example-full-width">
                                                 <input matInput placeholder="Address" type="text"
                                                     [(ngModel)]="playerObj.address"
-                                                    [formControl]="playerForm.controls['address']">
+                                                    [formControl]="playerForm.controls['address']" readonly>
                                             </mat-form-field>
                                             <div class="text-danger">
                                                 <small class="text-danger"
@@ -204,59 +231,61 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- idOfProof  -->
+                                    <!-- idProof  -->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <mat-form-field class="example-full-width">
                                                 <input matInput placeholder="Id Of Proof" type="text"
-                                                    [(ngModel)]="playerObj.idOfProof"
-                                                    [formControl]="playerForm.controls['idOfProof']">
+                                                    [(ngModel)]="playerObj.idProof"
+                                                    [formControl]="playerForm.controls['idProof']" readonly>
                                             </mat-form-field>
                                             <div class="text-danger">
                                                 <small class="text-danger"
-                                                    *ngIf="playerForm.controls['idOfProof'].hasError('required') && playerForm.controls['idOfProof'].touched">
-                                                    idOfProof is required.
+                                                    *ngIf="playerForm.controls['idProof'].hasError('required') && playerForm.controls['idProof'].touched">
+                                                    idProof is required.
                                                 </small>
                                                 <small class="text-danger"
-                                                    *ngIf="!playerForm.controls['idOfProof'].hasError('required') && !playerForm.controls['idOfProof'].valid && playerForm.controls['idOfProof'].touched">
-                                                    Please Enter valid idOfProof.
+                                                    *ngIf="!playerForm.controls['idProof'].hasError('required') && !playerForm.controls['idProof'].valid && playerForm.controls['idProof'].touched">
+                                                    Please Enter valid idProof.
                                                 </small>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- remark  -->
+                                    <!-- Remark  -->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <mat-form-field class="example-full-width">
                                                 <input matInput placeholder="Remark" type="text"
-                                                    [(ngModel)]="playerObj.remark"
-                                                    [formControl]="playerForm.controls['remark']">
+                                                    [(ngModel)]="playerObj.Remark"
+                                                    [formControl]="playerForm.controls['Remark']" readonly>
                                             </mat-form-field>
                                             <div class="text-danger">
                                                 <small class="text-danger"
-                                                    *ngIf="playerForm.controls['remark'].hasError('required') && playerForm.controls['remark'].touched">
+                                                    *ngIf="playerForm.controls['Remark'].hasError('required') && playerForm.controls['Remark'].touched">
                                                     Remark is required.
                                                 </small>
                                                 <small class="text-danger"
-                                                    *ngIf="!playerForm.controls['remark'].hasError('required') && !playerForm.controls['remark'].valid && playerForm.controls['remark'].touched">
+                                                    *ngIf="!playerForm.controls['Remark'].hasError('required') && !playerForm.controls['Remark'].valid && playerForm.controls['Remark'].touched">
                                                     Please Enter valid Remark.
                                                 </small>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- referedBy  -->
+                                    <!-- refCode  -->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label>Refrence By : </label>
-                                            <select [(ngModel)]="playerObj.referedBy" class="form-control"
-                                                [formControl]="playerForm.controls['referedBy']">
-                                                <option>Admin</option>
-                                                <option>User</option>
+                                            <select [(ngModel)]="playerObj.refCode" class="form-control"
+                                                [formControl]="playerForm.controls['refCode']" readonly>
+                                                <option selected>Select</option>
+                                                <option *ngFor="let player of playerList;" [value]="player.id" disabled>
+                                                    {{(player.fname?player.fname:'') + ' ' + (player.lname?player.lname:'')}}
+                                                </option>
                                             </select>
                                             <div class="text-danger">
                                                 <small class="text-danger"
-                                                    *ngIf="playerForm.controls['referedBy'].hasError('required') && playerForm.controls['referedBy'].touched">
-                                                    referedBy is required.
+                                                    *ngIf="playerForm.controls['refCode'].hasError('required') && playerForm.controls['refCode'].touched">
+                                                    refCode is required.
                                                 </small>
                                             </div>
                                         </div>
@@ -267,7 +296,7 @@
                                             <mat-form-field class="example-full-width">
                                                 <input matInput placeholder="Profession" type="text"
                                                     [(ngModel)]="playerObj.profession"
-                                                    [formControl]="playerForm.controls['profession']">
+                                                    [formControl]="playerForm.controls['profession']" readonly>
                                             </mat-form-field>
                                             <div class="text-danger">
                                                 <small class="text-danger"
@@ -283,7 +312,7 @@
                                             <mat-form-field class="example-full-width">
                                                 <input matInput placeholder="About Me" type="text"
                                                     [(ngModel)]="playerObj.aboutMe"
-                                                    [formControl]="playerForm.controls['aboutMe']">
+                                                    [formControl]="playerForm.controls['aboutMe']" readonly>
                                             </mat-form-field>
                                             <div class="text-danger">
                                                 <small class="text-danger"
@@ -297,7 +326,12 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label>Status : </label>
-                                            <input placeholder="Status" type="checkbox" [(ngModel)]="playerObj.status">
+                                            <!-- <input placeholder="Status" type="checkbox" [(ngModel)]="playerObj.status"> -->
+                                            <select [(ngModel)]="playerObj.status" class="form-control">
+                                                <option selected>Select</option>
+                                                <option value="Active">Active</option>
+                                                <option value="InActive">InActive</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <!-- save button - [disabled]="!loginForm.valid" -->
@@ -305,6 +339,192 @@
                                         (click)="onSubmit()">Save</button>
                                     <div class="clearfix"></div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Player WALLET HISTORY Popup Modal -->
+<div class="modal modal-angular fade" id="playerWalletHistory" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" aria-label="Close" (click)="walletModelClose()"><span
+                        aria-hidden="true">&times;</span></button>
+                <div class="separator"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-success">
+                                <h4 class="card-title">Wallet History</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class=" text-primary">
+                                            <th> # </th>
+                                            <th> Date </th>
+                                            <th> Transaction Type </th>
+                                            <th> Player Code </th>
+                                            <th> Amount </th>
+                                            <th> Type </th>
+                                            <th> From </th>
+                                            <th> To </th>
+                                            <th> Status </th>
+                                            <th> Remark </th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let player of walletHistList; let i=index;">
+                                                <td> {{i + 1}} </td>
+                                                <td> {{player.datetime| date:'dd-MM-yyyy hh:mm:dd a'}} </td>
+                                                <td> {{player.transType}} </td>
+                                                <td> {{player.playercode}} </td>
+                                                <td> {{player.amount}} </td>
+                                                <td> {{player.type}} </td>
+                                                <td> {{player.from}} </td>
+                                                <td> {{player.to}} </td>
+                                                <td> {{player.status?'Active':'Inactive'}} </td>
+                                                <td> {{player.remark}} </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr *ngIf="walletHistList && walletHistList.length <= 0"
+                                                class="text-center">
+                                                <td colspan="9">
+                                                    <span>Wallet History Records Not Found!</span>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Player Game Play HISTORY Popup Modal -->
+<div class="modal modal-angular fade" id="playerGameHistory" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" aria-label="Close" (click)="gameModelClose()"><span
+                        aria-hidden="true">&times;</span></button>
+                <div class="separator"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-success">
+                                <h4 class="card-title">Game Played History</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class=" text-primary">
+                                            <th> # </th>
+                                            <th> Date </th>
+                                            <th> Game </th>
+                                            <th> Start Time </th>
+                                            <th> End Time </th>
+                                            <th> Charge </th>
+                                            <th> Remark </th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let player of gameHistList; let i=index;">
+                                                <td> {{player.id}} </td>
+                                                <td> {{player.datetime | date:'dd-MM-yyyy'}} </td>
+                                                <td> {{player.game}} </td>
+                                                <td> {{player.starttime| date:'dd-MM-yyyy hh:mm:ss a'}}
+                                                <td> {{player.endtime| date:'dd-MM-yyyy hh:mm:ss a'}}
+                                                </td>
+                                                <td> {{player.charge}} </td>
+                                                <td> {{player.remark}} </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr *ngIf="gameHistList && gameHistList.length <= 0" class="text-center">
+                                                <td colspan="9">
+                                                    <span>Game Played History Records Not Found!</span>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Player Refill Wallet Popup Modal -->
+<div class="modal modal-angular fade" id="playerRefillWallet" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" aria-label="Close" (click)="refillModelClose()"><span
+                        aria-hidden="true">&times;</span></button>
+                <div class="separator"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-success">
+                                <h4 class="card-title">Player Refill Wallet</h4>
+                            </div>
+                            <div class="card-body">
+                                <div>
+                                    <!-- enter amount -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- <label>fname Name</label> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Enter Amount" type="text"
+                                                    [(ngModel)]="refillObj.amount"
+                                                    [formControl]="refillForm.controls['amount']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="refillForm.controls['amount'].hasError('required') && refillForm.controls['amount'].touched">
+                                                    Amount is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!refillForm.controls['amount'].hasError('required') && !refillForm.controls['amount'].valid && refillForm.controls['amount'].touched">
+                                                    Please Enter valid Amount.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Remark  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Remark" type="text"
+                                                    [(ngModel)]="refillObj.remark"
+                                                    [formControl]="playerForm.controls['Remark']">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <button mat-raised-button type="submit" class="btn btn-success"
+                                        (click)="saveRefill()">Submit</button>
+                                    <button mat-raised-button type="submit" class="btn btn-danger"
+                                        (click)="refillModelClose()">Cancel</button>
+                                    <div class="clearfix"></div>
+                                </div>
+
                             </div>
                         </div>
                     </div>

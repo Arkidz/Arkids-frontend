@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { VariableService } from './variable.service';
 import { MethodUtilityService } from './Method-utility.service';
+import { stringify } from 'querystring';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,7 @@ export class APIService {
     return this.http.get(apiName, { params: httpParams, headers: headers }).subscribe(
 
       (response: any) => {
+        console.log('getMethodAPI response : ', response)
         if (response.status < 200 || response.status >= 300) {
           if (response.status === 403) {
             this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', response.message);
@@ -87,20 +89,99 @@ export class APIService {
         }
         callback(response.data, true);
       } else {
+        console.log('post else block', response.data);
       }
     },
       (err: HttpErrorResponse) => {
-        if (err.status === 0) {
-          this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Server down..');
-        } else if (err.status === 403) {
-          this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', err.error.message);
-        } else {
-          const errorDTO = err.error;
-          callback(errorDTO.message, false);
-          window.scroll(0, 0);
+        console.log('error here..', err.error);
+        if (err.error && err.error.data && err.error.data.message) {
+          this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', err.error.data.message);
+        } else if (err.error && err.error.data && err.error.data.length > 0) {
+          if ((typeof err.error.data) === 'string') {
+            this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', err.error.message);
+          } else {
+            err.error.data.forEach(element => {
+              this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', element.message);
+            });
+          }
+        }
+        // if (err.status === 0) {
+        //   console.log('error 0..');
+        //   this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Server down..');
+        // } else if (err.status === 403) {
+        //   console.log('error 403..');
+        //   if (err.error && err.error.data && err.error.data.length > 0) {
+        //     err.error.data.forEach(element => {
+        //       this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', element.message);
+        //     });
+        //   }
+        // } else {
+        //   console.log('else error..');
+        //   const errorDTO = err.error;
+        //   callback(errorDTO.message, false);
+        //   window.scroll(0, 0);
+        // }
+      }
+    );
+  }
+
+  patchMethodAPI(isDisplayToast, apiName, params, id, callback) {
+    this.customJsonInclude(params);
+    let headers = new HttpHeaders();
+    apiName = VariableService.API_URL + apiName + '/' + id;
+    return this.http.patch(apiName, params, { headers: headers }).subscribe((response: any) => {
+      if (!(response.status < 200 || response.status >= 300)) {
+        if (isDisplayToast) {
+          this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', response.message);
+        }
+        if (response.status === 201) {
+          this.methodUtils.gotoBackPage();
+        }
+        callback(response.data, true);
+      } else {
+        console.log('post else block', response.data);
+      }
+    },
+      (err: HttpErrorResponse) => {
+        console.log('error here..', err.error);
+        if (err.error && err.error.data && err.error.data.message) {
+          this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', err.error.data.message);
+        } else if (err.error && err.error.data && err.error.data.length > 0) {
+          err.error.data.forEach(element => {
+            this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', element.message);
+          });
         }
       }
     );
+  }
+
+  deleteMethodAPI(isDisplayToast, apiName, id, callback) {
+    let headers = new HttpHeaders();
+    apiName = VariableService.API_URL + apiName + '/' + id;
+    return this.http.delete(apiName, { headers: headers }).subscribe((response: any) => {
+      if (!(response.status < 200 || response.status >= 300)) {
+        if (isDisplayToast) {
+          this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', response.message);
+        }
+        if (response.status === 201) {
+          this.methodUtils.gotoBackPage();
+        }
+        callback(response.data, true);
+      } else {
+      }
+    },
+      (err: HttpErrorResponse) => {
+        console.log('patch error here..', err.error);
+        if (err.error && err.error.data && err.error.data.message) {
+          this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', err.error.data.message);
+        } else if (err.error && err.error.data && err.error.data.length > 0) {
+          err.error.data.forEach(element => {
+            this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', element.message);
+          });
+        }
+      }
+    );
+
   }
 
   putMethodAPI(apiName, params, id, callback) {

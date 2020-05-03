@@ -1,0 +1,220 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title ">Games</h4>
+                        <button class="btn btn-info pull-right mrgtop" (click)="openModel()">
+                            Add
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class=" text-primary">
+                                    <th> # </th>
+                                    <!-- <th> Code </th> -->
+                                    <th> Name </th>
+                                    <th> Timer </th>
+                                    <th> Game Type </th>
+                                    <th> Game Zone </th>
+                                    <th> QR </th>
+                                    <th> Status </th>
+                                    <th> Action </th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let game of gameList; let i=index;">
+                                        <td> {{i+1}} </td>
+                                        <!-- <td> {{game.gCode}} </td> -->
+                                        <td> {{game.gName}} </td>
+                                        <td> {{game.gTimer}} </td>
+                                        <td> {{game.gType}} </td>
+                                        <td>
+                                            {{game.ecube_gamezone && game.ecube_gamezone.gzName ? game.ecube_gamezone.gzName : '-'}}
+                                        </td>
+                                        <td> {{game.gQR}} </td>
+                                        <td> {{game.gStatus?'Active':'Inactive'}} </td>
+                                        <td>
+                                            <button class="bnt btn-info mrg5" (click)="editGame(game)"
+                                                title="Edit Game">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            </button>
+                                            <button class="bnt btn-danger" (click)="deleteGame(game)"
+                                                title="Delete Game">
+                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr *ngIf="gameList && gameList.length <= 0" class="text-center">
+                                        <td colspan="4">
+                                            <span>Game Records Not Found!</span>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- gameId add Popup Modal -->
+<div class="modal modal-angular fade" id="gameAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" aria-label="Close" (click)="reset()"><span
+                        aria-hidden="true">&times;</span></button>
+                <div class="separator"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-success">
+                                <h4 class="card-title">{{title}}</h4>
+                            </div>
+                            <div class="card-body">
+                                <div>
+                                    <!-- game name -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- <label>gameId Name</label> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Game Name" type="text"
+                                                    [(ngModel)]="gameObj.gName" [formControl]="gForm.controls['gName']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="gForm.controls['gName'].hasError('required') && gForm.controls['gName'].touched">
+                                                    gameId Name is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!gForm.controls['gName'].hasError('required') && !gForm.controls['gName'].valid && gForm.controls['gName'].touched">
+                                                    Please Enter valid gameId Name.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- timer HH:MM:SS-->
+                                    <div class="row">
+                                        <!-- <label>Timer : </label> -->
+                                        <div class="col-md-4">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Hour" type="number" [(ngModel)]="hh"
+                                                    required pattern="[0-9*$]">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Minute" type="number" [(ngModel)]="mm"
+                                                    required pattern="[0-9*$]">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Second" type="number" [(ngModel)]="ss"
+                                                    required pattern="[0-9*$]">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <!-- game Type -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>Game Type : </label>
+                                            <select [(ngModel)]="gameObj.gType" class="form-control"
+                                                [formControl]="gForm.controls['gType']">
+                                                <option selected disabled>Select</option>
+                                                <option value="AutoStart">AutoStart</option>
+                                                <option value="Manual">Manual</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Zone Id -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Zone type" type="text"
+                                                    [(ngModel)]="gameObj.gZoneId"
+                                                    [formControl]="gForm.controls['gZoneId']">
+                                            </mat-form-field> -->
+                                            <label>Zone Type : </label>
+                                            <select [(ngModel)]="gameObj.gZoneId" class="form-control"
+                                                [formControl]="gForm.controls['gZoneId']">
+                                                <option selected disabled>Select</option>
+                                                <option *ngFor="let zone of gameZoneList;" [value]="zone.id">
+                                                    {{zone.gzName?zone.gzName:'-'}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- QR edit show-->
+                                    <div class="row" *ngIf="gameId">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Game QR" type="text"
+                                                    [(ngModel)]="gameObj.gQR" readonly>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <!-- Change  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Charge" type="text"
+                                                    [(ngModel)]="gameObj.gCharge">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <!-- Can Continue  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>Can Continue : </label>
+                                            <select [(ngModel)]="gameObj.canContinue" class="form-control">
+                                                <option selected disabled>Select</option>
+                                                <option value="0">Yes</option>
+                                                <option value="1">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- countinueMaxCtr  -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Continue Max Counter" type="text"
+                                                    [(ngModel)]="gameObj.countinueMaxCtr">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <!-- status -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>Status : </label>
+                                            <!-- <input placeholder="Status" type="checkbox"> -->
+                                            <select [(ngModel)]="gameObj.gStatus" class="form-control">
+                                                <option selected disabled>Select</option>
+                                                <option value="Active">Active</option>
+                                                <option value="InActive">InActive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- save button - [disabled]="!loginForm.valid" -->
+                                    <button mat-raised-button type="submit" class="btn btn-success"
+                                        (click)="onSubmit()">
+                                        {{gameId?'Update':'Save'}}
+                                    </button>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

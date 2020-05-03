@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-header card-header-danger">
                         <h4 class="card-title ">Users</h4>
-                        <button class="btn btn-info pull-right mrgtop" data-toggle="modal" data-target="#userAdd">
+                        <button class="btn btn-info pull-right mrgtop" (click)="openModel()">
                             Add
                         </button>
                     </div>
@@ -23,20 +23,35 @@
                                     <th> Action </th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let game of userList; let i=index;">
-                                        <td> {{game.id}} </td>
-                                        <td> {{game.uFname}} </td>
-                                        <td> {{game.uLName}} </td>
-                                        <td> {{game.username}} </td>
-                                        <td> {{game.uMobile}} </td>
-                                        <td> {{game.uType}} </td>
-                                        <td> {{game.uStatus?'Active':'Inactive'}} </td>
+                                    <tr *ngFor="let user of userList; let i=index;">
+                                        <td> {{i + 1}} </td>
+                                        <td> {{user.uFname}} </td>
+                                        <td> {{user.uLName}} </td>
+                                        <td> {{user.username}} </td>
+                                        <td> {{user.uMobile}} </td>
                                         <td>
-                                            <button class="bnt btn-info mrg5">Edit</button>
-                                            <button class="bnt btn-danger">Delete</button>
+                                            {{user.ecube_usertype && user.ecube_usertype.userType?user.ecube_usertype.userType:'-'}}
+                                        </td>
+                                        <td> {{user.uStatus?user.uStatus:'-'}} </td>
+                                        <td>
+                                            <button class="bnt btn-info mrg5" (click)="editUser(user)"
+                                                title="Edit User">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            </button>
+                                            <button class="bnt btn-danger" (click)="deleteUser(user)"
+                                                title="Delete User">
+                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
+                                <tfoot>
+                                    <tr *ngIf="userList && userList.length <= 0" class="text-center">
+                                        <td colspan="8">
+                                            <span>Users Records Not Found!</span>
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -52,7 +67,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close" aria-label="Close" (click)="reset()"><span
                         aria-hidden="true">&times;</span></button>
                 <!-- <h4 class="margin-top">
                 Add username
@@ -62,7 +77,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header card-header-success">
-                                <h4 class="card-title">New User</h4>
+                                <h4 class="card-title">{{title}}</h4>
                             </div>
                             <div class="card-body">
                                 <div>
@@ -134,7 +149,7 @@
                                         <div class="col-md-12">
                                             <!-- <label>username Name</label> -->
                                             <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="Email Id" type="text"
+                                                <input matInput placeholder="Email Id" type="email"
                                                     [(ngModel)]="userObj.email">
                                             </mat-form-field>
                                         </div>
@@ -144,7 +159,7 @@
                                         <div class="col-md-12">
                                             <!-- <label>username Name</label> -->
                                             <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="Password Name" type="text"
+                                                <input matInput placeholder="Password" type="password"
                                                     [(ngModel)]="userObj.password"
                                                     [formControl]="userForm.controls['password']">
                                             </mat-form-field>
@@ -172,11 +187,11 @@
                                             <div class="text-danger">
                                                 <small class="text-danger"
                                                     *ngIf="userForm.controls['uMobile'].hasError('required') && userForm.controls['uMobile'].touched">
-                                                    uMobile number is required.
+                                                    Mobile number is required.
                                                 </small>
                                                 <small class="text-danger"
                                                     *ngIf="!userForm.controls['uMobile'].hasError('required') && !userForm.controls['uMobile'].valid && userForm.controls['uMobile'].touched">
-                                                    Please Enter valid uMobile number.
+                                                    Please Enter valid Mobile number.
                                                 </small>
                                             </div>
                                         </div>
@@ -185,34 +200,36 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label>User Type : </label>
-                                            <!-- <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="uType Number" type="text"
-                                                    [(ngModel)]="userObj.uType"
-                                                    [formControl]="userForm.controls['uType']">
-                                            </mat-form-field> -->
                                             <select [(ngModel)]="userObj.uType" class="form-control"
                                                 [formControl]="userForm.controls['uType']">
-                                                <option>Admin</option>
-                                                <option>User</option>
+                                                <option selected>Select</option>
+                                                <option *ngFor="let ut of userTypeList;" [value]="ut.id">
+                                                    {{ut.userType?ut.userType:'-'}}</option>
                                             </select>
                                             <div class="text-danger">
                                                 <small class="text-danger"
                                                     *ngIf="userForm.controls['uType'].hasError('required') && userForm.controls['uType'].touched">
-                                                    uType number is required.
+                                                    User Type is required.
                                                 </small>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- gstin no -->
+
+                                    <!-- status -->
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label>uStatus : </label>
-                                            <input placeholder="uStatus" type="checkbox" [(ngModel)]="userObj.uStatus">
+                                            <label>Status : </label>
+                                            <!-- <input placeholder="uStatus" type="checkbox" [(ngModel)]="userObj.uStatus"> -->
+                                            <select [(ngModel)]="userObj.uStatus" class="form-control">
+                                                <option selected>Select</option>
+                                                <option value="Active">Active</option>
+                                                <option value="InActive">InActive</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <!-- save button - [disabled]="!loginForm.valid" -->
                                     <button mat-raised-button type="submit" class="btn btn-success"
-                                        (click)="onSubmit()">Save</button>
+                                        (click)="onSubmit()">{{userId?'Update':'Save'}}</button>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>

@@ -50,6 +50,9 @@
                     <div class="form-group">
                         <button class="btn btn-success" (click)="onLogin()">LogIn</button>
                     </div>
+                    <div class="form-group">
+                        <a class="btn btn-link" (click)="forgetPass()">Forget Password</a>
+                    </div>
                     <h6 *ngIf="loginError" class="text-danger"> {{ loginError }} </h6>
 
                 </div>
@@ -60,13 +63,18 @@
     </div>
 </div>
 
+<div id="divLoading" *ngIf="loader">
+    <p id="loading">
+        <img src="assets/img/loader3.gif">
+    </p>
+</div>
 
 <!-- Reset Password Popup Modal -->
 <div class="modal modal-angular fade" id="resetPass" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close" aria-label="Close" (click)="closeModel()"><span
                         aria-hidden="true">&times;</span></button>
                 <div class="separator"></div>
                 <div class="row">
@@ -117,7 +125,92 @@
                                             Password</button>
                                     </div>
                                     <!-- <h6 *ngIf="loginError" class="text-danger"> {{ loginError }} </h6> -->
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Forget Password Popup Modal -->
+<div class="modal modal-angular fade" id="forgetPass" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" aria-label="Close" (click)="resetForForgetPass()"><span
+                        aria-hidden="true">&times;</span></button>
+                <div class="separator"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-success">
+                                <h4 class="card-title">Forget Password</h4>
+                            </div>
+                            <div class="card-body">
+                                <!-- usernaame for forget password -->
+                                <div *ngIf="isForgetPass">
+                                    <div class="form-group">
+                                        <label for="psw"><b>Username </b></label>
+                                        <input type="password" id="password" class="form-control" placeholder="Username"
+                                            required [(ngModel)]="usernameObj.username"
+                                            (keyup)="checkUsername(usernameObj.username)"
+                                            (focus)="checkUsername(usernameObj.username)">
+                                        <div class="text-danger" *ngIf="forgetError">
+                                            <small class="text-danger">
+                                                {{forgetError}}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-success" (click)="submitPassword()">Submit</button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+
+                                <!-- verify response -->
+                                <div *ngIf="!isForgetPass">
+                                    <div class="form-group">
+                                        <label for="psw"><b>Verification Code </b></label>
+                                        <input type="password" id="password" class="form-control"
+                                            placeholder="Verification Code" required
+                                            [(ngModel)]="forgetPassObj.verificationCode"
+                                            [formControl]="forgetForm.controls['verificationCode']">
+                                        <div class="text-danger">
+                                            <small class="text-danger"
+                                                *ngIf="forgetForm.controls['verificationCode'].hasError('required') && forgetForm.controls['verificationCode'].touched">
+                                                Verification Code is required.
+                                            </small>
+                                            <small class="text-danger"
+                                                *ngIf="!forgetForm.controls['verificationCode'].hasError('required') && !forgetForm.controls['verificationCode'].valid && forgetForm.controls['verificationCode'].touched">
+                                                Please Enter valid Old Verification Code.
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="psw"><b>New Password </b></label>
+                                        <input type="password" id="password" class="form-control"
+                                            placeholder="New Password" required [(ngModel)]="forgetPassObj.newPassword"
+                                            [formControl]="forgetForm.controls['newPassword']">
+                                        <div class="text-danger">
+                                            <small class="text-danger"
+                                                *ngIf="forgetForm.controls['newPassword'].hasError('required') && forgetForm.controls['newPassword'].touched">
+                                                New password is required.
+                                            </small>
+                                            <small class="text-danger"
+                                                *ngIf="!forgetForm.controls['newPassword'].hasError('required') && !forgetForm.controls['newPassword'].valid && forgetForm.controls['newPassword'].touched">
+                                                Please Enter valid New password.
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-success" (click)="savePassword()">Save</button>
+                                    </div>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>

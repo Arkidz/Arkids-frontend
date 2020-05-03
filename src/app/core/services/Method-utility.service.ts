@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { ToasterConfig, ToasterService } from 'angular2-toaster';
+import { VariableService } from './variable.service';
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +62,18 @@ export class MethodUtilityService {
     return (obj && (Object.keys(obj).length === 0));
   }
 
+  // getLoginser detail
+  isAdminAccess() {
+    const details = localStorage.getItem(VariableService.USER_DATA);
+    if (details !== null) {
+      const userDetails = JSON.parse(details);
+      console.log('isAdminAccess : ', userDetails);
+      if (userDetails['username']) { return true; } else { return false; }
+    }
+    return false;
+    // {{userDetails && userDetails.user ? userDetails.user.uFname + ' ' + userDetails.user.uLName : '-' }}
+  }
+
   getToken() {
     return localStorage.getItem('token') ? localStorage.getItem('token') : null;
   }
@@ -88,6 +101,5 @@ export class MethodUtilityService {
   gotoBackPage() {
     this.location.back();
   }
-
 
 }

@@ -8,14 +8,20 @@ import { GameZoneComponent } from './game-zone/game-zone.component';
 import { UserTypeComponent } from './user-type/user-type.component';
 import { UsersComponent } from './users/users.component';
 import { PlayersComponent } from './players/players.component';
+import { GamesComponent } from './games/games.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
+import { GeneralSettingComponent } from './general-setting/general-setting.component';
 
 export const AdminLayoutRoutes: Routes = [
-    { path: 'dashboard',      component: DashboardComponent },
-    { path: 'company-detail',   component: CompanyDetailComponent },
-    { path: 'gamezone',     component: GameZoneComponent },
-    { path: 'usertype',     component: UserTypeComponent },
-    { path: 'users',     component: UsersComponent },
-    { path: 'players',     component: PlayersComponent },
-    { path: 'user-profile',   component: UserProfileComponent },
-    { path: 'table-list',     component: TableListComponent },
+    { path: 'dashboard', component: DashboardComponent },
+    { path: 'company-detail', component: CompanyDetailComponent },
+    { path: 'gamezone', component: GameZoneComponent },
+    { path: 'games', component: GamesComponent },
+    { path: 'usertype', component: UserTypeComponent },
+    { path: 'users', component: UsersComponent },
+    { path: 'players', component: PlayersComponent },
+    { path: 'change-password', component: ChangePasswordComponent },
+    { path: 'general-setting', component: GeneralSettingComponent },
+    { path: 'user-profile', component: UserProfileComponent },
+    { path: 'table-list', component: TableListComponent },
 ];

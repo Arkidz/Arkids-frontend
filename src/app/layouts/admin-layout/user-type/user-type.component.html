@@ -6,7 +6,7 @@
                     <div class="card-header card-header-danger">
                         <h4 class="card-title ">User Types</h4>
 
-                        <button class="btn btn-info pull-right mrgtop" data-toggle="modal" data-target="#gameAdd">
+                        <button class="btn btn-info pull-right mrgtop" (click)="openModel()">
                             Add
                         </button>
                     </div>
@@ -20,16 +20,27 @@
                                     <th> Action </th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let game of userTypeList; let i=index;">
-                                        <td> {{game.id}} </td>
-                                        <td> {{game.userType}} </td>
-                                        <td> {{game.status?'Active':'Inactive'}} </td>
+                                    <tr *ngFor="let utype of userTypeList; let i=index;">
+                                        <td> {{i+1}} </td>
+                                        <td> {{utype.userType}} </td>
+                                        <td> {{utype.Status?utype.Status:'-'}} </td>
                                         <td>
-                                            <button class="bnt btn-info mrg5">Edit</button>
-                                            <button class="bnt btn-danger">Delete</button>
+                                            <button class="bnt btn-info mrg5" (click)="editUserType(utype)"
+                                                title="Edit Usertype">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                            <button class="bnt btn-danger" (click)="deleteUserType(utype)"
+                                                title="Delete Usertype">
+                                                <i class="fa fa-trash" aria-hidden="true"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>
+                                <tfoot>
+                                    <tr *ngIf="userTypeList && userTypeList.length <= 0" class="text-center">
+                                        <td colspan="4">
+                                            <span>Usertype Records Not Found!</span>
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -41,11 +52,11 @@
 
 
 <!-- userType add Popup Modal -->
-<div class="modal modal-angular fade" id="gameAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal modal-angular fade" id="userTypeAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close" aria-label="Close" (click)="reset()"><span
                         aria-hidden="true">&times;</span></button>
                 <!-- <h4 class="margin-top">
                 Add userType
@@ -55,7 +66,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header card-header-success">
-                                <h4 class="card-title">New User Type</h4>
+                                <h4 class="card-title">{{title}}</h4>
                             </div>
                             <div class="card-body">
                                 <div>
@@ -84,13 +95,17 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label>Status : </label>
-                                            <input placeholder="Status" type="checkbox"
-                                                [(ngModel)]="userTypeObj.status">
+                                            <!-- <input placeholder="Status" type="checkbox"> -->
+                                            <select [(ngModel)]="userTypeObj.Status" class="form-control">
+                                                <option selected>Select</option>
+                                                <option value="Active">Active</option>
+                                                <option value="InActive">InActive</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <!-- save button - [disabled]="!loginForm.valid" -->
                                     <button mat-raised-button type="submit" class="btn btn-success"
-                                        (click)="onSubmit()">Save</button>
+                                        (click)="onSubmit()">{{usertypeId?'Update':'Save'}}</button>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>

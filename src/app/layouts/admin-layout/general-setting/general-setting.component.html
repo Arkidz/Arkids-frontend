@@ -1,0 +1,103 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-success">
+                        <h4 class="card-title">Settings</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- form -->
+                        <div>
+                            <!-- GSTIN in % -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="GST (%)" type="text" [(ngModel)]="settingObj.gst"
+                                            [formControl]="settingForm.controls['gst']">
+                                    </mat-form-field>
+                                    <div class="text-danger">
+                                        <small class="text-danger"
+                                            *ngIf="settingForm.controls['gst'].hasError('required') && settingForm.controls['gst'].touched">
+                                            GST is required.
+                                        </small>
+                                        <small class="text-danger"
+                                            *ngIf="!settingForm.controls['gst'].hasError('required') && !settingForm.controls['gst'].valid && settingForm.controls['gst'].touched">
+                                            Please Enter valid GST.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Welcome Points -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Welcome Points" type="text"
+                                            [(ngModel)]="settingObj.point"
+                                            [formControl]="settingForm.controls['point']">
+                                    </mat-form-field>
+                                    <div class="text-danger">
+                                        <small class="text-danger"
+                                            *ngIf="settingForm.controls['point'].hasError('required') && settingForm.controls['point'].touched">
+                                            Points is required.
+                                        </small>
+                                        <small class="text-danger"
+                                            *ngIf="!settingForm.controls['point'].hasError('required') && !settingForm.controls['point'].valid && settingForm.controls['point'].touched">
+                                            Please Enter valid Points.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Default Event Wallet Points -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Default Event Wallet Points" type="text"
+                                            [(ngModel)]="settingObj.walletPoint"
+                                            [formControl]="settingForm.controls['walletPoint']">
+                                    </mat-form-field>
+                                    <div class="text-danger">
+                                        <small class="text-danger"
+                                            *ngIf="settingForm.controls['walletPoint'].hasError('required') && settingForm.controls['walletPoint'].touched">
+                                            wallet Points is required.
+                                        </small>
+                                        <small class="text-danger"
+                                            *ngIf="!settingForm.controls['walletPoint'].hasError('required') && !settingForm.controls['walletPoint'].valid && settingForm.controls['walletPoint'].touched">
+                                            Please Enter valid wallet Points.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- QR Generate frequency -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="QR Generate Frequency(Day)" type="text"
+                                            [(ngModel)]="settingObj.qrDays"
+                                            [formControl]="settingForm.controls['qrDays']">
+                                    </mat-form-field>
+                                    <div class="text-danger">
+                                        <small class="text-danger"
+                                            *ngIf="settingForm.controls['qrDays'].hasError('required') && settingForm.controls['qrDays'].touched">
+                                            QR Generater Days is required.
+                                        </small>
+                                        <small class="text-danger"
+                                            *ngIf="!settingForm.controls['qrDays'].hasError('required') && !settingForm.controls['qrDays'].valid && settingForm.controls['qrDays'].touched">
+                                            Please Enter valid QR Generater Day.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- save button - [disabled]="!loginForm.valid" -->
+                            <button mat-raised-button type="submit" class="btn btn-success pull-right"
+                                (click)="onSubmit()">Save</button>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

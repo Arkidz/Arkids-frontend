@@ -1,19 +1,20 @@
 export class Players {
     id: number;
-    shortName: string;
-    firstName: string;
-    lastName: string;
-    emailId: string;
+    pCode: string;
+    shortname: string;
+    fname: string;
+    lname: string;
+    mobileno: string;
+    email: string;
     password: string;
-    mobile: string;
-    address: string;
-    idOfProof: string;
-    remark: string;
-    referedBy: string;
-    profession: string;
-    aboutMe: string;
-    image: string;
     regDate: Date;
     lastLogin: Date;
+    address: string;
+    idProof: string;
+    Remark: string;
+    refCode: string;
+    profession: string;
+    aboutMe: string;
+    imageId: string;
     status: boolean;
 }

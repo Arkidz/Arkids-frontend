@@ -14,12 +14,49 @@ export class VariableService {
   static ADMIN_COMPANY = '/admin/company-detail';
 
   // API URL
-  static API_URL = 'http://5654fe55.ngrok.io'; // main api root url
-  static API_LOGIN = '/admin/user/login'; // POST : { "username": “ss”,”password": “123”}
+  static API_URL = 'https://2313bf57.ngrok.io'; // main api root url
+  static API_LOGIN = '/admin/user/login'; // POST : { "username": “ss”,”password": “123”} - {"new_password":"12345"}
+  static API_CHANGE_PASSWORD = '/admin/user/change/password'; // POST : { "username": “ss”,old_password": “123”,"new_password":"12345"}
+  static API_FORGET_PASSWORD = '/admin/user/forgot/password'; // POST : { "username": “ss” }
+  static API_CONFIRM_PASSWORD = '/admin/user/confirm/password'; // POST : { "verificationCode", "newPassword", "username", }
+
+  // company
+  static API_CREATE_COMPANY = '/admin/master/company/create'; // post
+  static API_GET_COMPANY = '/admin/master/company/list'; // post
+  static API_UPDATE_COMPANY = '/admin/master/company/update'; // patch :id
+  static API_DELETE_COMPANY = '/admin/master/company/delete'; // delete :id
+
+  // gamezone
+  static API_CREATE_GAMEZONE = '/admin/master/gamezone/create'; // post
+  static API_GET_GAMEZONE = '/admin/master/gamezone/list'; // post
+  static API_UPDATE_GAMEZONE = '/admin/master/gamezone/update'; // patch /:id
+  static API_DELETE_GAMEZONE = '/admin/master/gamezone/delete'; // delete /:id
+
+  // usertype
+  static API_CREATE_USERTYPE = '/admin/master/user/type/create'; // post
+  static API_GET_USERTYPE = '/admin/master/user/type/list'; // post
+  static API_UPDATE_USERTYPE = '/admin/master/user/type/update'; // patch :id
+  static API_DELETE_USERTYPE = '/admin/master/user/type/delete'; // delete :id
+  static API_USERTYPE_DROPDOWN = '/admin/master/user/type/dropdown'; // get
 
   // user
   static API_CREATE_USER = '/admin/user/create'; // post
   static API_GET_USER = '/admin/user/list'; // post
+  static API_UPDATE_USER = '/admin/user/update'; // patch - /:id
+  static API_DELETE_USER = '/admin/user/delete'; // delete - /:id
+  static API_USER_AUTOCOMPLETE = '/admin/user/autocomplete/list'; // post - { Search:text of search }
+
+  // Player 
+  static API_CREATE_PLAYER = '/admin/user/player/create'; // post
+  static API_GET_PLAYER = '/admin/user/player/list'; // post
+  static API_UPDATE_PLAYER = '/admin/user/player/update'; // patch
+  static API_DELETE_PLAYER = '/admin/user/player/delete'; // delete
+
+  // game
+  static API_CREATE_GAME = '/admin/master/game/create'; // post
+  static API_GET_GAME = '/admin/master/game/list'; // post
+  static API_UPDATE_GAME = '/admin/master/game/update'; // patch /:id
+  static API_DELETE_GAME = '/admin/master/game/delete'; // delete /:id
 
   // validation
   static ONLY_SPACE_NOT_ALLOW = /.*\S.*/;
