@@ -15,6 +15,8 @@ export class ChangePasswordComponent implements OnInit {
   changePassForm: FormGroup;
   username = '';
   conf_password = '';
+  isSamePassword: boolean;
+  isSameOldPassword: boolean;
 
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
@@ -53,6 +55,21 @@ export class ChangePasswordComponent implements OnInit {
         this.conf_password = '';
       });
     }
+  }
+
+  // check new password and confirm password
+  compareOldPass() {
+    this.isSameOldPassword = this.changePassObj.old_password === this.changePassObj.new_password ? true : false;
+    if (this.isSameOldPassword === false && this.conf_password !== '') {
+      this.comparePass();
+    }
+    console.log('old pass : ', this.isSameOldPassword);
+  }
+
+  // check new password and confirm password
+  comparePass() {
+    this.isSamePassword = !!this.conf_password && this.changePassObj.new_password !== this.conf_password ? true : false;
+    console.log('old pass : ', this.isSamePassword);
   }
   /***
    * {
