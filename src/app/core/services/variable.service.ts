@@ -14,7 +14,7 @@ export class VariableService {
   static ADMIN_COMPANY = '/admin/company-detail';
 
   // API URL
-  static API_URL = 'https://4b151a94.ngrok.io'; // main api root url
+  static API_URL = 'https://400df05a.ngrok.io'; // main api root url
   static API_LOGIN = '/admin/user/login'; // POST : { "username": “ss”,”password": “123”} - {"new_password":"12345"}
   static API_CHANGE_PASSWORD = '/admin/user/change/password'; // POST : { "username": “ss”,old_password": “123”,"new_password":"12345"}
   static API_FORGET_PASSWORD = '/admin/user/forgot/password'; // POST : { "username": “ss” }
@@ -70,6 +70,7 @@ export class VariableService {
   static PATTERN_FOR_MOBILE_NO = '[+]?[0-9]{10}$';
   static PATTERN_FOR_PHONE_NO = '[+]?[0-9]{1,20}$';
   static PATTERN_FOR_NUMBER = '^[0-9]*$';
+  static PATTERN_FOR_NUMBER_DOT = '^[0-9]+([.][0-9]+)*$';
   static PATTERN_FOR_PINCODE = '^[0-9]{6}$';
 
   constructor() { }

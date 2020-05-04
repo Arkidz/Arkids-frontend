@@ -12,7 +12,7 @@ import { VariableService } from 'src/app/core/services/variable.service';
 })
 export class GeneralSettingComponent implements OnInit {
 
-  settingObj: any = {};
+  settingObj: any = { gst: 20, point: 80, walletPoint: 40, qrDays: 3 };
   settingList: any = [];
   settingForm: FormGroup;
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService,
@@ -25,7 +25,7 @@ export class GeneralSettingComponent implements OnInit {
 
   applyLoginValidation() {
     this.settingForm = new FormGroup({
-      gst: new FormControl('', [Validators.required, Validators.pattern(VariableService.PATTERN_FOR_NUMBER)]),
+      gst: new FormControl('', [Validators.required, Validators.pattern(VariableService.PATTERN_FOR_NUMBER_DOT)]),
       point: new FormControl('', [Validators.required, Validators.pattern(VariableService.PATTERN_FOR_NUMBER)]),
       walletPoint: new FormControl('', [Validators.required, Validators.pattern(VariableService.PATTERN_FOR_NUMBER)]),
       qrDays: new FormControl('', [Validators.required, Validators.pattern(VariableService.PATTERN_FOR_NUMBER)])
@@ -37,21 +37,22 @@ export class GeneralSettingComponent implements OnInit {
 
   getsettingList() {
     console.log('get settings data');
-    this.apiService.postMethodAPI(false, VariableService.API_GET_COMPANY, {}, (response) => {
-      if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
-        this.settingList = response['rows'];
-        this.setSettingData(response['rows'][0]);
-      } else {
-        this.settingList = [];
-      }
-      console.log('settingList : ', this.settingList);
-    });
+    // this.apiService.postMethodAPI(false, VariableService.API_GET_COMPANY, {}, (response) => {
+    //   if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+    //     this.settingList = response['rows'];
+    //     this.setSettingData(response['rows'][0]);
+    //   } else {
+    //     this.settingList = [];
+    //   }
+    //   console.log('settingList : ', this.settingList);
+    // });
   }
 
   onSubmit() {
     console.log('this.settingObj : ', this.settingObj);
     if (this.settingForm.valid) {
       console.log('submit generat setting ');
+      this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'General settings saved');
       // this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_COMPANY, this.settingObj, this.settingObj.id, (response) => {
       //   console.log('response : ', response);
       //   if (!this.methodUtils.isNullUndefinedOrBlank(response)) {

@@ -21,6 +21,7 @@ import { PlayersComponent } from './players/players.component';
 import { GamesComponent } from './games/games.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { GeneralSettingComponent } from './general-setting/general-setting.component';
+import { NgxQRCodeModule } from 'ngx-qrcode2';
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { GeneralSettingComponent } from './general-setting/general-setting.compo
     MatInputModule,
     MatSelectModule,
     MatTooltipModule,
+    NgxQRCodeModule
   ],
   declarations: [
     DashboardComponent,

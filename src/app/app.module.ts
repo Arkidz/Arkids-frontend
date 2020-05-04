@@ -9,6 +9,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentsModule } from './shared/components/components.module';
 import { ToasterModule } from 'angular2-toaster';
+import { NgxQRCodeModule } from 'ngx-qrcode2';
+
 
 @NgModule({
   declarations: [
@@ -23,8 +25,8 @@ import { ToasterModule } from 'angular2-toaster';
     ReactiveFormsModule,
     HttpClientModule,
     ComponentsModule,
-    ToasterModule.forRoot()
-
+    ToasterModule.forRoot(),
+    NgxQRCodeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

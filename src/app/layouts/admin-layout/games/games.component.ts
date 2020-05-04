@@ -24,6 +24,10 @@ export class GamesComponent implements OnInit {
   hh = '00';
   mm = '00';
   ss = '00';
+
+  elementType: 'url' | 'canvas' | 'img' = 'url';
+  value = 'EcudeQRCode';
+
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
   ngOnInit() {
