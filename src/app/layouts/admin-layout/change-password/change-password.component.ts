@@ -14,6 +14,7 @@ export class ChangePasswordComponent implements OnInit {
   changePassObj: any = {};
   changePassForm: FormGroup;
   username = '';
+  userId = '';
   conf_password = '';
   isSamePassword: boolean;
   isSameOldPassword: boolean;
@@ -39,12 +40,14 @@ export class ChangePasswordComponent implements OnInit {
       const userDetails = JSON.parse(details);
       console.log('this.userDetails : ', userDetails);
       this.username = userDetails['username'];
+      this.userId = userDetails['user_id'];
     }
     console.log('get company list : ', this.username);
   }
 
   changePassword() {
     this.changePassObj.username = this.username;
+    this.changePassObj.userId = this.userId;
     console.log('this.changePassObj : ', this.changePassObj);
     if (this.changePassForm.valid) {
       console.log('submit change password ');

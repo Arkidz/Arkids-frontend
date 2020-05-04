@@ -7,7 +7,7 @@ import * as S3 from 'aws-sdk/clients/s3';
   providedIn: 'root'
 })
 export class FileUploadAWSService {
-  public FOLDER = 'documents/';
+  public FOLDER = 'Images/';
   public BucketName = 'ecubearkidz';
   // public BucketName = 'ecubeshamaji';
 
@@ -68,13 +68,13 @@ export class FileUploadAWSService {
     const contentType = file.type;
     const bucket = new S3(
       {
-        accessKeyId: 'AKIARWMRVL3JNYLX7IXS',
-        secretAccessKey: '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',
+        accessKeyId: 'AKIARWMRVL3JLVEOB35Z',
+        secretAccessKey: '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',
         region: 'us-east-2'
       }
     );
     const params = {
-      Bucket: 'ecubeshamaji',
+      Bucket: 'ecuberepo',
       Key: this.FOLDER + file.name,
       Body: file,
       ACL: 'public-read',

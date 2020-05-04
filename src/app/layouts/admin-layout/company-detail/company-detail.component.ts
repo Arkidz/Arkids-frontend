@@ -63,7 +63,7 @@ export class CompanyDetailComponent implements OnInit {
     // console.log(fileInput.target);
     // console.log(this.fileData);
 
-    // this.fileService.uploadFileS3(this.fileData);
+    this.fileService.uploadFileS3(this.fileData);
     // return;
 
     const mimeType = this.fileData.type;
