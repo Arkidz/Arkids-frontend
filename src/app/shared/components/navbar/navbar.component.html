@@ -48,11 +48,11 @@
                                 aria-hidden="true"></i>
                             <span>{{userDetails && userDetails.user ? userDetails.user.uFname + ' ' + userDetails.user.uLName : '-' }}
                             </span></a>
-                        <a class="dropdown-item" [routerLink]="'/admin/company-detail'"><i class="fa fa-briefcase pd5"
+                        <a class="dropdown-item" [routerLink]="'/admin/company-detail'"><i class="fa fa-building pd5"
                                 aria-hidden="true"></i>
                             <span>Company Profile</span></a>
                         <a class="dropdown-item" [routerLink]="'/admin/change-password'">
-                            <i class="fa fa-key pd5" aria-hidden="true"></i><span>Change Password</span></a>
+                            <i class="fa fa-unlock pd5" aria-hidden="true"></i><span>Change Password</span></a>
                         <a class="dropdown-item" [routerLink]="'/admin/general-setting'">
                             <i class="fa fa fa-cog pd5" aria-hidden="true"></i> <span>General Setting</span></a>
                         <a class="dropdown-item" (click)="logout()">

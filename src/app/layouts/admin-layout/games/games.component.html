@@ -33,7 +33,9 @@
                                         <td>
                                             {{game.ecube_gamezone && game.ecube_gamezone.gzName ? game.ecube_gamezone.gzName : '-'}}
                                         </td>
-                                        <td> {{game.gQR}} </td>
+                                        <td> <img src="assets/img/qrcode.png" height="35" width="35">
+                                            <!-- {{game.gQR}}  -->
+                                        </td>
                                         <td> {{game.gStatus?'Active':'Inactive'}} </td>
                                         <td>
                                             <button class="bnt btn-info mrg5" (click)="editGame(game)"

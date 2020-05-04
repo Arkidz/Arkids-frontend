@@ -205,6 +205,7 @@ export class PlayersComponent implements OnInit {
   // refill
   refillWallet(player) {
     console.log('refillWallet ', player);
+    this.refillObj.id = player.id;
     $('#playerRefillWallet').modal({ keyboard: false, backdrop: 'static' });
   }
   refillModelClose() {
@@ -215,6 +216,16 @@ export class PlayersComponent implements OnInit {
   saveRefill() {
     console.log('save refill wallet : ', this.refillObj);
     console.log('save refill form : ', this.refillForm.valid);
+    this.playerList.forEach((element, index) => {
+      if (element.id == this.refillObj.id) {
+        if (this.playerList[index] && this.playerList[index]['wallet']) {
+          this.playerList[index]['wallet'] = +this.playerList[index]['wallet'] + +this.refillObj.amount;
+        } else {
+          this.playerList[index]['wallet'] = this.refillObj.amount;
+        }
+      }
+    });
+    this.refillModelClose();
   }
   /*
   {

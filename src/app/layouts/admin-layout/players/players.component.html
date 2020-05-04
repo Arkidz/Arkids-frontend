@@ -21,6 +21,7 @@
                                     <th> Reg Date </th>
                                     <th> Last Login </th>
                                     <th> Status </th>
+                                    <th> Wallet </th>
                                     <th> Action </th>
                                 </thead>
                                 <tbody>
@@ -38,17 +39,18 @@
                                                 {{player.status?player.status:'-'}}
                                             </span>
                                         </td>
+                                        <td> {{player.wallet?player.wallet:'0'}} </td>
                                         <td>
                                             <button class="bnt btn-primary mrg5" (click)="refillWallet(player)"
                                                 title="Refill Wallet">
                                                 <i class="fa fa-money" aria-hidden="true"></i></button>
-                                            <button class="bnt btn-primary mrg5" (click)="walletHistory(player)"
+                                            <button class="bnt btn-success mrg5" (click)="walletHistory(player)"
                                                 title="Wallet  History">
-                                                <i class="fa fa-address-card" aria-hidden="true"></i>
+                                                <i class="fa fa-list" aria-hidden="true"></i>
                                             </button>
                                             <button class="bnt btn-warning mrg5" (click)="gamesHistory(player)"
                                                 title="Game Played History">
-                                                <i class="fa fa-history" aria-hidden="true"></i></button>
+                                                <i class="fa fa-list" aria-hidden="true"></i></button>
                                             <button class="bnt btn-info mrg5" (click)="editPlayer(player)"
                                                 title="Edit Player">
                                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
