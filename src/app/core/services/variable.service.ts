@@ -14,7 +14,7 @@ export class VariableService {
   static ADMIN_COMPANY = '/admin/company-detail';
 
   // API URL
-  static API_URL = 'https://400df05a.ngrok.io'; // main api root url
+  static API_URL = 'https://0e58d188.ngrok.io'; // main api root url
   static API_LOGIN = '/admin/user/login'; // POST : { "username": “ss”,”password": “123”} - {"new_password":"12345"}
   static API_CHANGE_PASSWORD = '/admin/user/change/password'; // POST : { "username": “ss”,old_password": “123”,"new_password":"12345"}
   static API_FORGET_PASSWORD = '/admin/user/forgot/password'; // POST : { "username": “ss” }
@@ -57,6 +57,13 @@ export class VariableService {
   static API_GET_GAME = '/admin/master/game/list'; // post
   static API_UPDATE_GAME = '/admin/master/game/update'; // patch /:id
   static API_DELETE_GAME = '/admin/master/game/delete'; // delete /:id
+
+  // GEN SETTING
+  static API_CREATE_SETTING = '/admin/master/gen/setting/create';
+  static API_GET_SETTING = '/admin/master/gen/setting/list';
+  static API_UPDATE_SETTING = '/admin/master/gen/setting/update';
+  static API_DELETE_SETTING = '/admin/master/gen/setting/delete';
+
 
   // validation
   static ONLY_SPACE_NOT_ALLOW = /.*\S.*/;

@@ -54,6 +54,7 @@ export class APIService {
         } else {
           callback(response.data);
         }
+        this.methodUtils.setLoadingStatus(false);
       },
 
       (err: HttpErrorResponse) => {
@@ -64,14 +65,12 @@ export class APIService {
           const errorDto: any = err.error;
           callback(errorDto.data);
         }
-      }
-    );
+        this.methodUtils.setLoadingStatus(false);
+      });
   }
 
   postMethodAPI(isDisplayToast, apiName, params, callback) {
-
     this.customJsonInclude(params);
-
     let headers = new HttpHeaders();
     // if (this.variableService.arrayOfApiNameToExcludeToken.indexOf(apiName) < 0) {
     //   headers = headers.set('Authorization', 'Bearer ' + this.methodUtils.getToken());
@@ -91,6 +90,7 @@ export class APIService {
       } else {
         console.log('post else block', response.data);
       }
+      this.methodUtils.setLoadingStatus(false);
     },
       (err: HttpErrorResponse) => {
         console.log('error here..', err.error);
@@ -105,6 +105,7 @@ export class APIService {
             });
           }
         }
+        this.methodUtils.setLoadingStatus(false);
         // if (err.status === 0) {
         //   console.log('error 0..');
         //   this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Server down..');
@@ -141,6 +142,7 @@ export class APIService {
       } else {
         console.log('post else block', response.data);
       }
+      this.methodUtils.setLoadingStatus(false);
     },
       (err: HttpErrorResponse) => {
         console.log('error here..', err.error);
@@ -151,8 +153,8 @@ export class APIService {
             this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', element.message);
           });
         }
-      }
-    );
+        this.methodUtils.setLoadingStatus(false);
+      });
   }
 
   deleteMethodAPI(isDisplayToast, apiName, id, callback) {
@@ -167,8 +169,8 @@ export class APIService {
           this.methodUtils.gotoBackPage();
         }
         callback(response.data, true);
-      } else {
       }
+      this.methodUtils.setLoadingStatus(false);
     },
       (err: HttpErrorResponse) => {
         console.log('patch error here..', err.error);
@@ -178,16 +180,13 @@ export class APIService {
           err.error.data.forEach(element => {
             this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', element.message);
           });
-        }
-      }
-    );
+        } this.methodUtils.setLoadingStatus(false);
+      });
 
   }
 
   putMethodAPI(apiName, params, id, callback) {
-
     this.customJsonInclude(params);
-
     let headers = new HttpHeaders();
     // if (this.variableService.arrayOfApiNameToExcludeToken.indexOf(apiName) < 0) {
     //   headers = headers.set('Authorization', 'Bearer ' + this.methodUtils.getToken());
@@ -201,8 +200,8 @@ export class APIService {
           this.methodUtils.gotoBackPage();
         }
         callback(response.data, true);
-      } else {
       }
+      this.methodUtils.setLoadingStatus(false);
     },
       (err: HttpErrorResponse) => {
         if (err.status === 0) {
@@ -213,8 +212,8 @@ export class APIService {
           callback(errorDTO.message, false);
           window.scroll(0, 0);
         }
-      }
-    );
+        this.methodUtils.setLoadingStatus(false);
+      });
 
   }
   /**

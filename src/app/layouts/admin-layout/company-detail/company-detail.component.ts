@@ -35,7 +35,7 @@ export class CompanyDetailComponent implements OnInit {
       coName: new FormControl('', [Validators.required, Validators.pattern(VariableService.PATTERN_FOR_ALPHABATES_NUMBER_AND_SPACE)]),
       coAddress: new FormControl('', [Validators.required]),
       coEmailId: new FormControl('', [Validators.required, Validators.email]),
-      coMobile: new FormControl('', [Validators.required, Validators.pattern(VariableService.PATTERN_FOR_MOBILE_NO)]),
+      // coMobile: new FormControl('', [Validators.required, Validators.pattern(VariableService.PATTERN_FOR_MOBILE_NO)]),
       coLandline: new FormControl('', [Validators.required, Validators.pattern(VariableService.PATTERN_FOR_PHONE_NO)]),
       GSTIN: new FormControl('', [Validators.required, Validators.pattern(VariableService.PATTERN_FOR_GST_NO)]),
     });
@@ -60,12 +60,6 @@ export class CompanyDetailComponent implements OnInit {
   // logo image preview
   previewImage(fileInput: any) {
     this.fileData = <File>fileInput.target.files[0];
-    // console.log(fileInput.target);
-    // console.log(this.fileData);
-
-    this.fileService.uploadFileS3(this.fileData);
-    // return;
-
     const mimeType = this.fileData.type;
     if (mimeType.match(/image\/*/) == null) {
       return;
@@ -88,18 +82,16 @@ export class CompanyDetailComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('this.fileData : ', this.fileData);
-    // const formData = new FormData();
-    // formData.append('file', this.fileData);
-    // this.companyObj.coLogo = this.fileData;
     console.log('this.companyObj : ', this.companyObj);
     if (this.companyForm.valid) {
       console.log('submit company ');
+      this.methodUtils.setLoadingStatus(true);
       this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_COMPANY, this.companyObj, this.companyObj.id, (response) => {
         console.log('response : ', response);
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
           this.getCompanyList();
         }
+        this.methodUtils.setLoadingStatus(false);
       });
       // this.apiService.postMethodAPI(false, VariableService.API_UPDATE_COMPANY, this.companyObj, (response) => {
       //   console.log('update response : ', response);
@@ -108,7 +100,8 @@ export class CompanyDetailComponent implements OnInit {
       //   }
       //   console.log('companyList : ', this.companyList);
       // });
-
+    } else {
+      this.companyForm.markAllAsTouched();
     }
   }
 

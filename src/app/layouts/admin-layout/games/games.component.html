@@ -20,6 +20,7 @@
                                     <th> Timer </th>
                                     <th> Game Type </th>
                                     <th> Game Zone </th>
+                                    <th> Charges </th>
                                     <th> QR </th>
                                     <th> Status </th>
                                     <th> Action </th>
@@ -34,6 +35,7 @@
                                         <td>
                                             {{game.ecube_gamezone && game.ecube_gamezone.gzName ? game.ecube_gamezone.gzName : '-'}}
                                         </td>
+                                        <td>{{game.gCharge ? game.gCharge : '-'}}</td>
                                         <td>
                                             <!-- {{game.gQR}}  -->
                                             <ngx-qrcode [elementType]="elementType" [value]="game.gQR" cssClass="aclass"
@@ -91,7 +93,7 @@
                                         <div class="col-md-12">
                                             <!-- <label>gameId Name</label> -->
                                             <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="Game Name" type="text"
+                                                <input matInput placeholder="Game Name *" type="text"
                                                     [(ngModel)]="gameObj.gName" [formControl]="gForm.controls['gName']">
                                             </mat-form-field>
                                             <div class="text-danger">
@@ -133,13 +135,18 @@
                                     <!-- game Type -->
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label>Game Type : </label>
+                                            <label>Game Type * : </label>
                                             <select [(ngModel)]="gameObj.gType" class="form-control"
                                                 [formControl]="gForm.controls['gType']">
                                                 <option selected disabled>Select</option>
                                                 <option value="AutoStart">AutoStart</option>
                                                 <option value="Manual">Manual</option>
                                             </select>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="gForm.controls['gType'].hasError('required') && gForm.controls['gType'].touched">
+                                                    Game Type is required.
+                                                </small></div>
                                         </div>
                                     </div>
                                     <!-- Zone Id -->
@@ -150,7 +157,7 @@
                                                     [(ngModel)]="gameObj.gZoneId"
                                                     [formControl]="gForm.controls['gZoneId']">
                                             </mat-form-field> -->
-                                            <label>Zone Type : </label>
+                                            <label>Zone Type * : </label>
                                             <select [(ngModel)]="gameObj.gZoneId" class="form-control"
                                                 [formControl]="gForm.controls['gZoneId']">
                                                 <option selected disabled>Select</option>
@@ -158,6 +165,11 @@
                                                     {{zone.gzName?zone.gzName:'-'}}
                                                 </option>
                                             </select>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="gForm.controls['gZoneId'].hasError('required') && gForm.controls['gZoneId'].touched">
+                                                    Zone Type is required.
+                                                </small></div>
                                         </div>
                                     </div>
                                     <!-- QR edit show-->

@@ -52,9 +52,9 @@ export class UserTypeComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.userTypeObj.Status) { this.userTypeObj.Status = this.userTypeObj.Status.toString(); }
     console.log(this.userTypeObj);
     if (this.utForm.valid) {
+      this.methodUtils.setLoadingStatus(true);
       if (this.usertypeId) {
         this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_USERTYPE, this.userTypeObj, this.usertypeId, (response) => {
           console.log('UserType update response : ', response);
@@ -64,6 +64,7 @@ export class UserTypeComponent implements OnInit {
           } else {
             this.createError = 'UserType Update Fails';
           }
+          this.methodUtils.setLoadingStatus(false);
         });
       } else {
         this.apiService.postMethodAPI(true, VariableService.API_CREATE_USERTYPE, this.userTypeObj, (response) => {
@@ -74,8 +75,11 @@ export class UserTypeComponent implements OnInit {
           } else {
             this.createError = 'UserType Insert Fails';
           }
+          this.methodUtils.setLoadingStatus(false);
         });
       }
+    } else {
+      this.utForm.markAllAsTouched();
     }
   }
 
@@ -97,13 +101,14 @@ export class UserTypeComponent implements OnInit {
     this.userTypeObj.userType = data.userType;
     this.userTypeObj.Status = data.Status;
     // this.userTypeObj.remark = data.remark;
-    $('#userTypeAdd').modal('show');
+    $('#userTypeAdd').modal({ keyboard: false, backdrop: 'static' });
     this.title = 'Edit User Type';
   }
 
   deleteUserType(data) {
     if (confirm('Are you sure want to delete record')) {
       if (data && data.id) {
+        this.methodUtils.setLoadingStatus(true);
         this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_USERTYPE, data.id, (response) => {
           console.log('UserType delete response : ', response);
           if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
@@ -112,6 +117,7 @@ export class UserTypeComponent implements OnInit {
           } else {
             this.createError = 'UserType Delete Fails';
           }
+          this.methodUtils.setLoadingStatus(false);
         });
       } else {
         this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Fails Delete, Record Already In Use.');

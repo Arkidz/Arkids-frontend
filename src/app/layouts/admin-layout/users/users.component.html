@@ -86,7 +86,7 @@
                                         <div class="col-md-12">
                                             <!-- <label>uFname Name</label> -->
                                             <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="First Name" type="text"
+                                                <input matInput placeholder="First Name *" type="text"
                                                     [(ngModel)]="userObj.uFname"
                                                     [formControl]="userForm.controls['uFname']">
                                             </mat-form-field>
@@ -107,7 +107,7 @@
                                         <div class="col-md-12">
                                             <!-- <label>uLName Name</label> -->
                                             <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="Last Name" type="text"
+                                                <input matInput placeholder="Last Name *" type="text"
                                                     [(ngModel)]="userObj.uLName"
                                                     [formControl]="userForm.controls['uLName']">
                                             </mat-form-field>
@@ -128,7 +128,7 @@
                                         <div class="col-md-12">
                                             <!-- <label>username Name</label> -->
                                             <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="User Name" type="text"
+                                                <input matInput placeholder="User Name *" type="text"
                                                     [(ngModel)]="userObj.username"
                                                     [formControl]="userForm.controls['username']">
                                             </mat-form-field>
@@ -159,7 +159,7 @@
                                         <div class="col-md-12">
                                             <!-- <label>username Name</label> -->
                                             <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="Password" type="password"
+                                                <input matInput placeholder="Password *" type="password"
                                                     [(ngModel)]="userObj.password"
                                                     [formControl]="userForm.controls['password']">
                                             </mat-form-field>
@@ -180,7 +180,7 @@
                                         <div class="col-md-12">
                                             <!-- <label>uMobile Name</label> -->
                                             <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="Mobile Number" type="text"
+                                                <input matInput placeholder="Mobile Number *" type="text"
                                                     [(ngModel)]="userObj.uMobile"
                                                     [formControl]="userForm.controls['uMobile']">
                                             </mat-form-field>
@@ -191,7 +191,7 @@
                                                 </small>
                                                 <small class="text-danger"
                                                     *ngIf="!userForm.controls['uMobile'].hasError('required') && !userForm.controls['uMobile'].valid && userForm.controls['uMobile'].touched">
-                                                    Please Enter valid Mobile number.
+                                                    Please Enter valid Mobile number (10 digit).
                                                 </small>
                                             </div>
                                         </div>
@@ -199,7 +199,7 @@
                                     <!-- uType  -->
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label>User Type : </label>
+                                            <label>User Type *: </label>
                                             <select [(ngModel)]="userObj.uType" class="form-control"
                                                 [formControl]="userForm.controls['uType']">
                                                 <option selected>Select</option>

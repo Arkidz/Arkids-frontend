@@ -10,12 +10,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { ComponentsModule } from './shared/components/components.module';
 import { ToasterModule } from 'angular2-toaster';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
+import { LoaderComponent } from './shared/components/loader/loader.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    AdminLayoutComponent
+    AdminLayoutComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,

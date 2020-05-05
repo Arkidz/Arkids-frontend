@@ -79,6 +79,7 @@ export class GamesComponent implements OnInit {
     console.log(this.gameObj);
     // return;
     if (this.gForm.valid) {
+      this.methodUtils.setLoadingStatus(true);
       if (this.gameId) {
         this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_GAME, this.gameObj, this.gameId, (response) => {
           console.log('Game update response : ', response);
@@ -88,6 +89,7 @@ export class GamesComponent implements OnInit {
           } else {
             this.createError = 'Game Insert Fails';
           }
+          this.methodUtils.setLoadingStatus(false);
         });
       } else {
         this.gameObj.gQR = (new Date().getTime()).toString();
@@ -99,13 +101,16 @@ export class GamesComponent implements OnInit {
           } else {
             this.createError = 'Game Insert Fails';
           }
+          this.methodUtils.setLoadingStatus(false);
         });
       }
+    } else {
+      this.gForm.markAllAsTouched();
     }
   }
 
   openModel() {
-    $('#gameAdd').modal('show', { keyboard: false, backdrop: 'static' });
+    $('#gameAdd').modal({ keyboard: false, backdrop: 'static' });
   }
 
   reset() {
@@ -138,13 +143,14 @@ export class GamesComponent implements OnInit {
     this.gameObj.canContinue = data.canContinue;
     this.gameObj.countinueMaxCtr = data.countinueMaxCtr;
     this.gameObj.remark = data.remark;
-    $('#gameAdd').modal('show');
+    $('#gameAdd').modal({ keyboard: false, backdrop: 'static' });
     this.title = 'Edit Game';
   }
 
   deleteGame(data) {
     if (confirm('Are you sure want to delete record')) {
       if (data.id) {
+        this.methodUtils.setLoadingStatus(true);
         this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_GAME, data.id, (response) => {
           console.log('Game update response : ', response);
           if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
@@ -153,6 +159,7 @@ export class GamesComponent implements OnInit {
           } else {
             this.createError = 'Game Insert Fails';
           }
+          this.methodUtils.setLoadingStatus(false);
         });
       }
     }

@@ -70,6 +70,7 @@ export class UsersComponent implements OnInit {
     // if (this.userObj.uStatus) { this.userObj.uStatus = this.userObj.uStatus.toString(); }
     console.log(this.userObj);
     if (this.userForm.valid) {
+      this.methodUtils.setLoadingStatus(true);
       if (this.userId) {
         this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_USER, this.userObj, this.userId, (response) => {
           console.log('User update response : ', response);
@@ -79,6 +80,7 @@ export class UsersComponent implements OnInit {
           } else {
             this.createError = 'UserType Update Fails';
           }
+          this.methodUtils.setLoadingStatus(false);
         });
       } else {
         this.apiService.postMethodAPI(true, VariableService.API_CREATE_USER, this.userObj, (response) => {
@@ -89,9 +91,11 @@ export class UsersComponent implements OnInit {
           } else {
             this.createError = 'User Insert Fails';
           }
-        }
-        );
+          this.methodUtils.setLoadingStatus(false);
+        });
       }
+    } else {
+      this.userForm.markAllAsTouched();
     }
   }
   /*
@@ -131,13 +135,14 @@ export class UsersComponent implements OnInit {
     this.userObj.uStatus = data.uStatus;
     this.userObj.uMobile = data.uMobile;
     this.userObj.password = data.password;
-    $('#userAdd').modal('show');
+    $('#userAdd').modal({ keyboard: false, backdrop: 'static' });
     this.title = 'Edit User';
   }
 
   deleteUser(data) {
     if (confirm('Are you sure want to delete record')) {
       if (data.id) {
+        this.methodUtils.setLoadingStatus(true);
         this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_USER, data.id, (response) => {
           console.log('User delete response : ', response);
           if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
@@ -146,6 +151,7 @@ export class UsersComponent implements OnInit {
           } else {
             this.createError = 'User Delete Fails';
           }
+          this.methodUtils.setLoadingStatus(false);
         });
       }
     }

@@ -14,7 +14,7 @@
                                 <div class="col-md-12">
                                     <!-- <label>Company Name</label> -->
                                     <mat-form-field class="example-full-width">
-                                        <input matInput placeholder="Company Name" type="text"
+                                        <input matInput placeholder="Company Name *" type="text"
                                             [(ngModel)]="companyObj.coName"
                                             [formControl]="companyForm.controls['coName']">
                                     </mat-form-field>
@@ -53,7 +53,7 @@
                                 <div class="col-md-12">
                                     <!-- <label>Address</label> -->
                                     <mat-form-field class="example-full-width">
-                                        <textarea matInput placeholder="Company Address"
+                                        <textarea matInput placeholder="Company Address *"
                                             [(ngModel)]="companyObj.coAddress"
                                             [formControl]="companyForm.controls['coAddress']"></textarea>
                                     </mat-form-field>
@@ -73,7 +73,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <mat-form-field class="example-full-width">
-                                        <input matInput placeholder="Email" type="email"
+                                        <input matInput placeholder="Email *" type="email"
                                             [(ngModel)]="companyObj.coEmailId"
                                             [formControl]="companyForm.controls['coEmailId']">
                                     </mat-form-field>
@@ -94,10 +94,9 @@
                                 <div class="col-md-12">
                                     <mat-form-field class="example-full-width">
                                         <input matInput placeholder="Mobile Number" type="text"
-                                            [(ngModel)]="companyObj.coMobile"
-                                            [formControl]="companyForm.controls['coMobile']">
+                                            [(ngModel)]="companyObj.coMobile" readonly>
                                     </mat-form-field>
-                                    <div class="text-danger">
+                                    <!-- <div class="text-danger">
                                         <small class="text-danger"
                                             *ngIf="companyForm.controls['coMobile'].hasError('required') && companyForm.controls['coMobile'].touched">
                                             Company Mobile Number is required.
@@ -106,14 +105,14 @@
                                             *ngIf="!companyForm.controls['coMobile'].hasError('required') && !companyForm.controls['coMobile'].valid && companyForm.controls['coMobile'].touched">
                                             Please Enter valid Company Mobile Number.
                                         </small>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                             <!-- Landline no -->
                             <div class="row">
                                 <div class="col-md-12">
                                     <mat-form-field class="example-full-width">
-                                        <input matInput placeholder="LandLine Number" type="text"
+                                        <input matInput placeholder="LandLine Number *" type="text"
                                             [(ngModel)]="companyObj.coLandline"
                                             [formControl]="companyForm.controls['coLandline']">
                                     </mat-form-field>
@@ -133,7 +132,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <mat-form-field class="example-full-width">
-                                        <input matInput placeholder="GSTIN Number" type="text"
+                                        <input matInput placeholder="GSTIN Number *" type="text"
                                             [(ngModel)]="companyObj.GSTIN"
                                             [formControl]="companyForm.controls['GSTIN']">
                                     </mat-form-field>

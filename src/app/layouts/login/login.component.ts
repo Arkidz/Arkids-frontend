@@ -19,7 +19,6 @@ export class LoginComponent implements OnInit {
   loginReset: any = {};
   resetForm: FormGroup;
   loginError = '';
-  loader: boolean;
 
   // forget password
   usernameObj: any = { username: '' };
@@ -67,35 +66,37 @@ export class LoginComponent implements OnInit {
     console.log('here login : ', this.loginRequest);
     console.log('form value : ', this.loginForm.value);
     if (this.loginForm.valid) {
-      this.loader = true;
-      this.apiService.postMethod(VariableService.API_LOGIN, this.loginRequest, (response) => {
-        this.loader = false;
-        // this.apiService.postMethodAPI(true, VariableService.API_LOGIN, this.loginRequest, (response) => {
+      this.methodUtils.setLoadingStatus(true);
+      this.apiService.postMethodAPI(false, VariableService.API_LOGIN, this.loginRequest, (response) => {
+        this.methodUtils.setLoadingStatus(false);
         console.log('login response : ', response);
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
-          if (response['status'] === 'SUCCESS') {
-            const loginResponse = response['data'];
-            if (loginResponse && loginResponse['new_password_required']) {
-              // open reset password form
-              $('#resetPass').modal({ keyboard: false, backdrop: 'static' });
-              this.loginReset.username = this.loginRequest.username;
-            } else {
-              console.log('loginResponse : ', JSON.stringify(loginResponse));
-              $('#resetPass').modal('hide');
-              localStorage.setItem(VariableService.USER_DATA, JSON.stringify(loginResponse));
-              this.router.navigate([VariableService.ADMIN_DASHBOARD]);
-            }
+          // if (response['status'] === 'SUCCESS') {
+          // const loginResponse = response['data'];
+          const loginResponse = response;
+          if (loginResponse && loginResponse['new_password_required']) {
+            // open reset password form
+            $('#resetPass').modal({ keyboard: false, backdrop: 'static' });
+            this.loginReset.username = this.loginRequest.username;
           } else {
-            if (response['error']) {
-              this.loginError = response['error']['message'];
-            } else {
-              this.loginError = response['message'];
-            }
+            console.log('loginResponse : ', JSON.stringify(loginResponse));
+            $('#resetPass').modal('hide');
+            localStorage.setItem(VariableService.USER_DATA, JSON.stringify(loginResponse));
+            this.router.navigate([VariableService.ADMIN_DASHBOARD]);
           }
+          // } else {
+          //   if (response['error']) {
+          //     this.loginError = response['error']['message'];
+          //   } else {
+          //     this.loginError = response['message'];
+          //   }
+          // }
         } else {
-          this.loginError = 'Response is null';
+          this.loginError = 'Login Fails';
         }
       });
+    } else {
+      this.loginForm.markAllAsTouched();
     }
   }
 
@@ -103,23 +104,26 @@ export class LoginComponent implements OnInit {
   resetPasswordLogin() {
     console.log('reset login : ', this.loginReset);
     if (this.resetForm.valid) {
-      this.apiService.postMethod(VariableService.API_LOGIN, this.loginReset, (response) => {
-        console.log('reset login response');
+      this.methodUtils.setLoadingStatus(true);
+      this.apiService.postMethodAPI(false, VariableService.API_LOGIN, this.loginReset, (response) => {
+        console.log('reset login response', response);
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
-          if (response['status'] === 'SUCCESS') {
-            console.log('re-response : ', response['data']);
-            const loginResponse = JSON.stringify(response['data']);
-            console.log('loginResponse : ', loginResponse);
-            this.closeModel();
-            localStorage.setItem(VariableService.USER_DATA, loginResponse);
-            this.router.navigate([VariableService.ADMIN_DASHBOARD]);
-          } else {
-            this.loginError = response['message'];
-          }
+          // if (response['status'] === 'SUCCESS') {
+          const loginResponse = JSON.stringify(response);
+          // console.log('loginResponse : ', loginResponse);
+          this.closeModel();
+          localStorage.setItem(VariableService.USER_DATA, loginResponse);
+          this.router.navigate([VariableService.ADMIN_DASHBOARD]);
+          // } else {
+          //   this.loginError = response['message'];
+          // }
         } else {
-          this.loginError = 'Response is null';
+          this.loginError = 'Login Fails While Reset Password';
         }
+        this.methodUtils.setLoadingStatus(false);
       });
+    } else {
+      this.resetForm.markAllAsTouched();
     }
   }
   // close reset password
@@ -147,13 +151,15 @@ export class LoginComponent implements OnInit {
   submitPassword() {
     console.log('username forget password obj : ', this.usernameObj);
     if (!this.checkUsername(this.usernameObj.username)) {
+      this.methodUtils.setLoadingStatus(true);
       // this.isForgetPass = false;
-      this.apiService.postMethod(VariableService.API_FORGET_PASSWORD, this.usernameObj, (response) => {
+      this.apiService.postMethodAPI(false, VariableService.API_FORGET_PASSWORD, this.usernameObj, (response) => {
         console.log('username fp response');
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
           this.isForgetPass = false;
           this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'We mailed you Verification code on your Email');
         }
+        this.methodUtils.setLoadingStatus(false);
       });
     }
   }
@@ -163,13 +169,17 @@ export class LoginComponent implements OnInit {
     this.forgetPassObj.username = this.usernameObj.username;
     console.log('verify forget password obj : ', this.forgetPassObj);
     if (this.forgetForm.valid) {
-      this.apiService.postMethod(VariableService.API_CONFIRM_PASSWORD, this.forgetPassObj, (response) => {
+      this.methodUtils.setLoadingStatus(true);
+      this.apiService.postMethodAPI(false, VariableService.API_CONFIRM_PASSWORD, this.forgetPassObj, (response) => {
         console.log('savePassword response');
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
           this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'Your Password Changed Successfully.');
           this.resetForForgetPass();
         }
+        this.methodUtils.setLoadingStatus(false);
       });
+    } else {
+      this.forgetForm.markAllAsTouched();
     }
   }
 

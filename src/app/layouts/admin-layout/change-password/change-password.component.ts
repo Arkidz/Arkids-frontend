@@ -51,12 +51,16 @@ export class ChangePasswordComponent implements OnInit {
     console.log('this.changePassObj : ', this.changePassObj);
     if (this.changePassForm.valid) {
       console.log('submit change password ');
+      this.methodUtils.setLoadingStatus(true);
       this.apiService.postMethodAPI(true, VariableService.API_CHANGE_PASSWORD, this.changePassObj, (response) => {
         console.log('change password response : ', response);
         this.applyLoginValidation();
         this.changePassObj = {};
         this.conf_password = '';
+        this.methodUtils.setLoadingStatus(false);
       });
+    } else {
+      this.changePassForm.markAllAsTouched();
     }
   }
 

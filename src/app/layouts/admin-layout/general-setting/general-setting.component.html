@@ -13,16 +13,16 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <mat-form-field class="example-full-width">
-                                        <input matInput placeholder="GST (%)" type="text" [(ngModel)]="settingObj.gst"
-                                            [formControl]="settingForm.controls['gst']">
+                                        <input matInput placeholder="GST (%)" type="text" [(ngModel)]="settingObj.GSTPerc"
+                                            [formControl]="settingForm.controls['GSTPerc']">
                                     </mat-form-field>
                                     <div class="text-danger">
                                         <small class="text-danger"
-                                            *ngIf="settingForm.controls['gst'].hasError('required') && settingForm.controls['gst'].touched">
+                                            *ngIf="settingForm.controls['GSTPerc'].hasError('required') && settingForm.controls['GSTPerc'].touched">
                                             GST is required.
                                         </small>
                                         <small class="text-danger"
-                                            *ngIf="!settingForm.controls['gst'].hasError('required') && !settingForm.controls['gst'].valid && settingForm.controls['gst'].touched">
+                                            *ngIf="!settingForm.controls['GSTPerc'].hasError('required') && !settingForm.controls['GSTPerc'].valid && settingForm.controls['GSTPerc'].touched">
                                             Please Enter valid GST.
                                         </small>
                                     </div>
@@ -33,16 +33,16 @@
                                 <div class="col-md-12">
                                     <mat-form-field class="example-full-width">
                                         <input matInput placeholder="Welcome Points" type="text"
-                                            [(ngModel)]="settingObj.point"
-                                            [formControl]="settingForm.controls['point']">
+                                            [(ngModel)]="settingObj.WelcomePoints"
+                                            [formControl]="settingForm.controls['WelcomePoints']">
                                     </mat-form-field>
                                     <div class="text-danger">
                                         <small class="text-danger"
-                                            *ngIf="settingForm.controls['point'].hasError('required') && settingForm.controls['point'].touched">
+                                            *ngIf="settingForm.controls['WelcomePoints'].hasError('required') && settingForm.controls['WelcomePoints'].touched">
                                             Points is required.
                                         </small>
                                         <small class="text-danger"
-                                            *ngIf="!settingForm.controls['point'].hasError('required') && !settingForm.controls['point'].valid && settingForm.controls['point'].touched">
+                                            *ngIf="!settingForm.controls['WelcomePoints'].hasError('required') && !settingForm.controls['WelcomePoints'].valid && settingForm.controls['WelcomePoints'].touched">
                                             Please Enter valid Points.
                                         </small>
                                     </div>
@@ -53,16 +53,16 @@
                                 <div class="col-md-12">
                                     <mat-form-field class="example-full-width">
                                         <input matInput placeholder="Default Event Wallet Points" type="text"
-                                            [(ngModel)]="settingObj.walletPoint"
-                                            [formControl]="settingForm.controls['walletPoint']">
+                                            [(ngModel)]="settingObj.defEventWalletPoints"
+                                            [formControl]="settingForm.controls['defEventWalletPoints']">
                                     </mat-form-field>
                                     <div class="text-danger">
                                         <small class="text-danger"
-                                            *ngIf="settingForm.controls['walletPoint'].hasError('required') && settingForm.controls['walletPoint'].touched">
+                                            *ngIf="settingForm.controls['defEventWalletPoints'].hasError('required') && settingForm.controls['defEventWalletPoints'].touched">
                                             wallet Points is required.
                                         </small>
                                         <small class="text-danger"
-                                            *ngIf="!settingForm.controls['walletPoint'].hasError('required') && !settingForm.controls['walletPoint'].valid && settingForm.controls['walletPoint'].touched">
+                                            *ngIf="!settingForm.controls['defEventWalletPoints'].hasError('required') && !settingForm.controls['defEventWalletPoints'].valid && settingForm.controls['defEventWalletPoints'].touched">
                                             Please Enter valid wallet Points.
                                         </small>
                                     </div>
@@ -73,16 +73,16 @@
                                 <div class="col-md-12">
                                     <mat-form-field class="example-full-width">
                                         <input matInput placeholder="QR Generate Frequency(Day)" type="text"
-                                            [(ngModel)]="settingObj.qrDays"
-                                            [formControl]="settingForm.controls['qrDays']">
+                                            [(ngModel)]="settingObj.refCodeValidDays"
+                                            [formControl]="settingForm.controls['refCodeValidDays']">
                                     </mat-form-field>
                                     <div class="text-danger">
                                         <small class="text-danger"
-                                            *ngIf="settingForm.controls['qrDays'].hasError('required') && settingForm.controls['qrDays'].touched">
+                                            *ngIf="settingForm.controls['refCodeValidDays'].hasError('required') && settingForm.controls['refCodeValidDays'].touched">
                                             QR Generater Days is required.
                                         </small>
                                         <small class="text-danger"
-                                            *ngIf="!settingForm.controls['qrDays'].hasError('required') && !settingForm.controls['qrDays'].valid && settingForm.controls['qrDays'].touched">
+                                            *ngIf="!settingForm.controls['refCodeValidDays'].hasError('required') && !settingForm.controls['refCodeValidDays'].valid && settingForm.controls['refCodeValidDays'].touched">
                                             Please Enter valid QR Generater Day.
                                         </small>
                                     </div>

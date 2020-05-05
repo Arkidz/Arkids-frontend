@@ -107,6 +107,7 @@ export class PlayersComponent implements OnInit {
     // if (this.playerObj.status) { this.playerObj.status = this.playerObj.status.toString(); }
     console.log(this.playerObj);
     if (this.playerForm.valid) {
+      this.methodUtils.setLoadingStatus(true);
       if (this.playerId) {
         this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_PLAYER, this.playerObj, this.playerId, (response) => {
           console.log('UserType update response : ', response);
@@ -116,6 +117,7 @@ export class PlayersComponent implements OnInit {
           } else {
             this.createError = 'UserType Update Fails';
           }
+          this.methodUtils.setLoadingStatus(false);
         });
       } else {
         this.apiService.postMethodAPI(true, VariableService.API_CREATE_PLAYER, this.playerObj, (response) => {
@@ -126,8 +128,11 @@ export class PlayersComponent implements OnInit {
           } else {
             this.createError = 'UserType Insert Fails';
           }
+          this.methodUtils.setLoadingStatus(false);
         });
       }
+    } else {
+      this.refillForm.markAllAsTouched();
     }
   }
 
@@ -163,13 +168,14 @@ export class PlayersComponent implements OnInit {
     // this.playerObj.imageIdId = data.imageIdId;
     this.playerObj.profession = data.profession;
     this.playerObj.aboutMe = data.aboutMe;
-    $('#playerEdit').modal('show');
+    $('#playerEdit').modal({ keyboard: false, backdrop: 'static' });
     this.title = 'Edit Player';
   }
 
   deletePlayer(data) {
     if (confirm('Are you sure want to delete record')) {
       if (data.id) {
+        this.methodUtils.setLoadingStatus(true);
         this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_PLAYER, data.id, (response) => {
           console.log('UserType delete response : ', response);
           if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
@@ -178,6 +184,7 @@ export class PlayersComponent implements OnInit {
           } else {
             this.createError = 'UserType Delete Fails';
           }
+          this.methodUtils.setLoadingStatus(false);
         });
       }
     }

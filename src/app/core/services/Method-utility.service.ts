@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { ToasterConfig, ToasterService } from 'angular2-toaster';
 import { VariableService } from './variable.service';
+import { Subject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class MethodUtilityService {
       newestOnTop: true,
       mouseoverTimerStop: true
     });
+  private _loadingStatus = new Subject<any>();
 
   constructor(
     private http: HttpClient,
@@ -100,6 +102,14 @@ export class MethodUtilityService {
 
   gotoBackPage() {
     this.location.back();
+  }
+
+  getLoadingStatus(): Observable<boolean> {
+    return this._loadingStatus.asObservable();
+  }
+
+  setLoadingStatus(status: boolean) {
+    this._loadingStatus.next(status);
   }
 
 }
