@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
           }
         }
       }
-      // window.scrollTo(0, 0);
+      window.scrollTo(0, 0);
       this.checkRouterEvent(routerEvent);
     });
 

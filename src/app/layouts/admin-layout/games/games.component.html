@@ -21,7 +21,7 @@
                                     <th> Game Type </th>
                                     <th> Game Zone </th>
                                     <th> Charges </th>
-                                    <th> QR </th>
+                                    <th> QR Code</th>
                                     <th> Status </th>
                                     <th> Action </th>
                                 </thead>
@@ -36,14 +36,22 @@
                                             {{game.ecube_gamezone && game.ecube_gamezone.gzName ? game.ecube_gamezone.gzName : '-'}}
                                         </td>
                                         <td>{{game.gCharge ? game.gCharge : '-'}}</td>
-                                        <td>
+                                        <td [id]="'td'+i">
                                             <!-- {{game.gQR}}  -->
-                                            <ngx-qrcode [elementType]="elementType" [value]="game.gQR" cssClass="aclass"
-                                                errorCorrectionLevel="L">
+                                            <ngx-qrcode [elementType]="elementType" [value]="game.gName+' - '+game.gQR"
+                                                cssClass="aclass" errorCorrectionLevel="L">
                                             </ngx-qrcode>
                                         </td>
                                         <td> {{game.gStatus?'Active':'Inactive'}} </td>
                                         <td>
+                                            <button class="bnt btn-success mrg5" (click)="printQR('td'+i)"
+                                                title="Print Game QR Code">
+                                                <i class="fa fa-print" aria-hidden="true"></i>
+                                            </button>
+                                            <button class="bnt btn-warning mrg5" (click)="printQRPDF('td'+i, game.gName)"
+                                                title="PDF Game QR Code">
+                                                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                            </button>
                                             <button class="bnt btn-info mrg5" (click)="editGame(game)"
                                                 title="Edit Game">
                                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
