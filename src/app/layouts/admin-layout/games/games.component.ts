@@ -30,6 +30,7 @@ export class GamesComponent implements OnInit {
 
   elementType: 'url' | 'canvas' | 'img' = 'url';
   value = 'EcudeQRCode';
+  ptintObj: any = {};
 
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
@@ -168,13 +169,24 @@ export class GamesComponent implements OnInit {
     }
   }
 
-  printQR(id) {
-    const printContents = document.getElementById(id).innerHTML;
+  // print qr code using popup model
+  printQR(game) {
+    $('#qrPrintModal').modal({ keyboard: false, backdrop: 'static' });
+    this.ptintObj = game;
+  }
+  resetPrint() {
+    $('#qrPrintModal').modal('hide');
+    this.ptintObj = {};
+  }
+  // print qr code using popup model
+  printDiv() {
+    const printContents = document.getElementById('printDiv').innerHTML;
     const originalContents = document.body.innerHTML;
     document.body.innerHTML = printContents;
     window.print();
     document.body.innerHTML = originalContents;
   }
+
   printQRPDF(id, gName) {
     var data = document.getElementById(id);
     html2canvas(data).then(canvas => {

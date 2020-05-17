@@ -11,6 +11,7 @@ import { ComponentsModule } from './shared/components/components.module';
 import { ToasterModule } from 'angular2-toaster';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { LoaderComponent } from './shared/components/loader/loader.component';
+import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 
 @NgModule({
@@ -28,6 +29,8 @@ import { LoaderComponent } from './shared/components/loader/loader.component';
     HttpClientModule,
     ComponentsModule,
     ToasterModule.forRoot(),
+    BsDatepickerModule.forRoot(),
+    DatepickerModule.forRoot(),
     NgxQRCodeModule
   ],
   providers: [],

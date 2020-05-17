@@ -1,0 +1,289 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title ">Events</h4>
+                        <button class="btn btn-info pull-right mrgtop" (click)="openModel()">
+                            Add
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class=" text-primary">
+                                    <th> # </th>
+                                    <th> Event Name </th>
+                                    <th> Event Date </th>
+                                    <th> From Date </th>
+                                    <th> To Date </th>
+                                    <th> Venue </th>
+                                    <th> Capacity </th>
+                                    <th> Charge </th>
+                                    <th> Host </th>
+                                    <th> Description </th>
+                                    <th> Status </th>
+                                    <th> Action </th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let event of eventList; let i=index;">
+                                        <td> {{i+1}} </td>
+                                        <td> {{event.name?event.name:'-'}} </td>
+                                        <td> {{event.edate?event.edate:'-'}} </td>
+                                        <td> {{event.eFromTime?event.eFromTime:'-'}} </td>
+                                        <td> {{event.eToTime?event.eToTime:'-'}} </td>
+                                        <td> {{event.eVenue?event.eVenue:'-'}} </td>
+                                        <td> {{event.eCapacity?event.eCapacity:'-'}} </td>
+                                        <td> {{event.eCharge?event.eCharge:'-'}} </td>
+                                        <td> {{event.eHost?event.eHost:'-'}} </td>
+                                        <td> {{event.eHostDesc?event.eHostDesc:'-'}} </td>
+                                        <td> {{event.eStatus?event.eStatus:'-'}} </td>
+                                        <td>
+                                            <button class="bnt btn-info mrg5" (click)="editEvent(event)" title="Edit">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            </button>
+                                            <button class="bnt btn-danger" (click)="deleteEvent(event)" title="Delete">
+                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr *ngIf="eventList && eventList.length <= 0" class="text-center">
+                                        <td colspan="12">
+                                            <span>Event Records Not Found!</span>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Event add Popup Modal -->
+<div class="modal modal-angular fade" id="eventAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" aria-label="Close" (click)="reset()"><span
+                        aria-hidden="true">&times;</span></button>
+                <!-- <h4 class="margin-top">
+                Add Event
+            </h4> -->
+                <div class="separator"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-success">
+                                <h4 class="card-title">{{title}}</h4>
+                            </div>
+                            <div class="card-body">
+                                <div>
+                                    <!-- Event name -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Event Name *" type="text"
+                                                    [(ngModel)]="eventObj.name"
+                                                    [formControl]="eventForm.controls['name']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="eventForm.controls['name'].hasError('required') && eventForm.controls['name'].touched">
+                                                    Event Name is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!eventForm.controls['name'].hasError('required') && !eventForm.controls['name'].valid && eventForm.controls['name'].touched">
+                                                    Please Enter valid Event Name.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Event edate    [minDate]="minDate" [maxDate]="maxDate" [(bsValue)]="myDateValue" -->
+                                    <div class="row">
+                                        <div class="col-xs-12 col-12 col-md-12 form-group">
+                                            <label>Event Date * : </label>
+                                            <input type="text" class="form-control" #dp="bsDatepicker" bsDatepicker
+                                                [bsConfig]="configDP" [minDate]="minDate" [(bsValue)]="myDateValue"
+                                                (bsValueChange)="onValueChange($event)" (blur)="onValueChange($event)">
+                                            <div class="text-danger">
+                                                <small class="text-danger" *ngIf="!isValidDate"> Event Date is required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Event from date -->
+                                    <div class="row">
+                                        <div class="col-md-12 form-group">
+                                            <label>Event From Time * : </label>
+                                            <timepicker [(ngModel)]="fromTime" [showMinutes]="showMin"
+                                                [showSeconds]="showSec" [showMeridian]="ismeridian"
+                                                (isValid)="isValidFT($event)"></timepicker>
+                                            <div class="text-danger">
+                                                <small class="text-danger" *ngIf="!validFT">
+                                                    Event From Time is required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Event to date -->
+                                    <div class="row">
+                                        <div class="col-md-12 form-group">
+                                            <label>Event To Time * : </label>
+                                            <timepicker [(ngModel)]="toTime" [showMinutes]="showMin"
+                                                [showSeconds]="showSec" [showMeridian]="ismeridian"
+                                                (isValid)="isValidTT($event)"></timepicker>
+                                            <div class="text-danger">
+                                                <small class="text-danger" *ngIf="!validTT">
+                                                    Event To Time is required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Event eVenue -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Event Venue *" type="text"
+                                                    [(ngModel)]="eventObj.eVenue"
+                                                    [formControl]="eventForm.controls['eVenue']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="eventForm.controls['eVenue'].hasError('required') && eventForm.controls['eVenue'].touched">
+                                                    Event Venue is required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Event Capacity -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Event Capacity *" type="text"
+                                                    [(ngModel)]="eventObj.eCapacity"
+                                                    [formControl]="eventForm.controls['eCapacity']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="eventForm.controls['eCapacity'].hasError('required') && eventForm.controls['eCapacity'].touched">
+                                                    Event Capacity is required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Event Charge (per head) -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Event Charge(per head) *" type="text"
+                                                    [(ngModel)]="eventObj.eCharge"
+                                                    [formControl]="eventForm.controls['eCharge']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="eventForm.controls['eCharge'].hasError('required') && eventForm.controls['eCharge'].touched">
+                                                    Event Charge is required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Event eWalletUsageLimit -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Event Wallet Usage Limit *" type="text"
+                                                    [(ngModel)]="eventObj.eWalletUsageLimit"
+                                                    [formControl]="eventForm.controls['eWalletUsageLimit']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="eventForm.controls['eWalletUsageLimit'].hasError('required') && eventForm.controls['eWalletUsageLimit'].touched">
+                                                    Event Wallet Usage Limit is required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Event image1 -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Event Image1" type="text"
+                                                    [(ngModel)]="eventObj.ImageId1">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <!-- Event eHost -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Event Host *" type="text"
+                                                    [(ngModel)]="eventObj.eHost"
+                                                    [formControl]="eventForm.controls['eHost']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="eventForm.controls['eHost'].hasError('required') && eventForm.controls['eHost'].touched">
+                                                    Event Host is required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Event eHostDesc -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Event Description *" type="text"
+                                                    [(ngModel)]="eventObj.eHostDesc"
+                                                    [formControl]="eventForm.controls['eHostDesc']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="eventForm.controls['eHostDesc'].hasError('required') && eventForm.controls['eHostDesc'].touched">
+                                                    Event Host Description is required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Event eImage1 -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Event Host Image1" type="text"
+                                                    [(ngModel)]="eventObj.eImage1">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <!-- Event Status -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>Status : </label>
+                                            <select [(ngModel)]="eventObj.eStatus" class="form-control">
+                                                <option selected>Select</option>
+                                                <option value="Active">Active</option>
+                                                <option value="InActive">InActive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- save button - [disabled]="!loginForm.valid" -->
+                                    <button mat-raised-button type="submit" class="btn btn-success"
+                                        (click)="onSubmit()">
+                                        {{eventId?'Update':'Save'}}
+                                    </button>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

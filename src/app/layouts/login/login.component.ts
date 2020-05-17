@@ -71,26 +71,26 @@ export class LoginComponent implements OnInit {
         this.methodUtils.setLoadingStatus(false);
         console.log('login response : ', response);
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
-          // if (response['status'] === 'SUCCESS') {
-          // const loginResponse = response['data'];
           const loginResponse = response;
-          if (loginResponse && loginResponse['new_password_required']) {
-            // open reset password form
-            $('#resetPass').modal({ keyboard: false, backdrop: 'static' });
-            this.loginReset.username = this.loginRequest.username;
+          if (loginResponse && loginResponse['user'] && loginResponse['user']['ecube_usertype']) {
+            const ut = loginResponse['user']['ecube_usertype'];
+            if (ut && ut['userType'] && ut['userType'] === 'Admin') {
+              if (loginResponse && loginResponse['new_password_required']) {
+                // open reset password form
+                $('#resetPass').modal({ keyboard: false, backdrop: 'static' });
+                this.loginReset.username = this.loginRequest.username;
+              } else {
+                console.log('loginResponse : ', JSON.stringify(loginResponse));
+                $('#resetPass').modal('hide');
+                localStorage.setItem(VariableService.USER_DATA, JSON.stringify(loginResponse));
+                this.router.navigate([VariableService.ADMIN_DASHBOARD]);
+              }
+            } else {
+              this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Only Admin have access to login.');
+            }
           } else {
-            console.log('loginResponse : ', JSON.stringify(loginResponse));
-            $('#resetPass').modal('hide');
-            localStorage.setItem(VariableService.USER_DATA, JSON.stringify(loginResponse));
-            this.router.navigate([VariableService.ADMIN_DASHBOARD]);
+            this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Only Admin have access to login.');
           }
-          // } else {
-          //   if (response['error']) {
-          //     this.loginError = response['error']['message'];
-          //   } else {
-          //     this.loginError = response['message'];
-          //   }
-          // }
         } else {
           this.loginError = 'Login Fails';
         }

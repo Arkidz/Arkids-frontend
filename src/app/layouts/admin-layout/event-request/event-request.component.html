@@ -1,0 +1,143 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title ">Event Request</h4>
+                        <!-- <button class="btn btn-info pull-right mrgtop" (click)="openModel()">
+                            Add
+                        </button> -->
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class=" text-primary">
+                                    <th> # </th>
+                                    <th> P-Code </th>
+                                    <th> R-Code </th>
+                                    <th> Venue  </th>
+                                    <th> From-Time </th>
+                                    <th> To-Time </th>
+                                    <th> Description </th>
+                                    <th> Status </th>
+                                    <th> Action </th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let game of eveReqList; let i=index;">
+                                        <td> {{i+1}} </td>
+                                        <td> {{game.pCode?game.pCode:'-'}} </td>
+                                        <td> {{game.rcode?game.rcode:'-'}} </td>
+                                        <td> {{game.rVenue?game.rVenue:'-'}} </td>
+                                        <td> {{game.rFromTime?game.rFromTime:'-'}} </td>
+                                        <td> {{game.rToTime?game.rToTime:'-'}} </td>
+                                        <td> {{game.rDesc?game.rDesc:'-'}} </td>
+                                        <td> {{game.status?game.status:'-'}} </td>
+                                        <td>
+                                            <button class="bnt btn-primary mrg5" (click)="eventReqReply(game)"
+                                                title="Reply">
+                                                <i class="fa fa-reply" aria-hidden="true"></i>
+                                            </button>
+                                            <button class="bnt btn-warning mrg5" (click)="eventReqCancel(game)"
+                                                title="Cancel">
+                                                <i class="fa fa-window-close" aria-hidden="true"></i>
+                                            </button>
+                                            <button class="bnt btn-success mrg5" (click)="eventReqConfirm(game)"
+                                                title="Confirm">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </button>
+                                            <!-- <button class="bnt btn-info mrg5" (click)="eventReqEdit(game)" title="Edit">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            </button> -->
+                                            <button class="bnt btn-danger" (click)="eventReqDelete(game)"
+                                                title="Delete">
+                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr *ngIf="eveReqList && eveReqList.length <= 0" class="text-center">
+                                        <td colspan="9">
+                                            <span>Event Request Records Not Found!</span>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Event Request add Popup Modal -->
+<div class="modal modal-angular fade" id="eventReqAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" aria-label="Close" (click)="reset()"><span
+                        aria-hidden="true">&times;</span></button>
+                <!-- <h4 class="margin-top">
+                Add Event Request
+            </h4> -->
+                <div class="separator"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-success">
+                                <h4 class="card-title">{{title}}</h4>
+                            </div>
+                            <div class="card-body">
+                                <div>
+                                    <!-- Event Request name -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- <label>Event Request Name</label> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Event Request Name *" type="text"
+                                                    [(ngModel)]="eveReqObj.rcode"
+                                                    [formControl]="eveReqForm.controls['rcode']">
+                                            </mat-form-field>
+                                            <div class="text-danger">
+                                                <small class="text-danger"
+                                                    *ngIf="eveReqForm.controls['rcode'].hasError('required') && eveReqForm.controls['rcode'].touched">
+                                                    Event Request Name is required.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="!eveReqForm.controls['rcode'].hasError('required') && !eveReqForm.controls['rcode'].valid && eveReqForm.controls['rcode'].touched">
+                                                    Please Enter valid Event Request Name.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- gstin no -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>Status : </label>
+                                            <!-- <input placeholder="Status" type="checkbox" > -->
+                                            <select [(ngModel)]="eveReqObj.pCode" class="form-control">
+                                                <option selected>Select</option>
+                                                <option value="Active">Active</option>
+                                                <option value="InActive">InActive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- save button - [disabled]="!loginForm.valid" -->
+                                    <button mat-raised-button type="submit" class="btn btn-success"
+                                        (click)="onSubmit()">
+                                        {{eveRequestId?'Update':'Save'}}
+                                    </button>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -17,6 +17,8 @@ export const ROUTES: RouteInfo[] = [
   { path: '/admin/usertype', title: 'User Types', icon: 'person', class: '' },
   { path: '/admin/users', title: 'Users', icon: 'people', class: '' },
   { path: '/admin/players', title: 'Players', icon: 'supervised_user_circle', class: '' },
+  { path: '/admin/events', title: 'Events', icon: 'event', class: '' },
+  { path: '/admin/event-request', title: 'Event Request', icon: 'date_range', class: '' },
   { path: '/admin/change-password', title: 'Change Password', icon: 'lock_open', class: '' },
   { path: '/admin/general-setting', title: 'General Setting', icon: 'settings', class: '' },
   // { path: '/admin/user-profile', title: 'User Profile', icon: 'person', class: '' },

@@ -44,12 +44,12 @@
                                         </td>
                                         <td> {{game.gStatus?'Active':'Inactive'}} </td>
                                         <td>
-                                            <button class="bnt btn-success mrg5" (click)="printQR('td'+i)"
+                                            <button class="bnt btn-success mrg5" (click)="printQR(game)"
                                                 title="Print Game QR Code">
                                                 <i class="fa fa-print" aria-hidden="true"></i>
                                             </button>
-                                            <button class="bnt btn-warning mrg5" (click)="printQRPDF('td'+i, game.gName)"
-                                                title="PDF Game QR Code">
+                                            <button class="bnt btn-warning mrg5"
+                                                (click)="printQRPDF('td'+i, game.gName)" title="PDF Game QR Code">
                                                 <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                             </button>
                                             <button class="bnt btn-info mrg5" (click)="editGame(game)"
@@ -79,6 +79,48 @@
     </div>
 </div>
 
+
+
+
+<!-- Print Popup Modal -->
+<div class="modal modal-angular fade" id="qrPrintModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <button type="button" class="close" aria-label="Close" (click)="resetPrint()"><span
+                        aria-hidden="true">&times;</span></button>
+                <div class="separator"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-success">
+                                <h4 class="card-title">QR Code Print</h4>
+                            </div>
+                            <div class="card-body" id="printDiv">
+                                <div class="row igmdivcss">
+                                    <ngx-qrcode [elementType]="elementType" [value]="ptintObj.gName+' - '+ptintObj.gQR"
+                                        cssClass="aclass" errorCorrectionLevel="L">
+                                    </ngx-qrcode>
+                                </div>
+                                <div class="row">
+                                    <span>{{ptintObj.gName}}</span>
+                                </div>
+                                <div class="row">
+                                    <span>E-CUBE</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" class="bnt btn-success" (click)="printDiv()" title="Print Game QR Code">
+                    Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- print model over -->
 
 <!-- gameId add Popup Modal -->
 <div class="modal modal-angular fade" id="gameAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

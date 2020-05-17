@@ -14,7 +14,7 @@ export class VariableService {
   static ADMIN_COMPANY = '/admin/company-detail';
 
   // API URL
-  static API_URL = 'https://5b5cc93d.ngrok.io'; // main api root url
+  static API_URL = 'https://d40ed0d1.ngrok.io'; // main api root url
   static API_LOGIN = '/admin/user/login'; // POST : { "username": “ss”,”password": “123”} - {"new_password":"12345"}
   static API_CHANGE_PASSWORD = '/admin/user/change/password'; // POST : { "username": “ss”,old_password": “123”,"new_password":"12345"}
   static API_FORGET_PASSWORD = '/admin/user/forgot/password'; // POST : { "username": “ss” }
@@ -63,6 +63,18 @@ export class VariableService {
   static API_GET_SETTING = '/admin/master/gen/setting/list';
   static API_UPDATE_SETTING = '/admin/master/gen/setting/update';
   static API_DELETE_SETTING = '/admin/master/gen/setting/delete';
+
+  // Event
+  static API_CREATE_EVENT = '/admin/master/event/create';
+  static API_GET_EVENT = '/admin/master/event/list';
+  static API_UPDATE_EVENT = '/admin/master/event/update';
+  static API_DELETE_EVENT = '/admin/master/event/delete';
+
+  // Event Request - event/request/create
+  static API_CREATE_EVENT_REQ = '/admin/master/event/request/create';
+  static API_GET_EVENT_REQ = '/admin/master/event/request/list';
+  static API_UPDATE_EVENT_REQ = '/admin/master/event/request/update';
+  static API_DELETE_EVENT_REQ = '/admin/master/event/request/delete';
 
 
   // validation

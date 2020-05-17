@@ -22,6 +22,12 @@ import { GamesComponent } from './games/games.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { GeneralSettingComponent } from './general-setting/general-setting.component';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
+import { EventsComponent } from './events/events.component';
+import { EventRequestComponent } from './event-request/event-request.component';
+
+import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
+
 
 @NgModule({
   imports: [
@@ -35,7 +41,8 @@ import { NgxQRCodeModule } from 'ngx-qrcode2';
     MatInputModule,
     MatSelectModule,
     MatTooltipModule,
-    NgxQRCodeModule
+    NgxQRCodeModule,
+    BsDatepickerModule.forRoot(), TimepickerModule.forRoot()
   ],
   declarations: [
     DashboardComponent,
@@ -49,7 +56,9 @@ import { NgxQRCodeModule } from 'ngx-qrcode2';
     GeneralSettingComponent,
     UserProfileComponent,
     TableListComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    EventsComponent,
+    EventRequestComponent
   ]
 })
 
