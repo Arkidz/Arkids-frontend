@@ -70,7 +70,7 @@ export class MethodUtilityService {
     if (details !== null) {
       const userDetails = JSON.parse(details);
       console.log('isAdminAccess : ', userDetails);
-      if (userDetails['username']) { return true; } else { return false; }
+      if (userDetails['user'] && userDetails['user']['username']) { return true; } else { return false; }
     }
     return false;
     // {{userDetails && userDetails.user ? userDetails.user.uFname + ' ' + userDetails.user.uLName : '-' }}

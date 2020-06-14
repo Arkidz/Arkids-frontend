@@ -14,7 +14,7 @@ export class VariableService {
   static ADMIN_COMPANY = '/admin/company-detail';
 
   // API URL
-  static API_URL = 'https://d40ed0d1.ngrok.io'; // main api root url
+  static API_URL = 'https://2549b5f76c68.ngrok.io'; // main api root url -Base URL : http://localhost:3000
   static API_LOGIN = '/admin/user/login'; // POST : { "username": “ss”,”password": “123”} - {"new_password":"12345"}
   static API_CHANGE_PASSWORD = '/admin/user/change/password'; // POST : { "username": “ss”,old_password": “123”,"new_password":"12345"}
   static API_FORGET_PASSWORD = '/admin/user/forgot/password'; // POST : { "username": “ss” }

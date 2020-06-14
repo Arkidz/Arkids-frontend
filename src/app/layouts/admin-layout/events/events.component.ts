@@ -13,16 +13,17 @@ declare var $: any;
 })
 export class EventsComponent implements OnInit {
   @ViewChild(BsDatepickerDirective, { static: false }) datepicker: BsDatepickerDirective;
+  @ViewChild('dpf') dpf: any;
   eventObj: any = {};
-  // eventList: any = [];
-  eventList: any = [{
-    'ecode': '123', 'name': 'wedding', 'edate': '12-12-2020',
-    'eFromTime': 'eFromTime', 'eToTime': 'eToTime', 'eVenue': 'eVenue', 'eCapacity': 'eCapacity',
-    'eCharge': 'eCharge', 'eWalletUsageLimit': 'eWalletUsageLimit',
-    'ImageId1': 'ImageId1', 'ImageId2': 'ImageId2', 'ImageId3': 'ImageId3', 'ImageId4': 'ImageId4',
-    'ImageId5': 'ImageId5', 'eHost': 'eHost', 'eHostDesc': 'eHostDesc',
-    'eImage1': 'eImage1', 'eImage2': 'eImage2', 'eImage3': 'eImage3', 'eStatus': 'eStatus', 'eCreateDate': 'eCreateDate',
-  }];
+  eventList: any = [];
+  // eventList: any = [{
+  //   'ecode': '123', 'name': 'wedding', 'edate': '12-12-2020',
+  //   'eFromTime': 'eFromTime', 'eToTime': 'eToTime', 'eVenue': 'eVenue', 'eCapacity': 'eCapacity',
+  //   'eCharge': 'eCharge', 'eWalletUsageLimit': 'eWalletUsageLimit',
+  //   'ImageId1': 'ImageId1', 'ImageId2': 'ImageId2', 'ImageId3': 'ImageId3', 'ImageId4': 'ImageId4',
+  //   'ImageId5': 'ImageId5', 'eHost': 'eHost', 'eHostDesc': 'eHostDesc',
+  //   'eImage1': 'eImage1', 'eImage2': 'eImage2', 'eImage3': 'eImage3', 'eStatus': 'eStatus', 'eCreateDate': 'eCreateDate',
+  // }];
 
   eventForm: FormGroup;
   createError = '';
@@ -31,16 +32,20 @@ export class EventsComponent implements OnInit {
 
   // datepicker
   configDP = { dateInputFormat: 'DD-MM-YYYY', isAnimated: true, containerClass: 'theme-green' };
-  myDateValue = new Date();
-  isValidDate: boolean = true;
+  fromDateValue = new Date();
+  toDateValue = new Date();
+  isValidFDate: boolean = true;
+  isValidTDate: boolean = true;
   minDate = new Date();
   showMin: boolean = true;
-  showSec: boolean = true;
-  ismeridian: boolean = true;
-  fromTime = new Date();
-  validFT = true;
-  toTime = new Date();
-  validTT = true;
+  ismeridian: boolean = false;
+  isShowRepeatDay = false;
+  isMultiDay = false;
+  repeatDays: any = [{ name: 'Sunday', value: false }, { name: 'Monday', value: false }, { name: 'Tuesday', value: false },
+  { name: 'Wednesday', value: false }, { name: 'Thursday', value: false }, { name: 'Friday', value: false }, { name: 'Saturday', value: false }];
+  timeSlots: any = [{ fromTime: new Date(), toTime: new Date(), id: null }];
+  imagesList: any = [];
+  imgError: any = [];
 
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
@@ -52,16 +57,12 @@ export class EventsComponent implements OnInit {
   applyValidation() {
     this.eventForm = new FormGroup({
       name: new FormControl('', [Validators.required, Validators.pattern(VariableService.PATTERN_FOR_ALPHABATES_NUMBER_AND_SPACE)]),
-      // edate: new FormControl('', [Validators.required]),
-      // eFromTime: new FormControl('', [Validators.required]),
-      // eToTime: new FormControl('', [Validators.required]),
       eVenue: new FormControl('', [Validators.required]),
       eCapacity: new FormControl('', [Validators.required]),
       eCharge: new FormControl('', [Validators.required]),
       eWalletUsageLimit: new FormControl('', [Validators.required]),
       eHost: new FormControl('', [Validators.required]),
       eHostDesc: new FormControl('', [Validators.required]),
-      // eStatus: new FormControl('', [Validators.required]),
     });
   }
 
@@ -69,19 +70,25 @@ export class EventsComponent implements OnInit {
   onScrollEvent() {
     this.datepicker.hide();
   }
-  onValueChange(value: Date) {
-    console.log('value : ', value);
-    if (this.isValidToDate(value)) {
-      this.isValidDate = true;
+  onFromDateChange() {
+    if (this.isValidToDate(this.fromDateValue)) { this.isValidFDate = true; this.dateFromToDiffDay(); } else { this.isValidFDate = false; }
+  }
+  onToDateChange() {
+    if (this.isValidToDate(this.toDateValue)) { this.isValidTDate = true; this.dateFromToDiffDay(); } else { this.isValidTDate = false; }
+  }
+  // find date difference
+  dateFromToDiffDay() {
+    if (this.isValidToDate(this.fromDateValue) && this.isValidToDate(this.toDateValue)) {
+      var date1 = new Date(this.fromDateValue);
+      var date2 = new Date(this.toDateValue);
+      var diffTime = date2.getTime() - date1.getTime();
+      var diffDays = Math.round(diffTime / (1000 * 3600 * 24));
+      console.log(diffDays + " days");
+      if (diffDays > 7) { this.isShowRepeatDay = true; } else { this.isShowRepeatDay = false; }
+      if (diffDays < 0) { this.toDateValue = this.fromDateValue; }
     } else {
-      this.isValidDate = false;
+      this.isShowRepeatDay = false;
     }
-  }
-  isValidFT(event: boolean): void {
-    this.validFT = event;
-  }
-  isValidTT(event: boolean): void {
-    this.validTT = event;
   }
 
   isValidToDate(value) {
@@ -99,12 +106,55 @@ export class EventsComponent implements OnInit {
     });
   }
 
+  addSlot() {
+    this.timeSlots.push({ fromTime: new Date(), toTime: new Date(), id: null });
+  }
+  removeSlot(index) {
+    this.timeSlots.splice(index, 1);
+  }
+
+  fileChange(event) {
+    this.imgError = [];
+    const files = event.target.files;
+    if (files) {
+      for (let file of files) {
+        console.log('=> file : ', file);
+        const FileType = (file.type).toLowerCase();
+        const FileSize = ((file.size) / (1024 * 1024)).toFixed(2); // in MB
+        console.log('file in mb is ', FileSize);
+        if (FileType == 'image/jpg' || FileType == 'image/jpeg' || FileType == 'image/png') {
+          if (+FileSize <= 2) {
+            let reader = new FileReader();
+            reader.onload = (e: any) => {
+              if (this.imagesList.length < 5) {
+                this.imagesList.push(e.target.result);
+              } else {
+                this.imgError.push(' Only 5 files are allowed to upload.');
+              }
+              console.log('this.imagesList : ', this.imagesList);
+            }
+            reader.readAsDataURL(file);
+          } else {
+            this.imgError.push(file.name + ' File size exceeds 2 MB limit.');
+          }
+        } else {
+          this.imgError.push(file.name + ' Only jpg/jpeg and png files are allowed.');
+        }
+      }
+    }
+  }
+  removeImage(index) { this.imagesList.splice(index, 1); }
+
   onSubmit() {
-    if (this.eventForm.valid && this.isValidDate && this.validFT && this.validTT) {
-      this.eventObj.edate = this.getDDMMYYY(this.myDateValue);
-      this.eventObj.fromTime = this.getDDMMYYYTime(this.fromTime, this.myDateValue);
-      this.eventObj.eToTime = this.getDDMMYYYTime(this.toTime, this.myDateValue);
+    if (this.eventForm.valid && this.isValidFDate && this.isValidTDate) {
+      this.eventObj.eDays = this.repeatDays.map((item) => { if (item.value) { return item.name; } }).filter((data) => data);
+      this.eventObj.eFromDate = this.getDDMMYYY(this.fromDateValue);
+      this.eventObj.eToDate = this.getDDMMYYY(this.toDateValue);
+      this.eventObj.timeSlots = this.getTimeSlot(); // this.timeSlots
+      this.eventObj.images = this.imagesList;
       console.log('eventObj', this.eventObj);
+      console.log(JSON.stringify(this.eventObj));
+      // return;
       this.methodUtils.setLoadingStatus(true);
       if (this.eventId) {
         console.log('Event update  : ');
@@ -145,16 +195,29 @@ export class EventsComponent implements OnInit {
     $('#eventAdd').modal('hide');
     this.eventObj = {};
     this.eventId = '';
+    this.createError = '';
     this.getEvents();
     this.applyValidation();
+    this.fromDateValue = new Date();
+    this.toDateValue = new Date();
+    this.isValidFDate = true;
+    this.isValidTDate = true;
+    this.showMin = true;
+    this.ismeridian = false;
+    this.isShowRepeatDay = false;
+    this.isMultiDay = false;
+    this.repeatDays = [{ name: 'Sunday', value: false }, { name: 'Monday', value: false }, { name: 'Tuesday', value: false },
+    { name: 'Wednesday', value: false }, { name: 'Thursday', value: false }, { name: 'Friday', value: false }, { name: 'Saturday', value: false }];
+    this.timeSlots = [{ fromTime: new Date(), toTime: new Date(), id: null }];
+    this.imagesList = [];
+    this.imgError = [];
   }
 
   editEvent(data) {
+    console.log('event data edit ', data);
+    this.title = 'Edit Event';
     this.eventId = data.id;
     this.eventObj.name = data.name;
-    this.myDateValue = new Date(data.edate); // do so new Date() - this.eventObj.edate
-    this.fromTime = new Date(data.eFromTime); // do so - this.eventObj.fromTime
-    this.toTime = new Date(data.eToTime); // do so - this.eventObj.eToTime
     this.eventObj.eVenue = data.eVenue;
     this.eventObj.eCapacity = data.eCapacity;
     this.eventObj.eCharge = data.eCharge;
@@ -162,8 +225,13 @@ export class EventsComponent implements OnInit {
     this.eventObj.eHost = data.eHost;
     this.eventObj.eHostDesc = data.eHostDesc;
     this.eventObj.eStatus = data.eStatus;
+    this.fromDateValue = new Date(data.eFromDate);
+    this.toDateValue = new Date(data.eToDate);
+    this.imagesList = data.images;
+    this.setTimeSlot(data.timeSlote); // this.timeSlots - data.timeSlote
+    this.setRepeatedDays(data.eDays); // data.eDays = this.repeatDays
+    console.log('eventObj', this.eventObj);
     $('#eventAdd').modal({ keyboard: false, backdrop: 'static' });
-    this.title = 'Edit Event';
   }
 
   deleteEvent(data) {
@@ -186,50 +254,51 @@ export class EventsComponent implements OnInit {
 
   // get dd - mm - yyyy
   getDDMMYYY(date: Date) {
-    var dateStr =
-      ("00" + (date.getMonth() + 1)).slice(-2) + "/" +
-      ("00" + date.getDate()).slice(-2) + "/" +
-      date.getFullYear() + " " +
-      ("00" + date.getHours()).slice(-2) + ":" +
-      ("00" + date.getMinutes()).slice(-2) + ":" +
-      ("00" + date.getSeconds()).slice(-2);
-    console.log(dateStr);
+    // let dateStr = ("00" + (date.getMonth() + 1)).slice(-2) + "/" + ("00" + date.getDate()).slice(-2) + "/" + date.getFullYear();
+    let dateStr = date.getFullYear() + "/" + ("00" + (date.getMonth() + 1)).slice(-2) + "/" + ("00" + date.getDate()).slice(-2);
     return dateStr;
   }
-  // set date of eDate and set time dd - mm - yyyy
-  getDDMMYYYTime(date: Date, eventDate: Date) {
-    var dateStr = ("00" + (eventDate.getMonth() + 1)).slice(-2) + "/" +
-      ("00" + eventDate.getDate()).slice(-2) + "/" + eventDate.getFullYear();
-
-    var timeStr = ("00" + date.getHours()).slice(-2) + ":" + ("00" + date.getMinutes()).slice(-2) + ":" +
-      ("00" + date.getSeconds()).slice(-2);
-    var dtStr = dateStr + ' ' + timeStr;
-    console.log('date time str', dtStr);
-    return dtStr;
+  getTimeSlot() {
+    let times = [];
+    this.timeSlots.forEach(element => {
+      times.push({ toTime: this.getHHMMTime(element.toTime), fromTime: this.getHHMMTime(element.fromTime) });
+    });
+    return times;
+  }
+  setTimeSlot(times) {
+    this.timeSlots = [];
+    times.forEach((element: any) => {
+      this.timeSlots.push({ toTime: this.setHHMMDateTime(element.toTime), fromTime: this.setHHMMDateTime(element.fromTime), id: element.id });
+    });
+    return times;
+  }
+  // get date of eDate and set time hh - mm
+  getHHMMTime(date: Date) {
+    let timeStr = ("00" + date.getHours()).slice(-2) + ":" + ("00" + date.getMinutes()).slice(-2);
+    console.log('date time str', timeStr);
+    return timeStr;
+  }
+  // set new date  from time hh:mm
+  setHHMMDateTime(time) {
+    var tArr = time.split(':');
+    var d = new Date();
+    d.setHours(tArr[0]);
+    d.setMinutes(tArr[1]);
+    return d;
   }
 
-  // {
-  //   "ecode":"ecode",
-  //   "name":"name",
-  //   "edate":"edate",
-  //   "eFromTime":"eFromTime",
-  //   "eToTime":"eToTime",
-  //   "eVenue":"eVenue",
-  //   "eCapacity":"eCapacity",
-  //   "eCharge":"eCharge",
-  //   "eWalletUsageLimit":"eWalletUsageLimit",
-  //   "ImageId1":"ImageId1",
-  //   "ImageId2":"ImageId2",
-  //   "ImageId3":"ImageId3",
-  //   "ImageId4":"ImageId4",
-  //   "ImageId5":"ImageId5",
-  //   "eHost":"eHost",
-  //   "eHostDesc":"eHostDesc",
-  //   "eImage1":"eImage1",
-  //   "eImage2":"eImage2",
-  //   "eImage3":"eImage3",
-  //   "eStatus":"eStatus",
-  //   "eCreateDate":"eCreateDate",
-  //      }
+  // edit time set days
+  setRepeatedDays(days) {
+    if (days && days.length > 0) {
+      this.isMultiDay = true;
+      this.isShowRepeatDay = true;
+      this.repeatDays.forEach(element => {
+        if (days.includes(element.name)) {
+          element.value = true;
+        }
+      });
+      this.dateFromToDiffDay();
+    }
+  }
 
 }

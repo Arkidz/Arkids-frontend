@@ -15,7 +15,6 @@
                                 <thead class=" text-primary">
                                     <th> # </th>
                                     <th> Event Name </th>
-                                    <th> Event Date </th>
                                     <th> From Date </th>
                                     <th> To Date </th>
                                     <th> Venue </th>
@@ -30,9 +29,8 @@
                                     <tr *ngFor="let event of eventList; let i=index;">
                                         <td> {{i+1}} </td>
                                         <td> {{event.name?event.name:'-'}} </td>
-                                        <td> {{event.edate?event.edate:'-'}} </td>
-                                        <td> {{event.eFromTime?event.eFromTime:'-'}} </td>
-                                        <td> {{event.eToTime?event.eToTime:'-'}} </td>
+                                        <td> {{!event.eFromDate?'-':event.eFromDate | date:'dd-MM-yyyy'}} </td>
+                                        <td> {{!event.eToDate?'-':event.eToDate | date:'dd-MM-yyyy'}} </td>
                                         <td> {{event.eVenue?event.eVenue:'-'}} </td>
                                         <td> {{event.eCapacity?event.eCapacity:'-'}} </td>
                                         <td> {{event.eCharge?event.eCharge:'-'}} </td>
@@ -68,7 +66,7 @@
 
 <!-- Event add Popup Modal -->
 <div class="modal modal-angular fade" id="eventAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-body">
                 <button type="button" class="close" aria-label="Close" (click)="reset()"><span
@@ -105,52 +103,87 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- Event edate    [minDate]="minDate" [maxDate]="maxDate" [(bsValue)]="myDateValue" -->
+                                    <!-- Event edate    [minDate]="minDate" [maxDate]="maxDate" [(bsValue)]="fromDateValue" -->
                                     <div class="row">
-                                        <div class="col-xs-12 col-12 col-md-12 form-group">
-                                            <label>Event Date * : </label>
+                                        <div class="col-xs-12 col-12 col-md-6 form-group">
+                                            <label>From Date * : </label>
                                             <input type="text" class="form-control" #dp="bsDatepicker" bsDatepicker
-                                                [bsConfig]="configDP" [minDate]="minDate" [(bsValue)]="myDateValue"
-                                                (bsValueChange)="onValueChange($event)" (blur)="onValueChange($event)">
+                                                [bsConfig]="configDP" [minDate]="minDate" [(ngModel)]="fromDateValue"
+                                                (bsValueChange)="onFromDateChange()" (blur)="onFromDateChange()">
                                             <div class="text-danger">
-                                                <small class="text-danger" *ngIf="!isValidDate"> Event Date is required.
+                                                <small class="text-danger" *ngIf="!isValidFDate"> Event From Date is
+                                                    required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <!-- end - to date  -->
+                                        <div class="col-xs-12 col-12 col-md-6 form-group">
+                                            <label>To Date * : </label>
+                                            <input type="text" class="form-control" #dp="bsDatepicker" bsDatepicker
+                                                [bsConfig]="configDP" [minDate]="fromDateValue"
+                                                [(ngModel)]="toDateValue" (bsValueChange)="onToDateChange()"
+                                                (blur)="onToDateChange()">
+                                            <div class="text-danger">
+                                                <small class="text-danger" *ngIf="!isValidTDate"> Event To Date is
+                                                    required.
                                                 </small>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- Event from date -->
-                                    <div class="row">
-                                        <div class="col-md-12 form-group">
-                                            <label>Event From Time * : </label>
-                                            <timepicker [(ngModel)]="fromTime" [showMinutes]="showMin"
-                                                [showSeconds]="showSec" [showMeridian]="ismeridian"
-                                                (isValid)="isValidFT($event)"></timepicker>
-                                            <div class="text-danger">
-                                                <small class="text-danger" *ngIf="!validFT">
-                                                    Event From Time is required.
-                                                </small>
-                                            </div>
+                                    <!-- days -->
+                                    <div class="row" *ngIf="isShowRepeatDay">
+                                        <div class="col-xs-12 col-12 col-md-12 form-group">
+                                            <label class="switch">
+                                                <input type="checkbox" [(ngModel)]="isMultiDay">
+                                                <span class="slider"></span>
+                                            </label>
+                                            <label> : Repetitive event </label>
                                         </div>
                                     </div>
-                                    <!-- Event to date -->
-                                    <div class="row">
-                                        <div class="col-md-12 form-group">
-                                            <label>Event To Time * : </label>
-                                            <timepicker [(ngModel)]="toTime" [showMinutes]="showMin"
-                                                [showSeconds]="showSec" [showMeridian]="ismeridian"
-                                                (isValid)="isValidTT($event)"></timepicker>
-                                            <div class="text-danger">
-                                                <small class="text-danger" *ngIf="!validTT">
-                                                    Event To Time is required.
-                                                </small>
-                                            </div>
+                                    <!-- Repeated days  -->
+                                    <div class="row" *ngIf="isMultiDay">
+                                        <label class="mrglf15">Event Repeat Days : </label>
+                                        <div class="col-xs-12 col-12 col-md-12 form-group">
+                                            <span class="pr10" *ngFor="let day of repeatDays;let i=index;">
+                                                <label class="switch">
+                                                    <input type="checkbox" [(ngModel)]="day.value">
+                                                    <span class="pl5">{{day.name}}</span>
+                                                </label>
+                                            </span>
                                         </div>
                                     </div>
+
+                                    <!-- Event from time -->
+                                    <div class="row" *ngFor="let time of timeSlots;let i=index;">
+                                        <div class="col-md-4 form-group brdblk">
+                                            <label>From Time : </label>
+                                            <!-- [showSeconds]="showSec" (isValid)="isValidFT($event)" -->
+                                            <timepicker [(ngModel)]="time.fromTime" [showMinutes]="showMin"
+                                                [showMeridian]="ismeridian"></timepicker>
+                                        </div>
+                                        <!-- Event to time (isValid)="isValidTT($event)" -->
+                                        <div class="col-md-4 form-group brdblk mrglf15">
+                                            <label>To Time : </label>
+                                            <timepicker [(ngModel)]="time.toTime" [showMinutes]="showMin"
+                                                [showMeridian]="ismeridian"></timepicker>
+                                        </div>
+                                        <div class="col-md-2 form-group">
+                                            <button *ngIf="i==0" class="bnt btn-info pull-right" (click)="addSlot()"
+                                                title="Add Time Slot">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                            </button>
+                                            <button *ngIf="i>0" class="bnt btn-danger pull-right"
+                                                (click)="removeSlot(i)" title="Remove Time Slot">
+                                                <i class="fa fa-minus" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <!-- Event eVenue -->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="Event Venue *" type="text"
+                                                <input matInput placeholder="Venue *" type="text"
                                                     [(ngModel)]="eventObj.eVenue"
                                                     [formControl]="eventForm.controls['eVenue']">
                                             </mat-form-field>
@@ -166,7 +199,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="Event Capacity *" type="text"
+                                                <input matInput placeholder="Capacity *" type="text"
                                                     [(ngModel)]="eventObj.eCapacity"
                                                     [formControl]="eventForm.controls['eCapacity']">
                                             </mat-form-field>
@@ -182,7 +215,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="Event Charge(per head) *" type="text"
+                                                <input matInput placeholder="Charge(per head) *" type="text"
                                                     [(ngModel)]="eventObj.eCharge"
                                                     [formControl]="eventForm.controls['eCharge']">
                                             </mat-form-field>
@@ -198,7 +231,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="Event Wallet Usage Limit *" type="text"
+                                                <input matInput placeholder="Wallet Usage Limit *" type="text"
                                                     [(ngModel)]="eventObj.eWalletUsageLimit"
                                                     [formControl]="eventForm.controls['eWalletUsageLimit']">
                                             </mat-form-field>
@@ -210,20 +243,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- Event image1 -->
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="Event Image1" type="text"
-                                                    [(ngModel)]="eventObj.ImageId1">
-                                            </mat-form-field>
-                                        </div>
-                                    </div>
                                     <!-- Event eHost -->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="Event Host *" type="text"
+                                                <input matInput placeholder="Host *" type="text"
                                                     [(ngModel)]="eventObj.eHost"
                                                     [formControl]="eventForm.controls['eHost']">
                                             </mat-form-field>
@@ -239,9 +263,9 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="Event Description *" type="text"
+                                                <textarea matInput placeholder="Event Description *" type="text"
                                                     [(ngModel)]="eventObj.eHostDesc"
-                                                    [formControl]="eventForm.controls['eHostDesc']">
+                                                    [formControl]="eventForm.controls['eHostDesc']"></textarea>
                                             </mat-form-field>
                                             <div class="text-danger">
                                                 <small class="text-danger"
@@ -253,11 +277,24 @@
                                     </div>
                                     <!-- Event eImage1 -->
                                     <div class="row">
+                                        <div class="col-md-12" style="  padding-bottom: 10px;">
+                                            <input placeholder="Event Imagee" type="file" accept="image/*" multiple
+                                                (change)="fileChange($event)">
+                                            <span class="pull-right">Max. Limit: 5 files - 2 mb each</span>
+                                        </div>
                                         <div class="col-md-12">
-                                            <mat-form-field class="example-full-width">
-                                                <input matInput placeholder="Event Host Image1" type="text"
-                                                    [(ngModel)]="eventObj.eImage1">
-                                            </mat-form-field>
+                                            <div class="text-danger" *ngFor="let err of imgError;">
+                                                <span>{{err}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div *ngFor="let img of imagesList; let i = index">
+                                                <img [src]="img" class="rounded mb-3" width="180" height="175">
+                                                <button class="bnt btn-danger pull-right" (click)="removeImage(i)"
+                                                    title="Remove Image">
+                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                     <!-- Event Status -->
