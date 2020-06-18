@@ -12,23 +12,23 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-hover">
                                 <thead class=" text-primary">
-                                    <th> # </th>
-                                    <!-- <th> Code </th> -->
-                                    <th> Name </th>
-                                    <th> Timer </th>
-                                    <th> Game Type </th>
-                                    <th> Game Zone </th>
-                                    <th> Charges </th>
-                                    <th> QR Code</th>
-                                    <th> Status </th>
-                                    <th> Action </th>
+                                    <tr>
+                                        <th> # </th>
+                                        <th> Name </th>
+                                        <th> Timer </th>
+                                        <th> Game Type </th>
+                                        <th> Game Zone </th>
+                                        <th> Charges </th>
+                                        <th> QR Code</th>
+                                        <th> Status </th>
+                                        <th> Action </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let game of gameList; let i=index;">
                                         <td> {{i+1}} </td>
-                                        <!-- <td> {{game.gCode}} </td> -->
                                         <td> {{game.gName}} </td>
                                         <td> {{game.gTimer}} </td>
                                         <td> {{game.gType}} </td>
@@ -63,13 +63,13 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                                <tfoot>
+                                <!-- <tfoot>
                                     <tr *ngIf="gameList && gameList.length <= 0" class="text-center">
                                         <td colspan="9">
                                             <span>Game Records Not Found!</span>
                                         </td>
                                     </tr>
-                                </tfoot>
+                                </tfoot> -->
                             </table>
                         </div>
                     </div>
@@ -104,9 +104,6 @@
                                 </div>
                                 <div class="row">
                                     <span>{{ptintObj.gName}}</span>
-                                </div>
-                                <div class="row">
-                                    <span>E-CUBE</span>
                                 </div>
                             </div>
                         </div>

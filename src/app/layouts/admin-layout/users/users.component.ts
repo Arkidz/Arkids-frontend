@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { VariableService } from 'src/app/core/services/variable.service';
 import { Users } from 'src/app/core/models/users.model';
 import { APIService } from 'src/app/core/services/api.service';
 import { MethodUtilityService } from 'src/app/core/services/Method-utility.service';
 import { UserType } from 'src/app/core/models/userType.model';
+import { Subject } from 'rxjs';
 declare var $: any;
 
 @Component({
@@ -12,7 +13,7 @@ declare var $: any;
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, OnDestroy {
 
   // uType = new Users();
   userObj: any = {};
@@ -24,9 +25,14 @@ export class UsersComponent implements OnInit {
   createError = '';
   userId = '';
   title = 'New User';
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: any = new Subject();
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
   ngOnInit() {
+    this.dtOptions = {
+      pagingType: 'full_numbers' // , destroy: false // ,pageLength: 2
+    };
     this.applyLoginValidation();
     this.getUserList();
     this.getUserType();
@@ -48,8 +54,10 @@ export class UsersComponent implements OnInit {
     this.apiService.postMethodAPI(false, VariableService.API_GET_USER, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
         this.userList = response['rows'];
+        this.dtTrigger.next();
       } else {
         this.userList = [];
+        this.dtTrigger.next();
       }
       console.log('response : ', this.userList);
     });
@@ -157,4 +165,8 @@ export class UsersComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
+  }
 }

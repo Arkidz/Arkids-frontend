@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { VariableService } from 'src/app/core/services/variable.service';
 import { APIService } from 'src/app/core/services/api.service';
 import { MethodUtilityService } from 'src/app/core/services/Method-utility.service';
+import { Subject } from 'rxjs';
 declare var $: any;
 
 @Component({
@@ -10,7 +11,7 @@ declare var $: any;
   templateUrl: './event-request.component.html',
   styleUrls: ['./event-request.component.scss']
 })
-export class EventRequestComponent implements OnInit {
+export class EventRequestComponent implements OnInit, OnDestroy {
 
   eveReqObj: any = {};
   eveReqList: any = [];
@@ -32,9 +33,14 @@ export class EventRequestComponent implements OnInit {
   createError = '';
   eveRequestId = '';
   title = 'New Event Request';
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: any = new Subject();
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
   ngOnInit() {
+    this.dtOptions = {
+      pagingType: 'full_numbers' // , destroy: false // ,pageLength: 2
+    };
     this.applyValidation();
     this.getEventRequest();
   }
@@ -51,8 +57,10 @@ export class EventRequestComponent implements OnInit {
     this.apiService.postMethodAPI(false, VariableService.API_GET_EVENT_REQ, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
         this.eveReqList = response['rows'];
+        this.dtTrigger.next();
       } else {
         this.eveReqList = [];
+        this.dtTrigger.next();
       }
       console.log('eveReqList response : ', this.eveReqList);
     });
@@ -64,10 +72,36 @@ export class EventRequestComponent implements OnInit {
 
   eventReqCancel(eventReq) {
     console.log('eventReqCancel : ', eventReq);
+    this.eveRequestId = eventReq.id;
+    const param = { rStatus: 'reject' };
+    this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_EVENT_REQ, param, this.eveRequestId, (response) => {
+      console.log('Event Request update response : ', response);
+      if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+        console.log(response);
+        this.reset();
+        this.getEventRequest();
+      } else {
+        this.createError = 'Event Request Insert Fails';
+      }
+      this.methodUtils.setLoadingStatus(false);
+    });
   }
 
   eventReqConfirm(eventReq) {
     console.log('eventReqConfirm : ', eventReq);
+    this.eveRequestId = eventReq.id;
+    const param = { rStatus: 'accept' };
+    this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_EVENT_REQ, param, this.eveRequestId, (response) => {
+      console.log('Event Request update response : ', response);
+      if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+        console.log(response);
+        this.reset();
+        this.getEventRequest();
+      } else {
+        this.createError = 'Event Request Insert Fails';
+      }
+      this.methodUtils.setLoadingStatus(false);
+    });
   }
 
   onSubmit() {
@@ -140,6 +174,10 @@ export class EventRequestComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
+  }
   // {
   //   "rcode":"rcode",
   // "pCode":"pCode",

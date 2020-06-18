@@ -11,16 +11,18 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="table table-hover" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
                                 <thead class=" text-primary">
-                                    <th> # </th>
-                                    <th> First Name </th>
-                                    <th> Last Name </th>
-                                    <th> User Name </th>
-                                    <th> Mobile </th>
-                                    <th> User Type </th>
-                                    <th> Status </th>
-                                    <th> Action </th>
+                                    <tr>
+                                        <th> # </th>
+                                        <th> First Name </th>
+                                        <th> Last Name </th>
+                                        <th> User Name </th>
+                                        <th> Mobile </th>
+                                        <th> User Type </th>
+                                        <th> Status </th>
+                                        <th> Action </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let user of userList; let i=index;">
@@ -45,13 +47,13 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                                <tfoot>
+                                <!-- <tfoot>
                                     <tr *ngIf="userList && userList.length <= 0" class="text-center">
                                         <td colspan="8">
                                             <span>Users Records Not Found!</span>
                                         </td>
                                     </tr>
-                                </tfoot>
+                                </tfoot> -->
                             </table>
                         </div>
                     </div>

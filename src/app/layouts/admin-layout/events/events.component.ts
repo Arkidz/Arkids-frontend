@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { VariableService } from 'src/app/core/services/variable.service';
 import { APIService } from 'src/app/core/services/api.service';
 import { MethodUtilityService } from 'src/app/core/services/Method-utility.service';
 import { BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
+import { Subject } from 'rxjs';
 declare var $: any;
 
 @Component({
@@ -11,7 +12,7 @@ declare var $: any;
   templateUrl: './events.component.html',
   styleUrls: ['./events.component.scss']
 })
-export class EventsComponent implements OnInit {
+export class EventsComponent implements OnInit, OnDestroy {
   @ViewChild(BsDatepickerDirective, { static: false }) datepicker: BsDatepickerDirective;
   @ViewChild('dpf') dpf: any;
   eventObj: any = {};
@@ -46,10 +47,16 @@ export class EventsComponent implements OnInit {
   timeSlots: any = [{ fromTime: new Date(), toTime: new Date(), id: null }];
   imagesList: any = [];
   imgError: any = [];
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: any = new Subject();
 
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
   ngOnInit() {
+    this.dtOptions = {
+      pagingType: 'full_numbers' // , destroy: false // ,pageLength: 2
+    };
+    // $('#eventTable').DataTable();
     this.applyValidation();
     this.getEvents();
   }
@@ -99,8 +106,10 @@ export class EventsComponent implements OnInit {
     this.apiService.postMethodAPI(false, VariableService.API_GET_EVENT, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
         this.eventList = response['rows'];
+        this.dtTrigger.next();
       } else {
         this.eventList = [];
+        this.dtTrigger.next();
       }
       console.log('eventList response : ', this.eventList);
     });
@@ -146,6 +155,7 @@ export class EventsComponent implements OnInit {
   removeImage(index) { this.imagesList.splice(index, 1); }
 
   onSubmit() {
+    this.eventObj.eDays = [];
     if (this.eventForm.valid && this.isValidFDate && this.isValidTDate) {
       this.eventObj.eDays = this.repeatDays.map((item) => { if (item.value) { return item.name; } }).filter((data) => data);
       this.eventObj.eFromDate = this.getDDMMYYY(this.fromDateValue);
@@ -228,7 +238,7 @@ export class EventsComponent implements OnInit {
     this.fromDateValue = new Date(data.eFromDate);
     this.toDateValue = new Date(data.eToDate);
     this.imagesList = data.images;
-    this.setTimeSlot(data.timeSlote); // this.timeSlots - data.timeSlote
+    this.setTimeSlot(data.eTimeSlote); // this.timeSlots - data.timeSlote  - eTimeSlote
     this.setRepeatedDays(data.eDays); // data.eDays = this.repeatDays
     console.log('eventObj', this.eventObj);
     $('#eventAdd').modal({ keyboard: false, backdrop: 'static' });
@@ -266,11 +276,13 @@ export class EventsComponent implements OnInit {
     return times;
   }
   setTimeSlot(times) {
+    console.log('set times : ', times);
     this.timeSlots = [];
-    times.forEach((element: any) => {
-      this.timeSlots.push({ toTime: this.setHHMMDateTime(element.toTime), fromTime: this.setHHMMDateTime(element.fromTime), id: element.id });
-    });
-    return times;
+    if (times) {
+      times.forEach((element: any) => {
+        this.timeSlots.push({ toTime: this.setHHMMDateTime(element.toTime), fromTime: this.setHHMMDateTime(element.fromTime), id: element.id });
+      });
+    }
   }
   // get date of eDate and set time hh - mm
   getHHMMTime(date: Date) {
@@ -301,4 +313,8 @@ export class EventsComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
+  }
 }

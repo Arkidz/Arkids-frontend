@@ -11,18 +11,20 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="table table-hover" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
                                 <thead class=" text-primary">
-                                    <th> # </th>
-                                    <th> Short Name </th>
-                                    <th> Full Name </th>
-                                    <th> mobileno </th>
-                                    <th> email </th>
-                                    <th> Reg Date </th>
-                                    <th> Last Login </th>
-                                    <th> Status </th>
-                                    <th> Wallet </th>
-                                    <th> Action </th>
+                                    <tr>
+                                        <th> # </th>
+                                        <th> Short Name </th>
+                                        <th> Full Name </th>
+                                        <th> mobile No </th>
+                                        <th> Email </th>
+                                        <th> Reg. Date </th>
+                                        <th> Last Login </th>
+                                        <th> Status </th>
+                                        <th> Wallet Bal.(Rs.) </th>
+                                        <th> Action </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let player of playerList; let i=index;">
@@ -30,10 +32,10 @@
                                         <td> {{player.shortname?player.shortname:'-'}} </td>
                                         <td> {{(player.fname?player.fname:' ') + ' ' + (player.lname?player.lname:' ')}}
                                         </td>
-                                        <td> {{player.mobilenono}} </td>
-                                        <td> {{player.email}} </td>
-                                        <td> {{player.regDate | date:'dd-MM-yyyy'}} </td>
-                                        <td> {{player.lastLogin | date:'dd-MM-yyyy hh:mm:ss a'}} </td>
+                                        <td> {{player.mobileno?player.mobileno:''}} </td>
+                                        <td> {{player.email?player.email:'-'}} </td>
+                                        <td> {{!player.regDate ?'-':player.regDate | date:'dd-MM-yyyy'}} </td>
+                                        <td> {{!player.lastLogin?'-':player.lastLogin | date:'dd-MM-yyyy hh:mm:ss a'}} </td>
                                         <td>
                                             <span class="label label-success">
                                                 {{player.status?player.status:'-'}}
@@ -43,14 +45,19 @@
                                         <td>
                                             <button class="bnt btn-primary mrg5" (click)="refillWallet(player)"
                                                 title="Refill Wallet">
-                                                <i class="fa fa-money" aria-hidden="true"></i></button>
+                                                <!-- <i class="fa fa-money" aria-hidden="true"></i> -->
+                                                <img src="assets/img/rupees.png" alt="game" height="24" width="24">
+                                            </button>
                                             <button class="bnt btn-success mrg5" (click)="walletHistory(player)"
                                                 title="Wallet  History">
-                                                <i class="fa fa-list" aria-hidden="true"></i>
+                                                <!-- <i class="fa fa-list" aria-hidden="true"></i> -->
+                                                <img src="assets/img/wallet.png" alt="game" height="24" width="24">
                                             </button>
                                             <button class="bnt btn-warning mrg5" (click)="gamesHistory(player)"
                                                 title="Game Played History">
-                                                <i class="fa fa-list" aria-hidden="true"></i></button>
+                                                <!-- <i class="fa fa-list" aria-hidden="true"></i> -->
+                                                <img src="assets/img/game.png" alt="game" height="24" width="24">
+                                            </button>
                                             <button class="bnt btn-info mrg5" (click)="editPlayer(player)"
                                                 title="Edit Player">
                                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
@@ -60,13 +67,13 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                                <tfoot>
+                                <!-- <tfoot>
                                     <tr *ngIf="playerList && playerList.length <= 0" class="text-center">
                                         <td colspan="9">
                                             <span>Player Records Not Found!</span>
                                         </td>
                                     </tr>
-                                </tfoot>
+                                </tfoot> -->
                             </table>
                         </div>
                     </div>

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { VariableService } from 'src/app/core/services/variable.service';
 import { Players } from 'src/app/core/models/players.model';
 import { APIService } from 'src/app/core/services/api.service';
 import { MethodUtilityService } from 'src/app/core/services/Method-utility.service';
+import { Subject } from 'rxjs';
 declare var $: any;
 
 @Component({
@@ -11,7 +12,7 @@ declare var $: any;
   templateUrl: './players.component.html',
   styleUrls: ['./players.component.css']
 })
-export class PlayersComponent implements OnInit {
+export class PlayersComponent implements OnInit, OnDestroy {
 
   // userType = new Players();
   playerObj: any = {};
@@ -42,10 +43,15 @@ export class PlayersComponent implements OnInit {
 
   refillObj: any = {};
   refillForm: FormGroup;
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: any = new Subject();
 
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
   ngOnInit() {
+    this.dtOptions = {
+      pagingType: 'full_numbers' // , destroy: false // ,pageLength: 2
+    };
     this.applyValidation();
     this.applyValidationRefill();
     this.getPlayerList();
@@ -95,8 +101,10 @@ export class PlayersComponent implements OnInit {
     this.apiService.postMethodAPI(false, VariableService.API_GET_PLAYER, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
         this.playerList = response['rows'];
+        this.dtTrigger.next();
       } else {
         this.playerList = [];
+        this.dtTrigger.next();
       }
       console.log('playerList response : ', this.playerList);
     });
@@ -234,25 +242,9 @@ export class PlayersComponent implements OnInit {
     });
     this.refillModelClose();
   }
-  /*
-  {
-"pCode":""
-"shortname":""
-"fname":""
-"lname":""
-"mobileno":""
-"email":""
-"password":""
-"regDate":""
-"lastLogin":""
-"address":""
-"idProof":""
-"status":""
-"Remark":""
-"refCode":""
-"imageIdId":""
-"profession":""
-"aboutMe":""
-}
-  */
+
+  ngOnDestroy() {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
+  }
 }

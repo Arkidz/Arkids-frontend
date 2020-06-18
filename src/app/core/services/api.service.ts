@@ -16,17 +16,20 @@ export class APIService {
   ) { }
 
   public postMethod(url, data, callback) {
+    this.methodUtils.setLoadingStatus(true);
     this.http.post(VariableService.API_URL + url, data).subscribe(
       (response) => {
         callback(response);
+        this.methodUtils.setLoadingStatus(false);
       },
       (error) => {
         callback(error);
-      }
-    );
+        this.methodUtils.setLoadingStatus(false);
+      });
   }
 
   getMethodAPI(apiName: string, params: object, callback) {
+    this.methodUtils.setLoadingStatus(true);
     let httpParams = new HttpParams();
     if (!this.methodUtils.isNullUndefinedOrBlank(params)) {
       Object.keys(params).forEach(key => {
@@ -70,6 +73,7 @@ export class APIService {
   }
 
   postMethodAPI(isDisplayToast, apiName, params, callback) {
+    this.methodUtils.setLoadingStatus(true);
     this.customJsonInclude(params);
     let headers = new HttpHeaders();
     // if (this.variableService.arrayOfApiNameToExcludeToken.indexOf(apiName) < 0) {
@@ -127,6 +131,7 @@ export class APIService {
   }
 
   patchMethodAPI(isDisplayToast, apiName, params, id, callback) {
+    this.methodUtils.setLoadingStatus(true);
     this.customJsonInclude(params);
     let headers = new HttpHeaders();
     apiName = VariableService.API_URL + apiName + '/' + id;
@@ -158,6 +163,7 @@ export class APIService {
   }
 
   deleteMethodAPI(isDisplayToast, apiName, id, callback) {
+    this.methodUtils.setLoadingStatus(true);
     let headers = new HttpHeaders();
     apiName = VariableService.API_URL + apiName + '/' + id;
     return this.http.delete(apiName, { headers: headers }).subscribe((response: any) => {
@@ -180,12 +186,14 @@ export class APIService {
           err.error.data.forEach(element => {
             this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', element.message);
           });
-        } this.methodUtils.setLoadingStatus(false);
+        }
+        this.methodUtils.setLoadingStatus(false);
       });
 
   }
 
   putMethodAPI(apiName, params, id, callback) {
+    this.methodUtils.setLoadingStatus(true);
     this.customJsonInclude(params);
     let headers = new HttpHeaders();
     // if (this.variableService.arrayOfApiNameToExcludeToken.indexOf(apiName) < 0) {
@@ -214,7 +222,6 @@ export class APIService {
         }
         this.methodUtils.setLoadingStatus(false);
       });
-
   }
   /**
   * This Method Is Use For Remove Blank And Null Key From Object.

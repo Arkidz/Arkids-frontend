@@ -11,12 +11,14 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-hover">
                                 <thead class=" text-primary">
-                                    <th> # </th>
-                                    <th> Name </th>
-                                    <th> Status </th>
-                                    <th> Action </th>
+                                    <tr>
+                                        <th> # </th>
+                                        <th> Name </th>
+                                        <th> Status </th>
+                                        <th> Action </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let game of gameZoneList; let i=index;">
@@ -33,13 +35,13 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                                <tfoot>
+                                <!-- <tfoot>
                                     <tr *ngIf="gameZoneList && gameZoneList.length <= 0" class="text-center">
                                         <td colspan="4">
                                             <span>Sub-zone Records Not Found!</span>
                                         </td>
                                     </tr>
-                                </tfoot>
+                                </tfoot> -->
                             </table>
                         </div>
                     </div>

@@ -4,7 +4,7 @@ import { APIService } from 'src/app/core/services/api.service';
 import { MethodUtilityService } from 'src/app/core/services/Method-utility.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { VariableService } from 'src/app/core/services/variable.service';
-import { $ } from 'jquery';
+// import { $ } from 'jquery';
 declare var $: any;
 
 @Component({

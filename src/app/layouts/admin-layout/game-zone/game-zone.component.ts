@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GameZone } from 'src/app/core/models/gameZone.model';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { VariableService } from 'src/app/core/services/variable.service';
 import { APIService } from 'src/app/core/services/api.service';
 import { MethodUtilityService } from 'src/app/core/services/Method-utility.service';
+import { Subject } from 'rxjs';
 declare var $: any;
 
 @Component({
@@ -11,7 +12,7 @@ declare var $: any;
   templateUrl: './game-zone.component.html',
   styleUrls: ['./game-zone.component.css']
 })
-export class GameZoneComponent implements OnInit {
+export class GameZoneComponent implements OnInit, OnDestroy {
 
   // gameZoneObj = new GameZone();
   gameZoneObj: any = {};
@@ -21,9 +22,14 @@ export class GameZoneComponent implements OnInit {
   createError = '';
   gamezoneId = '';
   title = 'New Sub-Zone';
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: any = new Subject();
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
   ngOnInit() {
+    this.dtOptions = {
+      pagingType: 'full_numbers' // , destroy: false // ,pageLength: 2
+    };
     this.applyValidation();
     this.getGameZones();
   }
@@ -40,8 +46,10 @@ export class GameZoneComponent implements OnInit {
     this.apiService.postMethodAPI(false, VariableService.API_GET_GAMEZONE, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
         this.gameZoneList = response['rows'];
+        this.dtTrigger.next();
       } else {
         this.gameZoneList = [];
+        this.dtTrigger.next();
       }
       console.log('gameZoneList response : ', this.gameZoneList);
     });
@@ -121,12 +129,8 @@ export class GameZoneComponent implements OnInit {
     }
   }
 
-  /**  gamezone
-   { 
- "gzCode":"cccc",
-"gzName":"cccvvvv",
-"gzStatus":"vvvv",
-"remark":"remark"
-}
-   */
+  ngOnDestroy() {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
+  }
 }

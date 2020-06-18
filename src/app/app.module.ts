@@ -12,7 +12,7 @@ import { ToasterModule } from 'angular2-toaster';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { LoaderComponent } from './shared/components/loader/loader.component';
 import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-
+import { DataTablesModule } from 'angular-datatables';
 
 @NgModule({
   declarations: [
@@ -31,7 +31,8 @@ import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     ToasterModule.forRoot(),
     BsDatepickerModule.forRoot(),
     DatepickerModule.forRoot(),
-    NgxQRCodeModule
+    NgxQRCodeModule,
+    DataTablesModule
   ],
   providers: [],
   bootstrap: [AppComponent]

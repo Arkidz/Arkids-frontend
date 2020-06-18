@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { VariableService } from 'src/app/core/services/variable.service';
 import { APIService } from 'src/app/core/services/api.service';
 import { MethodUtilityService } from 'src/app/core/services/Method-utility.service';
@@ -10,13 +10,14 @@ declare var $: any;
 // import 'jspdf-autotable';
 import * as jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-games',
   templateUrl: './games.component.html',
   styleUrls: ['./games.component.scss']
 })
-export class GamesComponent implements OnInit {
+export class GamesComponent implements OnInit, OnDestroy {
   gameObj: any = {};
   gameList: Games[] = [];
   gameZoneList: GameZone[] = [];
@@ -31,10 +32,15 @@ export class GamesComponent implements OnInit {
   elementType: 'url' | 'canvas' | 'img' = 'url';
   value = 'EcudeQRCode';
   ptintObj: any = {};
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: any = new Subject();
 
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
   ngOnInit() {
+    this.dtOptions = {
+      pagingType: 'full_numbers' // , destroy: false // ,pageLength: 2
+    };
     this.applyValidation();
     this.getGames();
     this.getGameZones();
@@ -71,8 +77,10 @@ export class GamesComponent implements OnInit {
     this.apiService.postMethodAPI(false, VariableService.API_GET_GAME, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
         this.gameList = response['rows'];
+        this.dtTrigger.next();
       } else {
         this.gameList = [];
+        this.dtTrigger.next();
       }
       console.log('gameList response : ', this.gameList);
     });
@@ -202,26 +210,9 @@ export class GamesComponent implements OnInit {
       pdf.save('MYPdf.pdf'); // Generated PDF   
     });
   }
-  // dowloadPDF() {
-  // const columns = [{ title: "Bank Name", dataKey: "bankName" }];
-  // const rows = this.gameList;
-  // const doc = new jsPDF('p', 'pt');
-  // doc.autoTable(columns, rows);
-  // doc.save('table.pdf');
-  // }
-  /*
-     {
-      "gCode": "gCode",
-      "gName": "gName",
-      "gTimer": "gTimer",
-      "gType": "gType",
-      "gZoneId": "gZoneId",
-      "gStatus": "gStatus",
-      "gQR": "gQR",
-      "gCharge": "gCharge",
-      "canContinue": "true",
-      "countinueMaxCtr": "1",
-      "remark": "remark"
+
+  ngOnDestroy() {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
   }
-  */
 }

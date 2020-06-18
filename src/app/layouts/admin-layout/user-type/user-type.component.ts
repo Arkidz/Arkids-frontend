@@ -4,6 +4,7 @@ import { VariableService } from 'src/app/core/services/variable.service';
 import { UserType } from 'src/app/core/models/userType.model';
 import { APIService } from 'src/app/core/services/api.service';
 import { MethodUtilityService } from 'src/app/core/services/Method-utility.service';
+import { Subject } from 'rxjs';
 declare var $: any;
 
 @Component({
@@ -20,9 +21,14 @@ export class UserTypeComponent implements OnInit {
   createError = '';
   usertypeId = '';
   title = 'New User Type';
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: any = new Subject();
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
   ngOnInit() {
+    this.dtOptions = {
+      pagingType: 'full_numbers' // , destroy: false // ,pageLength: 2
+    };
     this.applyLoginValidation();
     this.getUserType();
   }
@@ -44,8 +50,10 @@ export class UserTypeComponent implements OnInit {
     this.apiService.postMethodAPI(false, VariableService.API_GET_USERTYPE, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
         this.userTypeList = response['rows'];
+        this.dtTrigger.next();
       } else {
         this.userTypeList = [];
+        this.dtTrigger.next();
       }
       console.log('userTypeList response : ', this.userTypeList);
     });
@@ -123,6 +131,11 @@ export class UserTypeComponent implements OnInit {
         this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Fails Delete, Record Already In Use.');
       }
     }
+  }
+
+  ngOnDestroy() {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
   }
 
 }

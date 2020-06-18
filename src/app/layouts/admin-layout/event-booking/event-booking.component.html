@@ -1,0 +1,130 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title ">Event Booking</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-hover">
+                                <thead class=" text-primary">
+                                    <tr>
+                                        <th> # </th>
+                                        <th> Event Name </th>
+                                        <th> Event Date </th>
+                                        <th> Time Slot </th>
+                                        <th> Capacity Max Heads </th>
+                                        <th> Registred Count </th>
+                                        <th> Available Count </th>
+                                        <th> Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let book of eveBookList; let i=index;">
+                                        <td> {{i+1}} </td>
+                                        <td> {{book.ecube_event&&book.ecube_event.name ? book.ecube_event.name : '-'}}
+                                        </td>
+                                        <td> {{book.ecube_event && book.ecube_event.eFromDate ? (book.ecube_event.eFromDate|date:'dd-MM-yyyy') : '-'}}
+                                        </td>
+                                        <td> {{book.ecube_event_timeslote?book.ecube_event_timeslote.fromTime +' - '+ book.ecube_event_timeslote.toTime:'-'}}
+                                        </td>
+                                        <td> {{book.ecube_event&&book.ecube_event.eCapacity ? book.ecube_event.eCapacity : '-'}}
+                                        </td>
+                                        <td> <a (click)="showBooking(book)" style="text-decoration: underline;">
+                                                {{book.regCount?book.regCount:'-'}} </a>
+                                        </td>
+                                        <td> {{book.availableCount?book.availableCount:'-'}} </td>
+                                        <td>
+                                            <button class="bnt btn-warning mrg5" (click)="cancelBooking(book)"
+                                                title="Cancel">
+                                                <i class="fa fa-window-close" aria-hidden="true"></i>Cancel
+                                            </button>
+                                            <button class="bnt btn-primary mrg5" (click)="markFullBooking(book)"
+                                                title="Mark Full">Mark Full </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <!-- <tfoot>
+                                    <tr *ngIf="eveBookList && eveBookList.length <= 0" class="text-center">
+                                        <th colspan="10">
+                                            <span>Event Booking Records Not Found!</span>
+                                        </th>
+                                    </tr>
+                                </tfoot> -->
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- show booking Popup Modal -->
+<div class="modal modal-angular fade" id="showbook" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" aria-label="Close" (click)="modelClose()"><span
+                        aria-hidden="true">&times;</span></button>
+                <div class="separator"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-success">
+                                <h4 class="card-title">Registred Booking For {{title}}</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class=" text-primary">
+                                            <th> # </th>
+                                            <th> Customer Name </th>
+                                            <th> Mobile No. </th>
+                                            <th> Number Of People </th>
+                                            <th> Booking Date </th>
+                                            <th> Action </th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let books of eventShowBookList; let i=index;">
+                                                <td> {{i + 1}} </td>
+                                                <td> {{books.cName}} </td>
+                                                <td> {{books.mobileNo}} </td>
+                                                <td> {{books.noOfPeople}} </td>
+                                                <td> {{books.bookDate}} </td>
+                                                <td>
+                                                    <button class="bnt btn-primary mrg5" (click)="changeSlot(books)"
+                                                        title="Change Slot"> Slot </button>
+                                                    <button class="bnt btn-warning mrg5" (click)="cancel(books)"
+                                                        title="Cancel"> <i class="fa fa-window-close"
+                                                            aria-hidden="true"></i>
+                                                    </button>
+                                                    <button class="bnt btn-danger" (click)="delete(books)"
+                                                        title="Delete">
+                                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr *ngIf="eventShowBookList && eventShowBookList.length <= 0"
+                                                class="text-center">
+                                                <td colspan="6">
+                                                    <span>Records Not Found!</span>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- show booking model end -->

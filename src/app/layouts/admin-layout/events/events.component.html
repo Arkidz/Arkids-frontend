@@ -11,19 +11,22 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table id="eventTable" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                                class="table table-hover">
                                 <thead class=" text-primary">
-                                    <th> # </th>
-                                    <th> Event Name </th>
-                                    <th> From Date </th>
-                                    <th> To Date </th>
-                                    <th> Venue </th>
-                                    <th> Capacity </th>
-                                    <th> Charge </th>
-                                    <th> Host </th>
-                                    <th> Description </th>
-                                    <th> Status </th>
-                                    <th> Action </th>
+                                    <tr>
+                                        <th> # </th>
+                                        <th> Event Name </th>
+                                        <th> From Date </th>
+                                        <th> To Date </th>
+                                        <th> Venue </th>
+                                        <th> Capacity </th>
+                                        <th> Charge </th>
+                                        <th> Host </th>
+                                        <th> Description </th>
+                                        <th> Status </th>
+                                        <th> Action </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let event of eventList; let i=index;">
@@ -47,13 +50,13 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                                <tfoot>
+                                <!-- <tfoot>
                                     <tr *ngIf="eventList && eventList.length <= 0" class="text-center">
                                         <td colspan="12">
                                             <span>Event Records Not Found!</span>
                                         </td>
                                     </tr>
-                                </tfoot>
+                                </tfoot> -->
                             </table>
                         </div>
                     </div>

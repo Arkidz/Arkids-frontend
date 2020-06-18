@@ -11,58 +11,60 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead class=" text-primary">
-                                    <th> # </th>
-                                    <th> Name </th>
-                                    <th> Event Date </th>
-                                    <th> Venue </th>
-                                    <th> From-Time </th>
-                                    <th> To-Time </th>
-                                    <th style="max-width: 261px; width: 200px;"> Description </th>
-                                    <th> Status </th>
-                                    <th> Action </th>
+                            <table id="ereqtbl" class="table table-hover">
+                                <thead class=" text-primary" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+                                    <tr>
+                                        <th> # </th>
+                                        <th> Name </th>
+                                        <th> Event Date </th>
+                                        <th> Venue </th>
+                                        <th> From-Time </th>
+                                        <th> To-Time </th>
+                                        <th style="max-width: 261px; width: 200px;"> Description </th>
+                                        <th> Status </th>
+                                        <th> Action </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let game of eveReqList; let i=index;">
+                                    <tr *ngFor="let request of eveReqList; let i=index;">
                                         <td> {{i+1}} </td>
-                                        <td> {{game.pCode?game.pCode:'-'}} </td>
-                                        <td> {{!game.rdate?'-':game.rdate | date:'dd-MM-yyyy'}} </td>
-                                        <td> {{game.rVenue?game.rVenue:'-'}} </td>
-                                        <td> {{game.rFromTime?game.rFromTime:'-'}} </td>
-                                        <td> {{game.rToTime?game.rToTime:'-'}} </td>
-                                        <td> {{game.rDesc?game.rDesc:'-'}} </td>
-                                        <td> {{game.status?game.status:'InActive'}} </td>
+                                        <td> {{request.ecube_player?request.ecube_player.fullname:'-'}} </td>
+                                        <td> {{!request.rdate?'-':request.rdate | date:'dd-MM-yyyy'}} </td>
+                                        <td> {{request.rVenue?request.rVenue:'-'}} </td>
+                                        <td> {{request.rFromTime?request.rFromTime:'-'}} </td>
+                                        <td> {{request.rToTime?request.rToTime:'-'}} </td>
+                                        <td> {{request.rDesc?request.rDesc:'-'}} </td>
+                                        <td> {{request.rStatus?request.rStatus:'-'}} </td>
                                         <td>
-                                            <button class="bnt btn-primary mrg5" (click)="eventReqReply(game)"
+                                            <button class="bnt btn-primary mrg5" (click)="eventReqReply(request)"
                                                 title="Reply">
                                                 <i class="fa fa-reply" aria-hidden="true"></i>
                                             </button>
-                                            <button class="bnt btn-success mrg5" (click)="eventReqConfirm(game)"
+                                            <button class="bnt btn-success mrg5" (click)="eventReqConfirm(request)"
                                                 title="Confirm">
                                                 <i class="fa fa-check-square-o" aria-hidden="true"></i>
                                             </button>
-                                            <button class="bnt btn-warning mrg5" (click)="eventReqCancel(game)"
+                                            <button class="bnt btn-warning mrg5" (click)="eventReqCancel(request)"
                                                 title="Decline">
                                                 <i class="fa fa-window-close" aria-hidden="true"></i>
                                             </button>
-                                            <!-- <button class="bnt btn-info mrg5" (click)="eventReqEdit(game)" title="Edit">
+                                            <!-- <button class="bnt btn-info mrg5" (click)="eventReqEdit(request)" title="Edit">
                                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                             </button> -->
-                                            <button class="bnt btn-danger" (click)="eventReqDelete(game)"
+                                            <button class="bnt btn-danger" (click)="eventReqDelete(request)"
                                                 title="Delete">
                                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                             </button>
                                         </td>
                                     </tr>
                                 </tbody>
-                                <tfoot>
+                                <!-- <tfoot>
                                     <tr *ngIf="eveReqList && eveReqList.length <= 0" class="text-center">
                                         <td colspan="9">
                                             <span>Event Request Records Not Found!</span>
                                         </td>
                                     </tr>
-                                </tfoot>
+                                </tfoot> -->
                             </table>
                         </div>
                     </div>

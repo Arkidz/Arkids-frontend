@@ -13,6 +13,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { GeneralSettingComponent } from './general-setting/general-setting.component';
 import { EventsComponent } from './events/events.component';
 import { EventRequestComponent } from './event-request/event-request.component';
+import { EventBookingComponent } from './event-booking/event-booking.component';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard', component: DashboardComponent },
@@ -24,6 +25,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'players', component: PlayersComponent },
     { path: 'events', component: EventsComponent },
     { path: 'event-request', component: EventRequestComponent },
+    { path: 'event-book', component: EventBookingComponent },
     { path: 'change-password', component: ChangePasswordComponent },
     { path: 'general-setting', component: GeneralSettingComponent },
     { path: 'user-profile', component: UserProfileComponent },

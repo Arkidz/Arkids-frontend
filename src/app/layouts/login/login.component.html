@@ -34,7 +34,7 @@
                     <div class="form-group">
                         <label for="psw"><b>Password *</b></label>
                         <input type="password" id="password" class="form-control" placeholder="Enter Password" required
-                            [(ngModel)]="loginRequest.password" [formControl]="loginForm.controls['password']">
+                            [(ngModel)]="loginRequest.password" [formControl]="loginForm.controls['password']" (keyup.enter)="onLogin()">
                         <div class="text-danger">
                             <small class="text-danger"
                                 *ngIf="loginForm.controls['password'].hasError('required') && loginForm.controls['password'].touched">

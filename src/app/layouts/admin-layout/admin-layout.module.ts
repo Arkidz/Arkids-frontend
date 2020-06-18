@@ -27,7 +27,8 @@ import { EventRequestComponent } from './event-request/event-request.component';
 
 import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
-
+import { EventBookingComponent } from './event-booking/event-booking.component';
+import { DataTablesModule } from 'angular-datatables';
 
 @NgModule({
   imports: [
@@ -42,7 +43,8 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
     MatSelectModule,
     MatTooltipModule,
     NgxQRCodeModule,
-    BsDatepickerModule.forRoot(), TimepickerModule.forRoot()
+    BsDatepickerModule.forRoot(), TimepickerModule.forRoot(),
+    DataTablesModule
   ],
   declarations: [
     DashboardComponent,
@@ -58,7 +60,8 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
     TableListComponent,
     NotificationsComponent,
     EventsComponent,
-    EventRequestComponent
+    EventRequestComponent,
+    EventBookingComponent
   ]
 })
 
