@@ -11,8 +11,8 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="ereqtbl" class="table table-hover">
-                                <thead class=" text-primary" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+                            <table id="ereqtbl" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-hover">
+                                <thead class=" text-primary">
                                     <tr>
                                         <th> # </th>
                                         <th> Name </th>
@@ -20,7 +20,7 @@
                                         <th> Venue </th>
                                         <th> From-Time </th>
                                         <th> To-Time </th>
-                                        <th style="max-width: 261px; width: 200px;"> Description </th>
+                                        <th style="max-width: 261px; width: 250px;"> Description </th>
                                         <th> Status </th>
                                         <th> Action </th>
                                     </tr>

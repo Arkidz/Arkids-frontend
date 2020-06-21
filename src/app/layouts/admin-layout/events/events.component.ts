@@ -165,7 +165,7 @@ export class EventsComponent implements OnInit, OnDestroy {
       console.log('eventObj', this.eventObj);
       console.log(JSON.stringify(this.eventObj));
       // return;
-      this.methodUtils.setLoadingStatus(true);
+      // this.methodUtils.setLoadingStatus(true);
       if (this.eventId) {
         console.log('Event update  : ');
         this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_EVENT, this.eventObj, this.eventId, (response) => {
@@ -176,7 +176,7 @@ export class EventsComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'Event Insert Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       } else {
         console.log('Event create  : ');
@@ -188,7 +188,7 @@ export class EventsComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'Event Insert Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       }
     } else {
@@ -247,7 +247,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   deleteEvent(data) {
     if (confirm('Are you sure want to delete record')) {
       if (data && data.id) {
-        this.methodUtils.setLoadingStatus(true);
+        // this.methodUtils.setLoadingStatus(true);
         this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_EVENT, data.id, (response) => {
           console.log('Event update response : ', response);
           if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
@@ -256,7 +256,7 @@ export class EventsComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'Event Insert Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       }
     }

@@ -14,7 +14,7 @@ export class VariableService {
   static ADMIN_COMPANY = '/admin/company-detail';
 
   // API URL
-  static API_URL = 'https://09f4c24daf94.ngrok.io'; // main api root url -Base URL : http://localhost:3000
+  static API_URL = 'https://642b21be949c.ngrok.io'; // main api root url -Base URL : http://localhost:3000
   static API_LOGIN = '/admin/user/login'; // POST : { "username": “ss”,”password": “123”} - {"new_password":"12345"}
   static API_CHANGE_PASSWORD = '/admin/user/change/password'; // POST : { "username": “ss”,old_password": “123”,"new_password":"12345"}
   static API_FORGET_PASSWORD = '/admin/user/forgot/password'; // POST : { "username": “ss” }
@@ -78,7 +78,8 @@ export class VariableService {
 
   // Event Booking
   static API_CREATE_EVENT_BOOK = '/admin/master/event-booking/create';
-  static API_GET_EVENT_BOOK = '/admin/master/event-booking/list'; // all list
+  // static API_GET_EVENT_BOOK = '/admin/master/event-booking/list'; // all list
+  static API_GET_EVENT_BOOK = '/admin/master/event-booking/get-event'; // event time slot wise get event bookings
   static API_GET_EVENT_BOOK_E_ID = '/admin/master/event-booking/get'; // /{event_id} get by event id
   static API_GET_EVENT_BOOK_U_ID = '/admin/master/event-booking/get-user'; // /{userId} get by user id
   static API_DELETE_EVENT_BOOK = '/admin/master/event-booking/delete';

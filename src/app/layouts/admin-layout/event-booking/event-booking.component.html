@@ -24,18 +24,23 @@
                                 <tbody>
                                     <tr *ngFor="let book of eveBookList; let i=index;">
                                         <td> {{i+1}} </td>
-                                        <td> {{book.ecube_event&&book.ecube_event.name ? book.ecube_event.name : '-'}}
+                                        <td> {{book.name ? book.name : '-'}} </td>
+                                        <td> {{book.eFromDate ? (book.eFromDate|date:'dd-MM-yyyy') : '-'}} </td>
+                                        <td>
+                                            <!-- {{book.eTimeSlote?book.eTimeSlote[0].fromTime +' - '+ book.eTimeSlote[0].toTime:'-'}} -->
+                                            <div *ngIf="book.eTimeSlote && book.eTimeSlote.length > 0">
+                                                <div *ngFor="let bs of book.eTimeSlote;">
+                                                    {{bs.fromTime +' - '+ bs.toTime}}</div>
+                                            </div>
                                         </td>
-                                        <td> {{book.ecube_event && book.ecube_event.eFromDate ? (book.ecube_event.eFromDate|date:'dd-MM-yyyy') : '-'}}
-                                        </td>
-                                        <td> {{book.ecube_event_timeslote?book.ecube_event_timeslote.fromTime +' - '+ book.ecube_event_timeslote.toTime:'-'}}
-                                        </td>
-                                        <td> {{book.ecube_event&&book.ecube_event.eCapacity ? book.ecube_event.eCapacity : '-'}}
-                                        </td>
+                                        <td> {{book.eCapacity ? book.eCapacity : '-'}} </td>
                                         <td> <a (click)="showBooking(book)" style="text-decoration: underline;">
-                                                {{book.regCount?book.regCount:'-'}} </a>
+                                                {{book.eventBooking&&book.eventBooking.count?book.eventBooking.count:0}}
+                                            </a>
                                         </td>
-                                        <td> {{book.availableCount?book.availableCount:'-'}} </td>
+                                        <td>
+                                            {{(+book.eCapacity - (book.eventBooking&&book.eventBooking.count?book.eventBooking.count:0))}}
+                                        </td>
                                         <td>
                                             <button class="bnt btn-warning mrg5" (click)="cancelBooking(book)"
                                                 title="Cancel">
@@ -90,10 +95,10 @@
                                         <tbody>
                                             <tr *ngFor="let books of eventShowBookList; let i=index;">
                                                 <td> {{i + 1}} </td>
-                                                <td> {{books.cName}} </td>
-                                                <td> {{books.mobileNo}} </td>
-                                                <td> {{books.noOfPeople}} </td>
-                                                <td> {{books.bookDate}} </td>
+                                                <td> {{books.ecube_player&&books.ecube_player.fullname?books.ecube_player.fullname:'-'}} </td>
+                                                <td> {{books.ecube_player&&books.ecube_player.mobileno?books.ecube_player.mobileno:'-'}} </td>
+                                                <td> {{books.seats?books.seats:0}} </td>
+                                                <td> {{books.createdAt?(books.createdAt|date:'dd-MM-yyyy'):'-'}} </td>
                                                 <td>
                                                     <button class="bnt btn-primary mrg5" (click)="changeSlot(books)"
                                                         title="Change Slot"> Slot </button>

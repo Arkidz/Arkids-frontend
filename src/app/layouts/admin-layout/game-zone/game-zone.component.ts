@@ -58,7 +58,7 @@ export class GameZoneComponent implements OnInit, OnDestroy {
   onSubmit() {
     console.log(this.gameZoneObj);
     if (this.gzForm.valid) {
-      this.methodUtils.setLoadingStatus(true);
+      // this.methodUtils.setLoadingStatus(true);
       if (this.gamezoneId) {
         this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_GAMEZONE, this.gameZoneObj, this.gamezoneId, (response) => {
           console.log('GameZone update response : ', response);
@@ -68,7 +68,7 @@ export class GameZoneComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'GameZone Insert Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       } else {
         this.apiService.postMethodAPI(true, VariableService.API_CREATE_GAMEZONE, this.gameZoneObj, (response) => {
@@ -79,7 +79,7 @@ export class GameZoneComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'GameZone Insert Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       }
     } else {
@@ -112,7 +112,7 @@ export class GameZoneComponent implements OnInit, OnDestroy {
   deleteZone(data) {
     if (confirm('Are you sure want to delete record')) {
       if (data && data.id && data.ecube_games && data.ecube_games.length <= 0) {
-        this.methodUtils.setLoadingStatus(true);
+        // this.methodUtils.setLoadingStatus(true);
         this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_GAMEZONE, data.id, (response) => {
           console.log('GameZone update response : ', response);
           if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
@@ -121,7 +121,7 @@ export class GameZoneComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'GameZone Insert Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       } else {
         this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Fails Delete, Record Already in use.');

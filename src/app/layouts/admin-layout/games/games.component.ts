@@ -91,7 +91,7 @@ export class GamesComponent implements OnInit, OnDestroy {
     console.log(this.gameObj);
     // return;
     if (this.gForm.valid) {
-      this.methodUtils.setLoadingStatus(true);
+      // this.methodUtils.setLoadingStatus(true);
       if (this.gameId) {
         this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_GAME, this.gameObj, this.gameId, (response) => {
           console.log('Game update response : ', response);
@@ -101,7 +101,7 @@ export class GamesComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'Game Insert Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       } else {
         this.gameObj.gQR = (new Date().getTime()).toString();
@@ -113,7 +113,7 @@ export class GamesComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'Game Insert Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       }
     } else {
@@ -162,7 +162,7 @@ export class GamesComponent implements OnInit, OnDestroy {
   deleteGame(data) {
     if (confirm('Are you sure want to delete record')) {
       if (data.id) {
-        this.methodUtils.setLoadingStatus(true);
+        // this.methodUtils.setLoadingStatus(true);
         this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_GAME, data.id, (response) => {
           console.log('Game update response : ', response);
           if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
@@ -171,7 +171,7 @@ export class GamesComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'Game Insert Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       }
     }
@@ -198,7 +198,7 @@ export class GamesComponent implements OnInit, OnDestroy {
   printQRPDF(id, gName) {
     var data = document.getElementById(id);
     html2canvas(data).then(canvas => {
-      // Few necessary setting options  
+      // Few necessary setting options
       var imgWidth = 208;
       var pageHeight = 295;
       var imgHeight = canvas.height * imgWidth / canvas.width;

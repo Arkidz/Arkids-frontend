@@ -66,9 +66,9 @@ export class LoginComponent implements OnInit {
     console.log('here login : ', this.loginRequest);
     console.log('form value : ', this.loginForm.value);
     if (this.loginForm.valid) {
-      this.methodUtils.setLoadingStatus(true);
+      // this.methodUtils.setLoadingStatus(true);
       this.apiService.postMethodAPI(false, VariableService.API_LOGIN, this.loginRequest, (response) => {
-        this.methodUtils.setLoadingStatus(false);
+        // this.methodUtils.setLoadingStatus(false);
         console.log('login response : ', response);
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
           const loginResponse = response;
@@ -104,7 +104,7 @@ export class LoginComponent implements OnInit {
   resetPasswordLogin() {
     console.log('reset login : ', this.loginReset);
     if (this.resetForm.valid) {
-      this.methodUtils.setLoadingStatus(true);
+      // this.methodUtils.setLoadingStatus(true);
       this.apiService.postMethodAPI(false, VariableService.API_LOGIN, this.loginReset, (response) => {
         console.log('reset login response', response);
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
@@ -120,7 +120,7 @@ export class LoginComponent implements OnInit {
         } else {
           this.loginError = 'Login Fails While Reset Password';
         }
-        this.methodUtils.setLoadingStatus(false);
+        // this.methodUtils.setLoadingStatus(false);
       });
     } else {
       this.resetForm.markAllAsTouched();
@@ -151,7 +151,7 @@ export class LoginComponent implements OnInit {
   submitPassword() {
     console.log('username forget password obj : ', this.usernameObj);
     if (!this.checkUsername(this.usernameObj.username)) {
-      this.methodUtils.setLoadingStatus(true);
+      // this.methodUtils.setLoadingStatus(true);
       // this.isForgetPass = false;
       this.apiService.postMethodAPI(false, VariableService.API_FORGET_PASSWORD, this.usernameObj, (response) => {
         console.log('username fp response');
@@ -159,7 +159,7 @@ export class LoginComponent implements OnInit {
           this.isForgetPass = false;
           this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'We mailed you Verification code on your Email');
         }
-        this.methodUtils.setLoadingStatus(false);
+        // this.methodUtils.setLoadingStatus(false);
       });
     }
   }
@@ -169,14 +169,14 @@ export class LoginComponent implements OnInit {
     this.forgetPassObj.username = this.usernameObj.username;
     console.log('verify forget password obj : ', this.forgetPassObj);
     if (this.forgetForm.valid) {
-      this.methodUtils.setLoadingStatus(true);
+      // this.methodUtils.setLoadingStatus(true);
       this.apiService.postMethodAPI(false, VariableService.API_CONFIRM_PASSWORD, this.forgetPassObj, (response) => {
         console.log('savePassword response');
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
           this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'Your Password Changed Successfully.');
           this.resetForForgetPass();
         }
-        this.methodUtils.setLoadingStatus(false);
+        // this.methodUtils.setLoadingStatus(false);
       });
     } else {
       this.forgetForm.markAllAsTouched();

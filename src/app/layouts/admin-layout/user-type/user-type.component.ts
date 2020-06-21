@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { VariableService } from 'src/app/core/services/variable.service';
 import { UserType } from 'src/app/core/models/userType.model';
@@ -12,7 +12,7 @@ declare var $: any;
   templateUrl: './user-type.component.html',
   styleUrls: ['./user-type.component.css']
 })
-export class UserTypeComponent implements OnInit {
+export class UserTypeComponent implements OnInit, OnDestroy {
 
   // u÷serType = new UserType();
   userTypeObj: any = {};
@@ -62,7 +62,7 @@ export class UserTypeComponent implements OnInit {
   onSubmit() {
     console.log(this.userTypeObj);
     if (this.utForm.valid) {
-      this.methodUtils.setLoadingStatus(true);
+      // this.methodUtils.setLoadingStatus(true);
       if (this.usertypeId) {
         this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_USERTYPE, this.userTypeObj, this.usertypeId, (response) => {
           console.log('UserType update response : ', response);
@@ -72,7 +72,7 @@ export class UserTypeComponent implements OnInit {
           } else {
             this.createError = 'UserType Update Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       } else {
         this.apiService.postMethodAPI(true, VariableService.API_CREATE_USERTYPE, this.userTypeObj, (response) => {
@@ -83,7 +83,7 @@ export class UserTypeComponent implements OnInit {
           } else {
             this.createError = 'UserType Insert Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       }
     } else {
@@ -116,7 +116,7 @@ export class UserTypeComponent implements OnInit {
   deleteUserType(data) {
     if (confirm('Are you sure want to delete record')) {
       if (data && data.id) {
-        this.methodUtils.setLoadingStatus(true);
+        // this.methodUtils.setLoadingStatus(true);
         this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_USERTYPE, data.id, (response) => {
           console.log('UserType delete response : ', response);
           if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
@@ -125,7 +125,7 @@ export class UserTypeComponent implements OnInit {
           } else {
             this.createError = 'UserType Delete Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       } else {
         this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Fails Delete, Record Already In Use.');

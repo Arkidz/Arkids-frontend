@@ -85,13 +85,13 @@ export class CompanyDetailComponent implements OnInit {
     console.log('this.companyObj : ', this.companyObj);
     if (this.companyForm.valid) {
       console.log('submit company ');
-      this.methodUtils.setLoadingStatus(true);
+      // this.methodUtils.setLoadingStatus(true);
       this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_COMPANY, this.companyObj, this.companyObj.id, (response) => {
         console.log('response : ', response);
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
           this.getCompanyList();
         }
-        this.methodUtils.setLoadingStatus(false);
+        // this.methodUtils.setLoadingStatus(false);
       });
       // this.apiService.postMethodAPI(false, VariableService.API_UPDATE_COMPANY, this.companyObj, (response) => {
       //   console.log('update response : ', response);

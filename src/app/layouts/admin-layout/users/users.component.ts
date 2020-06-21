@@ -78,7 +78,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     // if (this.userObj.uStatus) { this.userObj.uStatus = this.userObj.uStatus.toString(); }
     console.log(this.userObj);
     if (this.userForm.valid) {
-      this.methodUtils.setLoadingStatus(true);
+      // this.methodUtils.setLoadingStatus(true);
       if (this.userId) {
         this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_USER, this.userObj, this.userId, (response) => {
           console.log('User update response : ', response);
@@ -88,7 +88,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'UserType Update Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       } else {
         this.apiService.postMethodAPI(true, VariableService.API_CREATE_USER, this.userObj, (response) => {
@@ -99,7 +99,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'User Insert Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       }
     } else {
@@ -150,7 +150,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   deleteUser(data) {
     if (confirm('Are you sure want to delete record')) {
       if (data.id) {
-        this.methodUtils.setLoadingStatus(true);
+        // this.methodUtils.setLoadingStatus(true);
         this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_USER, data.id, (response) => {
           console.log('User delete response : ', response);
           if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
@@ -159,7 +159,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'User Delete Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       }
     }

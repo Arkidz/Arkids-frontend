@@ -53,14 +53,14 @@ export class GeneralSettingComponent implements OnInit {
     console.log('this.settingObj : ', this.settingObj);
     if (this.settingForm.valid) {
       console.log('submit generat setting ');
-      this.methodUtils.setLoadingStatus(true);
+      // this.methodUtils.setLoadingStatus(true);
       // this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'General settings saved');
       this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_SETTING, this.settingObj, this.settingObj.id, (response) => {
         console.log('response : ', response);
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
           this.getsettingList();
         }
-        this.methodUtils.setLoadingStatus(false);
+        // this.methodUtils.setLoadingStatus(false);
       });
     } else {
       this.settingForm.markAllAsTouched();

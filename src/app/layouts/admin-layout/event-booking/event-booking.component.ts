@@ -28,18 +28,18 @@ export class EventBookingComponent implements OnInit, OnDestroy {
   //   "regCount": "250",
   //   "availableCount": "60"
   // }];
-  // eventShowBookList: any = [];
-  eventShowBookList: any = [{
-    "cName": "amit trivedi",
-    "mobileNo": "44545454545",
-    "noOfPeople": "4",
-    "bookDate": "01-02-2020"
-  }, {
-    "cName": "shamaji",
-    "mobileNo": "94949494949",
-    "noOfPeople": "2",
-    "bookDate": "01-02-2020"
-  }];
+  eventShowBookList: any = [];
+  // eventShowBookList: any = [{
+  //   "cName": "amit trivedi",
+  //   "mobileNo": "44545454545",
+  //   "noOfPeople": "4",
+  //   "bookDate": "01-02-2020"
+  // }, {
+  //   "cName": "shamaji",
+  //   "mobileNo": "94949494949",
+  //   "noOfPeople": "2",
+  //   "bookDate": "01-02-2020"
+  // }];
   title = '';
   dtOptions: DataTables.Settings = {};
   dtTrigger: any = new Subject();
@@ -47,13 +47,12 @@ export class EventBookingComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dtOptions = {
-      pagingType: 'full_numbers',
-      pageLength: 2
+      pagingType: 'full_numbers' // ,pageLength: 2
     };
-    this.getEventRequest();
+    this.getEventBooking();
   }
 
-  getEventRequest() {
+  getEventBooking() {
     this.apiService.postMethodAPI(false, VariableService.API_GET_EVENT_BOOK, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
         this.eveBookList = response['rows'];
@@ -75,14 +74,18 @@ export class EventBookingComponent implements OnInit, OnDestroy {
 
   showBooking(book) {
     console.log('show booking...', book);
-    this.title = book.eName;
-    $('#showbook').modal({ keyboard: false, backdrop: 'static' });
+    if (book.eventBooking && book.eventBooking.count && book.eventBooking.count > 0) {
+      this.title = book.eName;
+      this.eventShowBookList = book.eventBooking.rows;
+      console.log('this.eventShowBookList : ', this.eventShowBookList);
+      $('#showbook').modal({ keyboard: false, backdrop: 'static' });
+    }
   }
 
   modelClose() {
     $('#showbook').modal('hide');
     this.title = '';
-    // this.eventShowBookList = [];
+    this.eventShowBookList = [];
   }
 
   changeSlot(books) { }

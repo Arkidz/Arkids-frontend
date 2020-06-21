@@ -83,7 +83,7 @@ export class EventRequestComponent implements OnInit, OnDestroy {
       } else {
         this.createError = 'Event Request Insert Fails';
       }
-      this.methodUtils.setLoadingStatus(false);
+      // this.methodUtils.setLoadingStatus(false);
     });
   }
 
@@ -100,14 +100,14 @@ export class EventRequestComponent implements OnInit, OnDestroy {
       } else {
         this.createError = 'Event Request Insert Fails';
       }
-      this.methodUtils.setLoadingStatus(false);
+      // this.methodUtils.setLoadingStatus(false);
     });
   }
 
   onSubmit() {
     console.log(this.eveReqObj);
     if (this.eveReqForm.valid) {
-      this.methodUtils.setLoadingStatus(true);
+      // this.methodUtils.setLoadingStatus(true);
       if (this.eveRequestId) {
         this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_EVENT_REQ, this.eveReqObj, this.eveRequestId, (response) => {
           console.log('Event Request update response : ', response);
@@ -117,7 +117,7 @@ export class EventRequestComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'Event Request Insert Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       } else {
         this.apiService.postMethodAPI(true, VariableService.API_CREATE_EVENT_REQ, this.eveReqObj, (response) => {
@@ -128,7 +128,7 @@ export class EventRequestComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'Event Request Insert Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       }
     } else {
@@ -160,7 +160,7 @@ export class EventRequestComponent implements OnInit, OnDestroy {
 
   eventReqDelete(data) {
     if (confirm('Are you sure want to delete record')) {
-      this.methodUtils.setLoadingStatus(true);
+      // this.methodUtils.setLoadingStatus(true);
       this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_EVENT_REQ, data.id, (response) => {
         console.log('Event Request update response : ', response);
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
@@ -169,7 +169,7 @@ export class EventRequestComponent implements OnInit, OnDestroy {
         } else {
           this.createError = 'Event Request Insert Fails';
         }
-        this.methodUtils.setLoadingStatus(false);
+        // this.methodUtils.setLoadingStatus(false);
       });
     }
   }

@@ -115,7 +115,7 @@ export class PlayersComponent implements OnInit, OnDestroy {
     // if (this.playerObj.status) { this.playerObj.status = this.playerObj.status.toString(); }
     console.log(this.playerObj);
     if (this.playerForm.valid) {
-      this.methodUtils.setLoadingStatus(true);
+      // this.methodUtils.setLoadingStatus(true);
       if (this.playerId) {
         this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_PLAYER, this.playerObj, this.playerId, (response) => {
           console.log('UserType update response : ', response);
@@ -125,7 +125,7 @@ export class PlayersComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'UserType Update Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       } else {
         this.apiService.postMethodAPI(true, VariableService.API_CREATE_PLAYER, this.playerObj, (response) => {
@@ -136,7 +136,7 @@ export class PlayersComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'UserType Insert Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       }
     } else {
@@ -183,7 +183,7 @@ export class PlayersComponent implements OnInit, OnDestroy {
   deletePlayer(data) {
     if (confirm('Are you sure want to delete record')) {
       if (data.id) {
-        this.methodUtils.setLoadingStatus(true);
+        // this.methodUtils.setLoadingStatus(true);
         this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_PLAYER, data.id, (response) => {
           console.log('UserType delete response : ', response);
           if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
@@ -192,7 +192,7 @@ export class PlayersComponent implements OnInit, OnDestroy {
           } else {
             this.createError = 'UserType Delete Fails';
           }
-          this.methodUtils.setLoadingStatus(false);
+          // this.methodUtils.setLoadingStatus(false);
         });
       }
     }
