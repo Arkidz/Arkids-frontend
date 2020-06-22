@@ -68,6 +68,29 @@ export class EventRequestComponent implements OnInit, OnDestroy {
 
   eventReqReply(eventReq) {
     console.log('eventReqReply : ', eventReq);
+    this.eveReqObj = eventReq;
+    this.eveRequestId = eventReq.id;
+    $('#erReply').modal({ keyboard: false, backdrop: 'static' });
+  }
+  resetReply() {
+    $('#erReply').modal('hide');
+    this.eveReqObj = {};
+    this.eveRequestId = '';
+  }
+  eventReplySave() {
+    const param = { replyText: this.eveReqObj.replyText, rStatus: 'reply' };
+    console.log('eventReqReply : ', param, ' eid : ', this.eveRequestId);
+    this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_EVENT_REQ, param, this.eveRequestId, (response) => {
+      console.log('Event Request update response : ', response);
+      if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+        console.log(response);
+        this.reset();
+        this.resetReply();
+      } else {
+        this.createError = 'Event Request Insert Fails';
+      }
+      // this.methodUtils.setLoadingStatus(false);
+    });
   }
 
   eventReqCancel(eventReq) {

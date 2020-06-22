@@ -43,11 +43,9 @@
                                         </td>
                                         <td>
                                             <button class="bnt btn-warning mrg5" (click)="cancelBooking(book)"
-                                                title="Cancel">
-                                                <i class="fa fa-window-close" aria-hidden="true"></i>Cancel
-                                            </button>
+                                                title="Cancel"> Cancel </button>
                                             <button class="bnt btn-primary mrg5" (click)="markFullBooking(book)"
-                                                title="Mark Full">Mark Full </button>
+                                                title="Mark Full" *ngIf="book.eTimeSlote && book.eTimeSlote.length > 0">Mark Full </button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -95,17 +93,17 @@
                                         <tbody>
                                             <tr *ngFor="let books of eventShowBookList; let i=index;">
                                                 <td> {{i + 1}} </td>
-                                                <td> {{books.ecube_player&&books.ecube_player.fullname?books.ecube_player.fullname:'-'}} </td>
-                                                <td> {{books.ecube_player&&books.ecube_player.mobileno?books.ecube_player.mobileno:'-'}} </td>
+                                                <td> {{books.ecube_player&&books.ecube_player.fullname?books.ecube_player.fullname:'-'}}
+                                                </td>
+                                                <td> {{books.ecube_player&&books.ecube_player.mobileno?books.ecube_player.mobileno:'-'}}
+                                                </td>
                                                 <td> {{books.seats?books.seats:0}} </td>
                                                 <td> {{books.createdAt?(books.createdAt|date:'dd-MM-yyyy'):'-'}} </td>
                                                 <td>
                                                     <button class="bnt btn-primary mrg5" (click)="changeSlot(books)"
-                                                        title="Change Slot"> Slot </button>
+                                                        title="Change Slot"> Change slot </button>
                                                     <button class="bnt btn-warning mrg5" (click)="cancel(books)"
-                                                        title="Cancel"> <i class="fa fa-window-close"
-                                                            aria-hidden="true"></i>
-                                                    </button>
+                                                        title="Cancel"> Cancel</button>
                                                     <button class="bnt btn-danger" (click)="delete(books)"
                                                         title="Delete">
                                                         <i class="fa fa-trash" aria-hidden="true"></i>

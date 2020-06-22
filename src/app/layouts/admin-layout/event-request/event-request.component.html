@@ -11,7 +11,8 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="ereqtbl" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-hover">
+                            <table id="ereqtbl" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                                class="table table-hover">
                                 <thead class=" text-primary">
                                     <tr>
                                         <th> # </th>
@@ -34,7 +35,8 @@
                                         <td> {{request.rFromTime?request.rFromTime:'-'}} </td>
                                         <td> {{request.rToTime?request.rToTime:'-'}} </td>
                                         <td> {{request.rDesc?request.rDesc:'-'}} </td>
-                                        <td> {{request.rStatus?request.rStatus:'-'}} </td>
+                                        <td> {{request.rStatus?(request.rStatus=='reply'?'Replied':request.rStatus|titlecase):'Pending'}}
+                                        </td>
                                         <td>
                                             <button class="bnt btn-primary mrg5" (click)="eventReqReply(request)"
                                                 title="Reply">
@@ -74,6 +76,39 @@
     </div>
 </div>
 
+<!-- rplay for event request popup Modal -->
+<div class="modal modal-angular fade" id="erReply" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" aria-label="Close" (click)="resetReply()"><span
+                        aria-hidden="true">&times;</span></button>
+                <div class="separator"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-success">
+                                <h4 class="card-title">Event Request Reply</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="replyText"><b>Reply Text *</b></label>
+                                    <input type="text" id="replyText" class="form-control" placeholder="Reply Text"
+                                        required [(ngModel)]="eveReqObj.replyText">
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-success" (click)="eventReplySave()">Reply</button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <!-- Event Request add Popup Modal -->
 <div class="modal modal-angular fade" id="eventReqAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

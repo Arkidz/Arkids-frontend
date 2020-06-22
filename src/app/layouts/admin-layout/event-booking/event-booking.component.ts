@@ -53,6 +53,7 @@ export class EventBookingComponent implements OnInit, OnDestroy {
   }
 
   getEventBooking() {
+    this.methodUtils.setLoadingStatus(true);
     this.apiService.postMethodAPI(false, VariableService.API_GET_EVENT_BOOK, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
         this.eveBookList = response['rows'];

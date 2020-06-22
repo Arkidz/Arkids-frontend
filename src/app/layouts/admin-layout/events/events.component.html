@@ -292,7 +292,8 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div *ngFor="let img of imagesList; let i = index">
-                                                <img [src]="img" class="rounded mb-3" width="180" height="175">
+                                                <img [src]="imgURLCheck(img)" class="rounded mb-3" width="180"
+                                                    height="175" onerror="this.src='assets/img/noimg.png';">
                                                 <button class="bnt btn-danger pull-right" (click)="removeImage(i)"
                                                     title="Remove Image">
                                                     <i class="fa fa-trash" aria-hidden="true"></i>

@@ -313,6 +313,15 @@ export class EventsComponent implements OnInit, OnDestroy {
     }
   }
 
+  // image replace with local host
+  imgURLCheck(url) {
+    let urlimg = '';
+    if (url && url.includes('http://localhost:3000')) {
+      urlimg = url.replace('http://localhost:3000', VariableService.API_URL);
+    } else { urlimg = url; }
+    return urlimg;
+  }
+
   ngOnDestroy() {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
