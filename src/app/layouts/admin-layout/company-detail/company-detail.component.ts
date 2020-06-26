@@ -84,6 +84,7 @@ export class CompanyDetailComponent implements OnInit {
   onSubmit() {
     console.log('this.companyObj : ', this.companyObj);
     if (this.companyForm.valid) {
+      this.companyObj.coLogo = this.previewUrl;
       console.log('submit company ');
       // this.methodUtils.setLoadingStatus(true);
       this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_COMPANY, this.companyObj, this.companyObj.id, (response) => {
@@ -117,6 +118,7 @@ export class CompanyDetailComponent implements OnInit {
     this.companyObj.remark = data.remark;
     this.companyObj.coStatus = data.coStatus;
     this.companyObj.id = data.id;
+    this.previewUrl = this.companyObj.coLogo;
   }
   /*
   { 

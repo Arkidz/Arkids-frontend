@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { VariableService } from 'src/app/core/services/variable.service';
 import { Players } from 'src/app/core/models/players.model';
 import { APIService } from 'src/app/core/services/api.service';
 import { MethodUtilityService } from 'src/app/core/services/Method-utility.service';
 import { Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
 declare var $: any;
 
 @Component({
@@ -45,6 +46,8 @@ export class PlayersComponent implements OnInit, OnDestroy {
   refillForm: FormGroup;
   dtOptions: DataTables.Settings = {};
   dtTrigger: any = new Subject();
+  @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
+  isDtInitialized: boolean = false;
 
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
@@ -96,15 +99,25 @@ export class PlayersComponent implements OnInit, OnDestroy {
       // remark: new FormControl('', [Validators.required])
     });
   }
-
+  resetTable() {
+    if (this.isDtInitialized) {
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.destroy();
+        this.dtTrigger.next();
+      });
+    } else {
+      this.isDtInitialized = true;
+      this.dtTrigger.next();
+    }
+  }
   getPlayerList() {
     this.apiService.postMethodAPI(false, VariableService.API_GET_PLAYER, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
         this.playerList = response['rows'];
-        this.dtTrigger.next();
+        this.resetTable();
       } else {
         this.playerList = [];
-        this.dtTrigger.next();
+        this.resetTable();
       }
       console.log('playerList response : ', this.playerList);
     });

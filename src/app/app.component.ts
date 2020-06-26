@@ -14,22 +14,22 @@ export class AppComponent implements OnInit {
 
   constructor(private router: Router, public methodSer: MethodUtilityService) {
     router.events.subscribe((routerEvent: Event) => {
-      // if (routerEvent instanceof NavigationStart) {
-      //   console.log('current route...', routerEvent.url);
-      //   if (routerEvent.url === '' || routerEvent.url === '/' || routerEvent.url === '/login') {
-      //     console.log('login route...');
-      //     if (this.methodSer.isAdminAccess() === true) {
-      //       localStorage.removeItem(VariableService.USER_DATA);
-      //       console.log('clear storage...');
-      //     }
-      //   } else {
-      //     if (this.methodSer.isAdminAccess() === false) {
-      //       localStorage.removeItem(VariableService.USER_DATA);
-      //       console.log('go to loginpage...');
-      //       this.router.navigate(['/login']);
-      //     }
-      //   }
-      // }
+      if (routerEvent instanceof NavigationStart) {
+        console.log('current route...', routerEvent.url);
+        if (routerEvent.url === '' || routerEvent.url === '/' || routerEvent.url === '/login') {
+          console.log('login route...');
+          if (this.methodSer.isAdminAccess() === true) {
+            localStorage.removeItem(VariableService.USER_DATA);
+            console.log('clear storage...');
+          }
+        } else {
+          if (this.methodSer.isAdminAccess() === false) {
+            localStorage.removeItem(VariableService.USER_DATA);
+            console.log('go to loginpage...');
+            this.router.navigate(['/login']);
+          }
+        }
+      }
       window.scrollTo(0, 0);
       this.checkRouterEvent(routerEvent);
     });

@@ -14,7 +14,7 @@ export class VariableService {
   static ADMIN_COMPANY = '/admin/company-detail';
 
   // API URL
-  static API_URL = '//ec2-18-224-172-176.us-east-2.compute.amazonaws.com:3000'; // main api root url -Base URL : http://localhost:3000
+  static API_URL = 'http://ec2-3-134-253-58.us-east-2.compute.amazonaws.com:3000'; // main api root url -Base URL : http://localhost:3000
   // static API_URL = 'https://642b21be949c.ngrok.io'; // main api root url -Base URL : http://localhost:3000
   static API_LOGIN = '/admin/user/login'; // POST : { "username": “ss”,”password": “123”} - {"new_password":"12345"}
   static API_CHANGE_PASSWORD = '/admin/user/change/password'; // POST : { "username": “ss”,old_password": “123”,"new_password":"12345"}

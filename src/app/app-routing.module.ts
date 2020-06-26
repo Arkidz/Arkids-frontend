@@ -12,7 +12,7 @@ const routes: Routes = [
   },
   // { path: 'login', loadChildren: './layouts/login/login.module#LoginModule' },
   {
-    path: 'admin', component: AdminLayoutComponent, // canActivate: [AdminGuard],
+    path: 'admin', component: AdminLayoutComponent, canActivate: [AdminGuard],
     children: [{
       path: '',
       loadChildren: () => import('./layouts/admin-layout/admin-layout.module').then(a => a.AdminLayoutModule)

@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { VariableService } from 'src/app/core/services/variable.service';
 import { APIService } from 'src/app/core/services/api.service';
 import { MethodUtilityService } from 'src/app/core/services/Method-utility.service';
 import { Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
 declare var $: any;
 
 @Component({
@@ -35,6 +36,9 @@ export class EventRequestComponent implements OnInit, OnDestroy {
   title = 'New Event Request';
   dtOptions: DataTables.Settings = {};
   dtTrigger: any = new Subject();
+  @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
+  isDtInitialized: boolean = false;
+
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
   ngOnInit() {
@@ -52,15 +56,25 @@ export class EventRequestComponent implements OnInit, OnDestroy {
       // pCode: new FormControl('', [Validators.required]),
     });
   }
-
+  resetTable() {
+    if (this.isDtInitialized) {
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.destroy();
+        this.dtTrigger.next();
+      });
+    } else {
+      this.isDtInitialized = true;
+      this.dtTrigger.next();
+    }
+  }
   getEventRequest() {
     this.apiService.postMethodAPI(false, VariableService.API_GET_EVENT_REQ, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
         this.eveReqList = response['rows'];
-        this.dtTrigger.next();
+        this.resetTable();
       } else {
         this.eveReqList = [];
-        this.dtTrigger.next();
+        this.resetTable();
       }
       console.log('eveReqList response : ', this.eveReqList);
     });

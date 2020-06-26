@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MethodUtilityService } from 'src/app/core/services/Method-utility.service';
 import { APIService } from 'src/app/core/services/api.service';
 import { VariableService } from 'src/app/core/services/variable.service';
 import { Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
 declare var $: any;
 
 @Component({
@@ -43,6 +44,9 @@ export class EventBookingComponent implements OnInit, OnDestroy {
   title = '';
   dtOptions: DataTables.Settings = {};
   dtTrigger: any = new Subject();
+  @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
+  isDtInitialized: boolean = false;
+
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
   ngOnInit() {
@@ -51,16 +55,26 @@ export class EventBookingComponent implements OnInit, OnDestroy {
     };
     this.getEventBooking();
   }
-
+  resetTable() {
+    if (this.isDtInitialized) {
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.destroy();
+        this.dtTrigger.next();
+      });
+    } else {
+      this.isDtInitialized = true;
+      this.dtTrigger.next();
+    }
+  }
   getEventBooking() {
     this.methodUtils.setLoadingStatus(true);
     this.apiService.postMethodAPI(false, VariableService.API_GET_EVENT_BOOK, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
         this.eveBookList = response['rows'];
-        this.dtTrigger.next();
+        this.resetTable();
       } else {
         this.eveBookList = [];
-        this.dtTrigger.next();
+        this.resetTable();
       }
       console.log('eveBookList response : ', this.eveBookList);
     });

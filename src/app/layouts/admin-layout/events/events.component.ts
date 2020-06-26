@@ -5,6 +5,7 @@ import { APIService } from 'src/app/core/services/api.service';
 import { MethodUtilityService } from 'src/app/core/services/Method-utility.service';
 import { BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
 declare var $: any;
 
 @Component({
@@ -49,6 +50,8 @@ export class EventsComponent implements OnInit, OnDestroy {
   imgError: any = [];
   dtOptions: DataTables.Settings = {};
   dtTrigger: any = new Subject();
+  @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
+  isDtInitialized: boolean = false;
 
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
@@ -101,15 +104,25 @@ export class EventsComponent implements OnInit, OnDestroy {
   isValidToDate(value) {
     return ((value !== 'Invalid Date') && (value instanceof Date) && value !== null);
   }
-
+  resetTable() {
+    if (this.isDtInitialized) {
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.destroy();
+        this.dtTrigger.next();
+      });
+    } else {
+      this.isDtInitialized = true;
+      this.dtTrigger.next();
+    }
+  }
   getEvents() {
     this.apiService.postMethodAPI(false, VariableService.API_GET_EVENT, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
         this.eventList = response['rows'];
-        this.dtTrigger.next();
+        this.resetTable();
       } else {
         this.eventList = [];
-        this.dtTrigger.next();
+        this.resetTable();
       }
       console.log('eventList response : ', this.eventList);
     });

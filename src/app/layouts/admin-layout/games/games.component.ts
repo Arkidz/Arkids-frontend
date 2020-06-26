@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { VariableService } from 'src/app/core/services/variable.service';
 import { APIService } from 'src/app/core/services/api.service';
 import { MethodUtilityService } from 'src/app/core/services/Method-utility.service';
@@ -11,6 +11,7 @@ declare var $: any;
 import * as jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-games',
@@ -34,6 +35,8 @@ export class GamesComponent implements OnInit, OnDestroy {
   ptintObj: any = {};
   dtOptions: DataTables.Settings = {};
   dtTrigger: any = new Subject();
+  @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
+  isDtInitialized: boolean = false;
 
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
@@ -73,14 +76,25 @@ export class GamesComponent implements OnInit, OnDestroy {
     });
   }
 
+  resetTable() {
+    if (this.isDtInitialized) {
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.destroy();
+        this.dtTrigger.next();
+      });
+    } else {
+      this.isDtInitialized = true;
+      this.dtTrigger.next();
+    }
+  }
   getGames() {
     this.apiService.postMethodAPI(false, VariableService.API_GET_GAME, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
         this.gameList = response['rows'];
-        this.dtTrigger.next();
+        this.resetTable();
       } else {
         this.gameList = [];
-        this.dtTrigger.next();
+        this.resetTable();
       }
       console.log('gameList response : ', this.gameList);
     });
@@ -93,6 +107,8 @@ export class GamesComponent implements OnInit, OnDestroy {
     if (this.gForm.valid) {
       // this.methodUtils.setLoadingStatus(true);
       if (this.gameId) {
+        this.gameObj.canContinue = this.gameObj.canContinue.toString();
+        this.gameObj.countinueMaxCtr = this.gameObj.countinueMaxCtr.toString();
         this.apiService.patchMethodAPI(true, VariableService.API_UPDATE_GAME, this.gameObj, this.gameId, (response) => {
           console.log('Game update response : ', response);
           if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
