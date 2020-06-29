@@ -12,6 +12,7 @@ import * as jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Subject } from 'rxjs';
 import { DataTableDirective } from 'angular-datatables';
+declare var jsPDF: any;
 
 @Component({
   selector: 'app-games',
@@ -199,32 +200,64 @@ export class GamesComponent implements OnInit, OnDestroy {
     this.ptintObj = game;
   }
   resetPrint() {
+    console.log('close...model')
     $('#qrPrintModal').modal('hide');
     this.ptintObj = {};
   }
   // print qr code using popup model
-  printDiv() {
-    const printContents = document.getElementById('printDiv').innerHTML;
-    const originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
+  printDiv(gName, qrURL) {
+    var URL = qrURL;
+    if (URL) {
+      var printWindow = window.open(URL, '_blank');
+      printWindow.window.print();
+    }
+    // var pwin = window.open(document.getElementById(gName)['src'], "_blank");
+    // pwin.onload = function () { window.print(); }
+    // const printContents = document.getElementById('printDiv').innerHTML;
+    // const originalContents = document.body.innerHTML;
+    // document.body.innerHTML = printContents;
+    // window.print();
+    // document.body.innerHTML = originalContents;
   }
 
-  printQRPDF(id, gName) {
-    var data = document.getElementById(id);
-    html2canvas(data).then(canvas => {
-      // Few necessary setting options
-      var imgWidth = 208;
-      var pageHeight = 295;
-      var imgHeight = canvas.height * imgWidth / canvas.width;
-      var heightLeft = imgHeight;
-      const contentDataURL = canvas.toDataURL('image/png')
-      let pdf = new jspdf('p', 'mm', 'a4'); // A4 size page of PDF  
-      var position = 0;
-      pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
-      pdf.save('MYPdf.pdf'); // Generated PDF   
-    });
+  printQRPDF(id, qrURL) {
+    // var data = document.getElementById(id);
+    // html2canvas(data).then(canvas => {
+    //   // Few necessary setting options
+    //   var imgWidth = 208;
+    //   var pageHeight = 295;
+    //   var imgHeight = canvas.height * imgWidth / canvas.width;
+    //   var heightLeft = imgHeight;
+    //   const contentDataURL = canvas.toDataURL('image/png')
+    //   let pdf = new jspdf('p', 'mm', 'a4'); // A4 size page of PDF  
+    //   var position = 0;
+    //   pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
+    //   pdf.save('MYPdf.pdf'); // Generated PDF   
+    // });
+
+    var img = new Image();
+    img.onerror = function () {
+      alert('Cannot load image: "' + qrURL + '"');
+    };
+    img.onload = function () {
+      var doc = new jsPDF('p', 'pt', 'a4');
+      var width = doc.internal.pageSize.width;
+      var height = doc.internal.pageSize.height;
+      var options = {
+        pagesplit: true
+      };
+      doc.text(10, 20, 'Crazy Monkey');
+      var h1 = 50;
+      var aspectwidth1 = (height - h1) * (9 / 16);
+      doc.addImage(img, 'JPEG', 10, h1, aspectwidth1, (height - h1), 'monkey');
+      doc.addPage();
+      doc.text(10, 20, 'Hello World');
+      var h2 = 30;
+      var aspectwidth2 = (height - h2) * (9 / 16);
+      doc.addImage(img, 'JPEG', 10, h2, aspectwidth2, (height - h2), 'monkey');
+      doc.output('datauri');
+    };
+    img.src = qrURL;
   }
 
   ngOnDestroy() {

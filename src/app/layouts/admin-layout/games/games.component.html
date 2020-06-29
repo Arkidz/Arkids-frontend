@@ -39,9 +39,11 @@
                                         <td>{{game.gCharge ? game.gCharge : '-'}}</td>
                                         <td [id]="'td'+i">
                                             <!-- {{game.gQR}}  -->
-                                            <ngx-qrcode [elementType]="elementType" [value]="game.gName+' - '+game.gQR"
+                                            <!-- <ngx-qrcode [elementType]="elementType" [value]="game.gName+' - '+game.gQR"
                                                 cssClass="aclass" errorCorrectionLevel="L">
-                                            </ngx-qrcode>
+                                            </ngx-qrcode> -->
+                                            <img [id]="'img'+i" [src]="game.gQR" height="65"
+                                                onerror="this.src='assets/img/noimg.png';">
                                         </td>
                                         <td> {{game.gStatus?'Active':'Inactive'}} </td>
                                         <td>
@@ -49,8 +51,8 @@
                                                 title="Print Game QR Code">
                                                 <i class="fa fa-print" aria-hidden="true"></i>
                                             </button>
-                                            <button class="bnt btn-warning mrg5"
-                                                (click)="printQRPDF('td'+i, game.gName)" title="PDF Game QR Code">
+                                            <button class="bnt btn-warning mrg5" (click)="printQRPDF('td'+i, game.gQR)"
+                                                title="PDF Game QR Code">
                                                 <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                             </button>
                                             <button class="bnt btn-info mrg5" (click)="editGame(game)"
@@ -99,9 +101,8 @@
                             </div>
                             <div class="card-body" id="printDiv">
                                 <div class="row igmdivcss">
-                                    <ngx-qrcode [elementType]="elementType" [value]="ptintObj.gName+' - '+ptintObj.gQR"
-                                        cssClass="aclass" errorCorrectionLevel="L">
-                                    </ngx-qrcode>
+                                    <img [id]="ptintObj.gName" [src]="ptintObj.gQR"
+                                        onerror="this.src='assets/img/noimg.png';">
                                 </div>
                                 <div class="row">
                                     <span>{{ptintObj.gName}}</span>
@@ -112,7 +113,8 @@
                 </div>
             </div>
             <div class="modal-footer text-center">
-                <button type="button" class="bnt btn-success" (click)="printDiv()" title="Print Game QR Code">
+                <button type="button" class="bnt btn-success" (click)="printDiv(ptintObj.gName,ptintObj.gQR)"
+                    title="Print Game QR Code">
                     Print</button>
             </div>
         </div>

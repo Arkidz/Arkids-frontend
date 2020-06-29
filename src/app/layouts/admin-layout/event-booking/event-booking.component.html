@@ -8,7 +8,8 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="eBookTbl" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-hover">
+                            <table id="eBookTbl" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                                class="table table-hover">
                                 <thead class=" text-primary">
                                     <tr>
                                         <th> # </th>
@@ -23,30 +24,35 @@
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let book of eveBookList; let i=index;">
-                                        <td> {{i+1}} </td>
-                                        <td> {{book.name ? book.name : '-'}} </td>
-                                        <td> {{book.eFromDate ? (book.eFromDate|date:'dd-MM-yyyy') : '-'}} </td>
-                                        <td>
-                                            <!-- {{book.eTimeSlote?book.eTimeSlote[0].fromTime +' - '+ book.eTimeSlote[0].toTime:'-'}} -->
-                                            <div *ngIf="book.eTimeSlote && book.eTimeSlote.length > 0">
-                                                <div *ngFor="let bs of book.eTimeSlote;">
-                                                    {{bs.fromTime +' - '+ bs.toTime}}</div>
-                                            </div>
-                                        </td>
-                                        <td> {{book.eCapacity ? book.eCapacity : '-'}} </td>
-                                        <td> <a (click)="showBooking(book)" style="text-decoration: underline;">
-                                                {{book.eventBooking&&book.eventBooking.count?book.eventBooking.count:0}}
-                                            </a>
-                                        </td>
-                                        <td>
-                                            {{(+book.eCapacity - (book.eventBooking&&book.eventBooking.count?book.eventBooking.count:0))}}
-                                        </td>
-                                        <td>
-                                            <button class="bnt btn-warning mrg5" (click)="cancelBooking(book)"
-                                                title="Cancel"> Cancel </button>
-                                            <button class="bnt btn-primary mrg5" (click)="markFullBooking(book)"
-                                                title="Mark Full" *ngIf="book.eTimeSlote && book.eTimeSlote.length > 0">Mark Full </button>
-                                        </td>
+                                        <ng-container *ngIf="!book.slotCancelled">
+                                            <td> {{i+1}} </td>
+                                            <td> {{book.name ? book.name : '-'}} </td>
+                                            <td> {{book.eFromDate ? (book.eFromDate|date:'dd-MM-yyyy') : '-'}} </td>
+                                            <td>
+                                                <!-- {{book.eTimeSlote?book.eTimeSlote[0].fromTime +' - '+ book.eTimeSlote[0].toTime:'-'}} -->
+                                                <div *ngIf="book.eTimeSlote && book.eTimeSlote.length > 0">
+                                                    <div *ngFor="let bs of book.eTimeSlote;">
+                                                        {{bs.fromTime +' - '+ bs.toTime}}</div>
+                                                </div>
+                                            </td>
+                                            <td> {{book.eCapacity ? book.eCapacity : '-'}} </td>
+                                            <td> <a (click)="showBooking(book)" style="text-decoration: underline;">
+                                                    {{book.totalSeat?book.totalSeat:0}}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                {{(+book.eCapacity - (book.totalSeat?book.totalSeat:0))}}
+                                            </td>
+                                            <td>
+                                                <button class="bnt btn-warning mrg5" (click)="cancelBooking(book)"
+                                                    title="Cancel"> Cancel </button>
+                                                <button class="bnt btn-primary mrg5" (click)="markFullBooking(book)"
+                                                    title="Mark Full"
+                                                    *ngIf="book.eTimeSlote && book.eTimeSlote.length > 0">
+                                                    {{book.slotFull? 'Mark Avail.':'Mark Full'}}
+                                                </button>
+                                            </td>
+                                        </ng-container>
                                     </tr>
                                 </tbody>
                                 <!-- <tfoot>
@@ -100,7 +106,7 @@
                                                 <td> {{books.seats?books.seats:0}} </td>
                                                 <td> {{books.createdAt?(books.createdAt|date:'dd-MM-yyyy'):'-'}} </td>
                                                 <td>
-                                                    <button class="bnt btn-primary mrg5" (click)="changeSlot(books)"
+                                                    <button class="bnt btn-primary mrg5" (click)="changeSlot(books,i)"
                                                         title="Change Slot"> Change slot </button>
                                                     <button class="bnt btn-warning mrg5" (click)="cancel(books)"
                                                         title="Cancel"> Cancel</button>

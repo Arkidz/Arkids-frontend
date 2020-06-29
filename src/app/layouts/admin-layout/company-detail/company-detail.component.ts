@@ -118,7 +118,8 @@ export class CompanyDetailComponent implements OnInit {
     this.companyObj.remark = data.remark;
     this.companyObj.coStatus = data.coStatus;
     this.companyObj.id = data.id;
-    this.previewUrl = this.companyObj.coLogo;
+    this.companyObj.coLogo = data.coLogo;
+    this.previewUrl = data.coLogo;
   }
   /*
   { 
