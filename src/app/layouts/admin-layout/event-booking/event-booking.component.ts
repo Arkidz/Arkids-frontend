@@ -47,6 +47,8 @@ export class EventBookingComponent implements OnInit, OnDestroy {
   dtTrigger: any = new Subject();
   @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
   isDtInitialized: boolean = false;
+  bookCancelObj: any = {};
+  isRefund = true;
 
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
@@ -86,7 +88,16 @@ export class EventBookingComponent implements OnInit, OnDestroy {
                 this.eveBookList[index]['slotTid'] = item.ecube_event_timeslote.id;
               }
             });
-
+          }
+          // set time slot
+          if (!this.eveBookList[index]['myTimeSlots']) { this.eveBookList[index]['myTimeSlots'] = []; }
+          if (element.timeSlote && element.timeSlote !== undefined) {
+            const obj = element.timeSlote;
+            for (const prop in obj) {
+              if (obj.hasOwnProperty(prop)) { // console.log('obj[prop]', obj[prop][0]);
+                this.eveBookList[index]['myTimeSlots'].push(obj[prop][0]);
+              }
+            }
           }
         });
         this.resetTable();
@@ -98,38 +109,25 @@ export class EventBookingComponent implements OnInit, OnDestroy {
     });
   }
 
-  cancelBooking(book) {
-    console.log('cancel booking...', book);
-    if (book.eventBooking && book.eventBooking.rows && book.eventBooking.rows.length > 0) {
-      const param = {};
-      var timeSlotId = book.eventBooking.rows[0].timesloteId;
-      console.log(' timeSlotId : ', timeSlotId);
-      this.apiService.getMethodAPI(VariableService.API_CANCEL_EVENT_BOOK + timeSlotId, param, (response) => {
-        console.log('Event booking cancel book response : ', response);
-        if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
-          console.log(response);
-          this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'Update success');
-          this.getEventBooking();
-        }
-      });
-    } else {
-      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'No Bookings to Cancel');
-    }
-  }
-  markFullBooking(book) {
+  markFullBooking(book, value) {
     console.log('Mark Full booking...', book);
+    console.log('Mark book.slotFull : ', book.slotFull, value);
     if (book.eventBooking && book.eventBooking.rows && book.eventBooking.rows.length > 0) {
-      const param = {};
-      var timeSlotId = book.eventBooking.rows[0].timesloteId;
-      console.log(' timeSlotId : ', timeSlotId);
-      this.apiService.getMethodAPI(VariableService.API_MARK_FULL_EVENT_BOOK + timeSlotId, param, (response) => {
-        console.log('Event booking mark full response : ', response);
-        if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
-          console.log(response);
-          this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'Update success');
-          this.getEventBooking();
-        }
-      });
+      const param = { isMarkfull: value };
+      if (book.eventBooking.rows[0].timesloteId && book.eventBooking.rows[0].timesloteId !== '') {
+        var timeSlotId = book.eventBooking.rows[0].timesloteId;
+        console.log(' timeSlotId : ', timeSlotId);
+        this.apiService.postMethodAPI(true, VariableService.API_MARK_FULL_EVENT_BOOK + timeSlotId, param, (response) => {
+          console.log('Event booking mark full response : ', response);
+          if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+            console.log(response);
+            this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'Update success');
+            this.getEventBooking();
+          }
+        });
+      } else {
+        this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'No TimeSlot id found');
+      }
     } else {
       this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Can not Mark full');
     }
@@ -153,23 +151,101 @@ export class EventBookingComponent implements OnInit, OnDestroy {
     this.eventShowBookList = [];
   }
 
-  changeSlot(books, ind) {
+  changeSlotModelOpen(books, ind) {
     console.log('change slot of booking index', ind);
     console.log('change slot of booking ', books);
     console.log('event booking object ', this.eveBookObj);
+    console.log('event booking object myTimeSlots', this.eveBookObj.myTimeSlots);
+    if (this.eveBookObj.myTimeSlots && this.eveBookObj.myTimeSlots.length > 0) {
+      this.bookCancelObj = books;
+      $('#changeSlotModel').modal({ keyboard: false, backdrop: 'static' });
+    } else {
+      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'No Time Slot to change slot');
+    }
   }
-  cancel(book) {
+
+  changeSlot(date, fromtime, totime, timeSlotId) {
+    console.log('event booking object ', this.eveBookObj);
+    console.log(' bookCancelObj object ', this.bookCancelObj);
+    if (timeSlotId) {
+      const param = { date: date, fromTime: fromtime, toTime: totime };
+      console.log(' timeSlotId : ', timeSlotId);
+      this.apiService.postMethodAPI(true, VariableService.API_CHANGE_SLOT_EVENT_BOOK + timeSlotId, param, (response) => {
+        console.log('Event booking cancel book response : ', response);
+        if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+          console.log(response);
+          this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'Update success');
+          this.modelChangeSlotClose();
+          this.getEventBooking();
+        }
+      });
+    } else {
+      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'No Bookings to change slot');
+    }
+  }
+
+  modelChangeSlotClose() {
+    $('#changeSlotModel').modal('hide');
+    this.title = '';
+    this.eveBookObj = {};
+    this.eventShowBookList = [];
+    this.modelClose();
+  }
+
+  // outSide cancel
+  cancelBooking(book) {
+    console.log('cancel booking...', book);
+    if (book.eventBooking && book.eventBooking.rows && book.eventBooking.rows.length > 0) {
+      const param = { isRefund: this.isRefund };
+      if (book.eventBooking.rows[0].timesloteId && book.eventBooking.rows[0].timesloteId !== '') {
+        this.cancelModelOpen(book.eventBooking.rows[0]);
+        // var timeSlotId = book.eventBooking.rows[0].timesloteId;
+        // console.log(' timeSlotId : ', timeSlotId);
+        // this.apiService.postMethodAPI(true, VariableService.API_CANCEL_EVENT_BOOK + timeSlotId, param, (response) => {
+        //   console.log('Event booking cancel book response : ', response);
+        //   if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+        //     console.log(response);
+        //     this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'Update success');
+        //     this.getEventBooking();
+        //   }
+        // });
+      } else {
+        this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'No TimeSlot id found');
+      }
+    } else {
+      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'No Bookings to Cancel');
+    }
+  }
+
+  cancelModelOpen(book) {
     console.log('single cancel booking...', book);
     if (book.timesloteId) {
-      const param = {};
-      var timeSlotId = book.timesloteId;
+      this.bookCancelObj = book;
+      $('#cancelModel').modal({ keyboard: false, backdrop: 'static' });
+    } else {
+      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'No Bookings to Cancel');
+    }
+  }
+
+  modelCancelClose() {
+    $('#cancelModel').modal('hide');
+    this.bookCancelObj = {};
+    this.isRefund = true;
+  }
+
+  cancel() {
+    console.log('single cancel this.bookCancelObj...', this.bookCancelObj);
+    if (this.bookCancelObj.timesloteId) {
+      const param = { isRefund: this.isRefund };
+      var timeSlotId = this.bookCancelObj.timesloteId;
       console.log(' timeSlotId : ', timeSlotId);
-      this.apiService.getMethodAPI(VariableService.API_CANCEL_EVENT_BOOK + timeSlotId, param, (response) => {
+      this.apiService.postMethodAPI(true, VariableService.API_CANCEL_EVENT_BOOK + timeSlotId, param, (response) => {
         console.log('Event booking cancel book response : ', response);
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
           console.log(response);
           this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'Update success');
           this.modelClose();
+          this.modelCancelClose();
           this.getEventBooking();
         }
       });

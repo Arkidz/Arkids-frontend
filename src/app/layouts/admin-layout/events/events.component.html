@@ -111,7 +111,7 @@
                                         <div class="col-xs-12 col-12 col-md-6 form-group">
                                             <label>From Date * : </label>
                                             <input type="text" class="form-control" #dp="bsDatepicker" bsDatepicker
-                                                [bsConfig]="configDP" [minDate]="minDate" [(ngModel)]="fromDateValue"
+                                                [bsConfig]="configDP" [(ngModel)]="fromDateValue"
                                                 (bsValueChange)="onFromDateChange()" (blur)="onFromDateChange()">
                                             <div class="text-danger">
                                                 <small class="text-danger" *ngIf="!isValidFDate"> Event From Date is

@@ -235,29 +235,51 @@ export class GamesComponent implements OnInit, OnDestroy {
     //   pdf.save('MYPdf.pdf'); // Generated PDF   
     // });
 
+    // var img = new Image();
+    // img.onerror = function () {
+    //   alert('Cannot load image: "' + qrURL + '"');
+    // };
+    // img.onload = function () {
+    //   var doc = new jsPDF('p', 'pt', 'a4');
+    //   var width = doc.internal.pageSize.width;
+    //   var height = doc.internal.pageSize.height;
+    //   var options = {
+    //     pagesplit: true
+    //   };
+    //   doc.text(10, 20, 'Crazy Monkey');
+    //   var h1 = 50;
+    //   var aspectwidth1 = (height - h1) * (9 / 16);
+    //   doc.addImage(img, 'JPEG', 10, h1, aspectwidth1, (height - h1), 'monkey');
+    //   doc.addPage();
+    //   doc.text(10, 20, 'Hello World');
+    //   var h2 = 30;
+    //   var aspectwidth2 = (height - h2) * (9 / 16);
+    //   doc.addImage(img, 'JPEG', 10, h2, aspectwidth2, (height - h2), 'monkey');
+    //   doc.output('datauri');
+    // };
+    // img.src = qrURL;
+
+    this.getBase64Image(qrURL, function (base64image) {
+      console.log(base64image);
+    });
+  }
+
+  getBase64Image(imgUrl, callback) {
     var img = new Image();
-    img.onerror = function () {
-      alert('Cannot load image: "' + qrURL + '"');
-    };
+    // onload fires when the image is fully loadded, and has width and height
     img.onload = function () {
-      var doc = new jsPDF('p', 'pt', 'a4');
-      var width = doc.internal.pageSize.width;
-      var height = doc.internal.pageSize.height;
-      var options = {
-        pagesplit: true
-      };
-      doc.text(10, 20, 'Crazy Monkey');
-      var h1 = 50;
-      var aspectwidth1 = (height - h1) * (9 / 16);
-      doc.addImage(img, 'JPEG', 10, h1, aspectwidth1, (height - h1), 'monkey');
-      doc.addPage();
-      doc.text(10, 20, 'Hello World');
-      var h2 = 30;
-      var aspectwidth2 = (height - h2) * (9 / 16);
-      doc.addImage(img, 'JPEG', 10, h2, aspectwidth2, (height - h2), 'monkey');
-      doc.output('datauri');
+      var canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+      var dataURL = canvas.toDataURL("image/png"),
+        dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+      callback(dataURL); // the base64 string
     };
-    img.src = qrURL;
+    // set attributes and src 
+    img.setAttribute('crossOrigin', 'anonymous'); //
+    img.src = imgUrl;
   }
 
   ngOnDestroy() {

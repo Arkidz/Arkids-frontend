@@ -210,6 +210,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   }
 
   openModel() {
+    this.fromDateValue = new Date();
     $('#eventAdd').modal({ keyboard: false, backdrop: 'static' });
   }
 
@@ -221,7 +222,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.createError = '';
     this.getEvents();
     this.applyValidation();
-    this.fromDateValue = new Date();
+    this.fromDateValue = null; // new Date();
     this.toDateValue = new Date();
     this.isValidFDate = true;
     this.isValidTDate = true;

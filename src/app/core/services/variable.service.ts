@@ -84,8 +84,9 @@ export class VariableService {
   static API_GET_EVENT_BOOK_E_ID = '/admin/master/event-booking/get'; // /{event_id} get by event id
   static API_GET_EVENT_BOOK_U_ID = '/admin/master/event-booking/get-user'; // /{userId} get by user id
   static API_DELETE_EVENT_BOOK = '/admin/master/event-booking/delete';
-  static API_CANCEL_EVENT_BOOK = '/admin/master/event-booking/cancel-timeslot/'; // /:{timeslotId}
-  static API_MARK_FULL_EVENT_BOOK = '/admin/master/event-booking/full-timeslot/'; // /:{timeslotId}
+  static API_CANCEL_EVENT_BOOK = '/admin/master/event-booking/cancel-timeslot/'; // /:{timeslotId} -get
+  static API_MARK_FULL_EVENT_BOOK = '/admin/master/event-booking/full-timeslot/'; // /:{timeslotId} - post - {isMarkfull: true/false}
+  static API_CHANGE_SLOT_EVENT_BOOK = '/admin/master/event-booking/change-timeslot/'; // /:{timeslotId} -post - {date, fromTime, toTime}
 
 
   // validation
