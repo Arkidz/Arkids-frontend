@@ -288,3 +288,41 @@
         </div>
     </div>
 </div>
+
+
+
+<!-- delete Confirm Popup Modal -->
+<div class="modal modal-angular fade" id="deleteModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" aria-label="Close" (click)="resetDelete()"><span
+                        aria-hidden="true">&times;</span></button>
+                <div class="separator"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-success">
+                                <h4 class="card-title">Delete Confirmation</h4>
+                            </div>
+                            <div class="card-body">
+                                <div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p>Are You Sure Want to Delete?</p>
+                                        </div>
+                                        <button mat-raised-button type="submit" class="btn btn-danger mrgleft15"
+                                            (click)="delete()">Yes</button>
+                                        <button mat-raised-button type="submit" class="btn btn-warning"
+                                            (click)="resetDelete()">No</button>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

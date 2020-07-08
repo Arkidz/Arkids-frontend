@@ -177,20 +177,25 @@ export class GamesComponent implements OnInit, OnDestroy {
   }
 
   deleteGame(data) {
-    if (confirm('Are you sure want to delete record')) {
-      if (data.id) {
-        // this.methodUtils.setLoadingStatus(true);
-        this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_GAME, data.id, (response) => {
-          console.log('Game update response : ', response);
-          if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
-            console.log(response);
-            this.reset();
-          } else {
-            this.createError = 'Game Insert Fails';
-          }
-          // this.methodUtils.setLoadingStatus(false);
-        });
-      }
+    $('#deleteModel').modal({ keyboard: false, backdrop: 'static' });
+    this.gameObj = data;
+  }
+  resetDelete() {
+    $('#deleteModel').modal('hide');
+    this.gameObj = {};
+  }
+  delete() {
+    if (this.gameObj.id) {
+      this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_GAME, this.gameObj.id, (response) => {
+        console.log('Game update response : ', response);
+        if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+          console.log(response);
+          this.resetDelete();
+          this.getGames();
+        }
+      });
+    } else {
+      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Fails Delete, Record Already in use.');
     }
   }
 

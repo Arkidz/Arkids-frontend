@@ -29,11 +29,11 @@
                                         <td> {{book.name ? book.name : '-'}} </td>
                                         <td> {{book.eFromDate ? (book.eFromDate|date:'dd-MM-yyyy') : '-'}} </td>
                                         <td>
-                                            <!-- {{book.eTimeSlote?book.eTimeSlote[0].fromTime +' - '+ book.eTimeSlote[0].toTime:'-'}} -->
-                                            <div *ngIf="book.eTimeSlote && book.eTimeSlote.length > 0">
+                                            {{book.myTimeSlots?book.myTimeSlots[0].fromTime +' - '+ book.myTimeSlots[0].toTime:'-'}}
+                                            <!-- <div *ngIf="book.eTimeSlote && book.eTimeSlote.length > 0">
                                                 <div *ngFor="let bs of book.eTimeSlote;">
                                                     {{bs.fromTime +' - '+ bs.toTime}}</div>
-                                            </div>
+                                            </div> -->
                                         </td>
                                         <td> {{book.eCapacity ? book.eCapacity : '-'}} </td>
                                         <td> <a (click)="showBooking(book)" style="text-decoration: underline;">

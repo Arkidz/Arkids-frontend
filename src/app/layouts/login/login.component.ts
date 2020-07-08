@@ -70,19 +70,17 @@ export class LoginComponent implements OnInit {
         console.log('login response : ', response);
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
           const loginResponse = response;
-          if (loginResponse && loginResponse['user'] && loginResponse['user']['ecube_usertype']) {
+          if (loginResponse && loginResponse['new_password_required']) {
+            // open reset password form
+            $('#resetPass').modal({ keyboard: false, backdrop: 'static' });
+            this.loginReset.username = this.loginRequest.username;
+          } else if (loginResponse && loginResponse['user'] && loginResponse['user']['ecube_usertype']) {
             const ut = loginResponse['user']['ecube_usertype'];
             if (ut && ut['userType'] && ut['userType'] === 'Admin') {
-              if (loginResponse && loginResponse['new_password_required']) {
-                // open reset password form
-                $('#resetPass').modal({ keyboard: false, backdrop: 'static' });
-                this.loginReset.username = this.loginRequest.username;
-              } else {
-                console.log('loginResponse : ', JSON.stringify(loginResponse));
-                $('#resetPass').modal('hide');
-                localStorage.setItem(VariableService.USER_DATA, JSON.stringify(loginResponse));
-                this.router.navigate([VariableService.ADMIN_DASHBOARD]);
-              }
+              console.log('loginResponse : ', JSON.stringify(loginResponse));
+              $('#resetPass').modal('hide');
+              localStorage.setItem(VariableService.USER_DATA, JSON.stringify(loginResponse));
+              this.router.navigate([VariableService.ADMIN_DASHBOARD]);
             } else {
               this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Only Admin have access to login.');
             }

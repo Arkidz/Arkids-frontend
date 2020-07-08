@@ -259,20 +259,25 @@ export class EventsComponent implements OnInit, OnDestroy {
   }
 
   deleteEvent(data) {
-    if (confirm('Are you sure want to delete record')) {
-      if (data && data.id) {
-        // this.methodUtils.setLoadingStatus(true);
-        this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_EVENT, data.id, (response) => {
-          console.log('Event update response : ', response);
-          if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
-            console.log(response);
-            this.reset();
-          } else {
-            this.createError = 'Event Insert Fails';
-          }
-          // this.methodUtils.setLoadingStatus(false);
-        });
-      }
+    $('#deleteModel').modal({ keyboard: false, backdrop: 'static' });
+    this.eventObj = data;
+  }
+  resetDelete() {
+    $('#deleteModel').modal('hide');
+    this.eventObj = {};
+  }
+  delete() {
+    if (this.eventObj && this.eventObj.id) {
+      this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_EVENT, this.eventObj.id, (response) => {
+        console.log('Event update response : ', response);
+        if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+          console.log(response);
+          this.resetDelete();
+          this.getEvents();
+        }
+      });
+    } else {
+      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Fails Delete, Record Already in use.');
     }
   }
 

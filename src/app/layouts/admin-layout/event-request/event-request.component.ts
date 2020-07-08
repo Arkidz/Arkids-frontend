@@ -196,18 +196,26 @@ export class EventRequestComponent implements OnInit, OnDestroy {
   }
 
   eventReqDelete(data) {
-    if (confirm('Are you sure want to delete record')) {
-      // this.methodUtils.setLoadingStatus(true);
-      this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_EVENT_REQ, data.id, (response) => {
+    $('#deleteModel').modal({ keyboard: false, backdrop: 'static' });
+    this.eveReqObj = data;
+  }
+  resetDelete() {
+    $('#deleteModel').modal('hide');
+    this.eveReqObj = {};
+  }
+
+  delete() {
+    if (this.eveReqObj && this.eveReqObj.id) {
+      this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_EVENT_REQ, this.eveReqObj.id, (response) => {
         console.log('Event Request update response : ', response);
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
           console.log(response);
-          this.reset();
-        } else {
-          this.createError = 'Event Request Insert Fails';
+          this.resetDelete();
+          this.getEventRequest();
         }
-        // this.methodUtils.setLoadingStatus(false);
       });
+    } else {
+      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Fails Delete, Record Already in use.');
     }
   }
 

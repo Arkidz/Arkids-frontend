@@ -128,22 +128,29 @@ export class UserTypeComponent implements OnInit, OnDestroy {
   }
 
   deleteUserType(data) {
-    if (confirm('Are you sure want to delete record')) {
-      if (data && data.id) {
-        // this.methodUtils.setLoadingStatus(true);
-        this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_USERTYPE, data.id, (response) => {
-          console.log('UserType delete response : ', response);
-          if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
-            console.log(response);
-            this.reset();
-          } else {
-            this.createError = 'UserType Delete Fails';
-          }
-          // this.methodUtils.setLoadingStatus(false);
-        });
-      } else {
-        this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Fails Delete, Record Already In Use.');
-      }
+    $('#deleteModel').modal({ keyboard: false, backdrop: 'static' });
+    this.userTypeObj = data;
+  }
+  resetDelete() {
+    $('#deleteModel').modal('hide');
+    this.userTypeObj = {};
+  }
+  delete() {
+    if (this.userTypeObj && this.userTypeObj.id) {
+      // this.methodUtils.setLoadingStatus(true);
+      this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_USERTYPE, this.userTypeObj.id, (response) => {
+        console.log('UserType delete response : ', response);
+        if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+          console.log(response);
+          this.resetDelete();
+          this.getUserType();
+        } else {
+          this.createError = 'UserType Delete Fails';
+        }
+        // this.methodUtils.setLoadingStatus(false);
+      });
+    } else {
+      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Fails Delete, Record Already In Use.');
     }
   }
 

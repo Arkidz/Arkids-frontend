@@ -194,20 +194,25 @@ export class PlayersComponent implements OnInit, OnDestroy {
   }
 
   deletePlayer(data) {
-    if (confirm('Are you sure want to delete record')) {
-      if (data.id) {
-        // this.methodUtils.setLoadingStatus(true);
-        this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_PLAYER, data.id, (response) => {
-          console.log('UserType delete response : ', response);
-          if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
-            console.log(response);
-            this.reset();
-          } else {
-            this.createError = 'UserType Delete Fails';
-          }
-          // this.methodUtils.setLoadingStatus(false);
-        });
-      }
+    $('#deleteModel').modal({ keyboard: false, backdrop: 'static' });
+    this.playerObj = data;
+  }
+  resetDelete() {
+    $('#deleteModel').modal('hide');
+    this.playerObj = {};
+  }
+  delete() {
+    if (this.playerObj && this.playerObj.playerObj.id) {
+      this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_PLAYER, this.playerObj.id, (response) => {
+        console.log('UserType delete response : ', response);
+        if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+          console.log(response);
+          this.resetDelete();
+          this.getPlayerList();
+        }
+      });
+    } else {
+      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Fails Delete, Record Already in use.');
     }
   }
 

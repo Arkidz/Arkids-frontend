@@ -123,22 +123,25 @@ export class GameZoneComponent implements OnInit, OnDestroy {
   }
 
   deleteZone(data) {
-    if (confirm('Are you sure want to delete record')) {
-      if (data && data.id && data.ecube_games && data.ecube_games.length <= 0) {
-        // this.methodUtils.setLoadingStatus(true);
-        this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_GAMEZONE, data.id, (response) => {
-          console.log('GameZone update response : ', response);
-          if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
-            console.log(response);
-            this.reset();
-          } else {
-            this.createError = 'GameZone Insert Fails';
-          }
-          // this.methodUtils.setLoadingStatus(false);
-        });
-      } else {
-        this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Fails Delete, Record Already in use.');
-      }
+    $('#deleteModel').modal({ keyboard: false, backdrop: 'static' });
+    this.gameZoneObj = data;
+  }
+  resetDelete() {
+    $('#deleteModel').modal('hide');
+    this.gameZoneObj = {};
+  }
+  delete() {
+    if (this.gameZoneObj && this.gameZoneObj.id && this.gameZoneObj.ecube_games && this.gameZoneObj.ecube_games.length <= 0) {
+      this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_GAMEZONE, this.gameZoneObj.id, (response) => {
+        console.log('GameZone update response : ', response);
+        if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+          console.log(response);
+          this.resetDelete();
+          this.getGameZones();
+        }
+      });
+    } else {
+      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Fails Delete, Record Already in use.');
     }
   }
 

@@ -162,20 +162,25 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   deleteUser(data) {
-    if (confirm('Are you sure want to delete record')) {
-      if (data.id) {
-        // this.methodUtils.setLoadingStatus(true);
-        this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_USER, data.id, (response) => {
-          console.log('User delete response : ', response);
-          if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
-            console.log(response);
-            this.reset();
-          } else {
-            this.createError = 'User Delete Fails';
-          }
-          // this.methodUtils.setLoadingStatus(false);
-        });
-      }
+    $('#deleteModel').modal({ keyboard: false, backdrop: 'static' });
+    this.userObj = data;
+  }
+  resetDelete() {
+    $('#deleteModel').modal('hide');
+    this.userObj = {};
+  }
+  delete() {
+    if (this.userObj && this.userObj.id) {
+      this.apiService.deleteMethodAPI(true, VariableService.API_DELETE_USER, this.userObj && this.userObj.id, (response) => {
+        console.log('User delete response : ', response);
+        if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+          console.log(response);
+          this.resetDelete();
+          this.getUserList();
+        }
+      });
+    } else {
+      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Fails Delete, Record Already in use.');
     }
   }
 
