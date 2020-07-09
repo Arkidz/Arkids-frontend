@@ -66,7 +66,7 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   applyValidation() {
     this.eventForm = new FormGroup({
-      name: new FormControl('', [Validators.required, Validators.pattern(VariableService.PATTERN_FOR_ALPHABATES_NUMBER_AND_SPACE)]),
+      name: new FormControl('', [Validators.required]), // , Validators.pattern(VariableService.PATTERN_FOR_ALPHABATES_NUMBER_AND_SPACE)
       eVenue: new FormControl('', [Validators.required]),
       eCapacity: new FormControl('', [Validators.required]),
       eCharge: new FormControl('', [Validators.required]),
@@ -150,6 +150,7 @@ export class EventsComponent implements OnInit, OnDestroy {
             reader.onload = (e: any) => {
               if (this.imagesList.length < 5) {
                 this.imagesList.push(e.target.result);
+                $('#fileEvt').val('');
               } else {
                 this.imgError.push(' Only 5 files are allowed to upload.');
               }

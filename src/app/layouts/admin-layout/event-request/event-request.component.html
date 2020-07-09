@@ -17,6 +17,7 @@
                                     <tr>
                                         <th> # </th>
                                         <th> Name </th>
+                                        <th> Mobile </th>
                                         <th> Event Date </th>
                                         <th> Venue </th>
                                         <th> From-Time </th>
@@ -30,6 +31,7 @@
                                     <tr *ngFor="let request of eveReqList; let i=index;">
                                         <td> {{i+1}} </td>
                                         <td> {{request.ecube_player?request.ecube_player.fullname:'-'}} </td>
+                                        <td> {{request.ecube_player?request.ecube_player.mobileno:'-'}} </td>
                                         <td> {{!request.rdate?'-':request.rdate | date:'dd-MM-yyyy'}} </td>
                                         <td> {{request.rVenue?request.rVenue:'-'}} </td>
                                         <td> {{request.rFromTime?request.rFromTime:'-'}} </td>

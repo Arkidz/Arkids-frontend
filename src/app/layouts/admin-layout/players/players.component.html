@@ -16,6 +16,7 @@
                                 <thead class=" text-primary">
                                     <tr>
                                         <th> # </th>
+                                        <th> User Name </th>
                                         <th> Short Name </th>
                                         <th> Full Name </th>
                                         <th> mobile No </th>
@@ -30,6 +31,7 @@
                                 <tbody>
                                     <tr *ngFor="let player of playerList; let i=index;">
                                         <td> {{i + 1}} </td>
+                                        <td> {{player.username?player.username:'-'}} </td>
                                         <td> {{player.shortname?player.shortname:'-'}} </td>
                                         <td> {{(player.fname?player.fname:' ') + ' ' + (player.lname?player.lname:' ')}}
                                         </td>
