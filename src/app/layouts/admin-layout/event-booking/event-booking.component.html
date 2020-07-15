@@ -26,30 +26,32 @@
                                     <tr *ngFor="let book of eveBookList; let i=index;">
                                         <!-- [hidden]="book.slotCancelled" -->
                                         <td> {{i+1}} </td>
-                                        <td> {{book.name ? book.name : '-'}} </td>
-                                        <td> {{book.eFromDate ? (book.eFromDate|date:'dd-MM-yyyy') : '-'}} </td>
+                                        <td> {{book.ecube_event && book.ecube_event.name ? book.ecube_event.name : '-'}}
+                                        </td>
+                                        <td> {{book.eventDate ? (book.eventDate|date:'dd-MM-yyyy') : '-'}} </td>
                                         <td>
-                                            {{book.myTimeSlots?book.myTimeSlots[0].fromTime +' - '+ book.myTimeSlots[0].toTime:'-'}}
+                                            {{book.fromTime +' - '+ book.toTime}}
                                             <!-- <div *ngIf="book.eTimeSlote && book.eTimeSlote.length > 0">
                                                 <div *ngFor="let bs of book.eTimeSlote;">
                                                     {{bs.fromTime +' - '+ bs.toTime}}</div>
                                             </div> -->
                                         </td>
-                                        <td> {{book.eCapacity ? book.eCapacity : '-'}} </td>
+                                        <td> {{book.ecube_event && book.ecube_event.eCapacity ? book.ecube_event.eCapacity : '-'}}
+                                        </td>
                                         <td> <a (click)="showBooking(book)" style="text-decoration: underline;">
                                                 {{book.totalSeat?book.totalSeat:0}}
                                             </a>
                                         </td>
                                         <td>
-                                            {{(+book.eCapacity - (book.totalSeat?book.totalSeat:0))}}
+                                            {{(+book.ecube_event.eCapacity - (book.totalSeat?book.totalSeat:0))}}
                                         </td>
                                         <td>
                                             <button class="bnt btn-warning mrg5" (click)="cancelBooking(book)"
                                                 title="Cancel"> Cancel </button>
                                             <button class="bnt btn-primary mrg5"
-                                                (click)="markFullBooking(book,book.slotFull?false:true)"
-                                                title="Mark Full" *ngIf="book.eTimeSlote && book.eTimeSlote.length > 0">
-                                                {{book.slotFull? 'Mark Avail.':'Mark Full'}}
+                                                (click)="markFullBooking(book,book.isFull?false:true)" title="Mark Full"
+                                                *ngIf="book.booking && book.booking.count > 0">
+                                                {{book.isFull? 'Mark Avail.':'Mark Full'}}
                                             </button>
                                         </td>
                                     </tr>

@@ -43,6 +43,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   ismeridian: boolean = false;
   isShowRepeatDay = false;
   isMultiDay = false;
+  isBatch = false;
   repeatDays: any = [{ name: 'Sunday', value: false }, { name: 'Monday', value: false }, { name: 'Tuesday', value: false },
   { name: 'Wednesday', value: false }, { name: 'Thursday', value: false }, { name: 'Friday', value: false }, { name: 'Saturday', value: false }];
   timeSlots: any = [{ fromTime: new Date(), toTime: new Date(), id: null }];
@@ -176,6 +177,7 @@ export class EventsComponent implements OnInit, OnDestroy {
       this.eventObj.eToDate = this.getDDMMYYY(this.toDateValue);
       this.eventObj.timeSlots = this.getTimeSlot(); // this.timeSlots
       this.eventObj.images = this.imagesList;
+      this.eventObj.isBatch = this.isBatch;
       console.log('eventObj', this.eventObj);
       console.log(JSON.stringify(this.eventObj));
       // return;
@@ -231,6 +233,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.ismeridian = false;
     this.isShowRepeatDay = false;
     this.isMultiDay = false;
+    this.isBatch = false;
     this.repeatDays = [{ name: 'Sunday', value: false }, { name: 'Monday', value: false }, { name: 'Tuesday', value: false },
     { name: 'Wednesday', value: false }, { name: 'Thursday', value: false }, { name: 'Friday', value: false }, { name: 'Saturday', value: false }];
     this.timeSlots = [{ fromTime: new Date(), toTime: new Date(), id: null }];
@@ -250,6 +253,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.eventObj.eHost = data.eHost;
     this.eventObj.eHostDesc = data.eHostDesc;
     this.eventObj.eStatus = data.eStatus;
+    this.isBatch = data.isBatch;
     this.fromDateValue = new Date(data.eFromDate);
     this.toDateValue = new Date(data.eToDate);
     this.imagesList = data.images;

@@ -47,11 +47,12 @@ export class VariableService {
   static API_DELETE_USER = '/admin/user/delete'; // delete - /:id
   static API_USER_AUTOCOMPLETE = '/admin/user/autocomplete/list'; // post - { Search:text of search }
 
-  // Player 
+  // Player
   static API_CREATE_PLAYER = '/admin/user/player/create'; // post
   static API_GET_PLAYER = '/admin/user/player/list'; // post
   static API_UPDATE_PLAYER = '/admin/user/player/update'; // patch
   static API_DELETE_PLAYER = '/admin/user/player/delete'; // delete
+  static API_WALLET_SAVE_PLAYER = '/admin/master/wallet/create'; // post
 
   // game
   static API_CREATE_GAME = '/admin/master/game/create'; // post
@@ -79,8 +80,8 @@ export class VariableService {
 
   // Event Booking
   static API_CREATE_EVENT_BOOK = '/admin/master/event-booking/create';
-  // static API_GET_EVENT_BOOK = '/admin/master/event-booking/list'; // all list
-  static API_GET_EVENT_BOOK = '/admin/master/event-booking/get-event'; // event time slot wise get event bookings
+  static API_GET_EVENT_BOOK = '/admin/master/event-booking/list'; // all list
+  static API_GET_EVENT_BOOK1 = '/admin/master/event-booking/get-event'; // event time slot wise get event bookings
   static API_GET_EVENT_BOOK_E_ID = '/admin/master/event-booking/get'; // /{event_id} get by event id
   static API_GET_EVENT_BOOK_U_ID = '/admin/master/event-booking/get-user'; // /{userId} get by user id
   static API_DELETE_EVENT_BOOK = '/admin/master/event-booking/delete';

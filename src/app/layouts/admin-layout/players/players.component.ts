@@ -95,7 +95,7 @@ export class PlayersComponent implements OnInit, OnDestroy {
 
   applyValidationRefill() {
     this.refillForm = new FormGroup({
-      amount: new FormControl('', [Validators.required, Validators.pattern(VariableService.PATTERN_FOR_NUMBER)]),
+      wallet_amount: new FormControl('', [Validators.required, Validators.pattern(VariableService.PATTERN_FOR_NUMBER)]),
       // remark: new FormControl('', [Validators.required])
     });
   }
@@ -238,7 +238,8 @@ export class PlayersComponent implements OnInit, OnDestroy {
   // refill
   refillWallet(player) {
     console.log('refillWallet ', player);
-    this.refillObj.id = player.id;
+    this.refillObj = player;
+    this.refillObj.wallet_amount = 0;
     $('#playerRefillWallet').modal({ keyboard: false, backdrop: 'static' });
   }
   refillModelClose() {
@@ -249,16 +250,29 @@ export class PlayersComponent implements OnInit, OnDestroy {
   saveRefill() {
     console.log('save refill wallet : ', this.refillObj);
     console.log('save refill form : ', this.refillForm.valid);
-    this.playerList.forEach((element, index) => {
-      if (element.id == this.refillObj.id) {
-        if (this.playerList[index] && this.playerList[index]['wallet']) {
-          this.playerList[index]['wallet'] = +this.playerList[index]['wallet'] + +this.refillObj.amount;
-        } else {
-          this.playerList[index]['wallet'] = this.refillObj.amount;
+    // this.playerList.forEach((element, index) => {
+    //   if (element.id == this.refillObj.id) {
+    //     if (this.playerList[index] && this.playerList[index]['wallet']) {
+    //       this.playerList[index]['wallet'] = +this.playerList[index]['wallet'] + +this.refillObj.amount;
+    //     } else {
+    //       this.playerList[index]['wallet'] = this.refillObj.amount;
+    //     }
+    //   }
+    // });
+    // 
+    if (this.refillObj && this.refillObj.id && this.refillForm.valid) {
+      var param = { 'remark': this.refillObj.remark, 'amount': this.refillObj.wallet_amount, 'type': 'credit', 'playerId': this.refillObj.id };
+      this.apiService.postMethodAPI(true, VariableService.API_WALLET_SAVE_PLAYER, param, (response) => {
+        console.log('UserType delete response : ', response);
+        if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+          console.log(response);
+          this.refillModelClose();
+          this.getPlayerList();
         }
-      }
-    });
-    this.refillModelClose();
+      });
+    } else {
+      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Fails to refill user wallet.');
+    }
   }
 
   ngOnDestroy() {

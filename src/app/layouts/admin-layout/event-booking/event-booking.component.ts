@@ -75,29 +75,29 @@ export class EventBookingComponent implements OnInit, OnDestroy {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
         this.eveBookList = response['rows'];
         this.eveBookList.forEach((element, index) => {
-          console.log('event book element : ', element);
           if (!this.eveBookList[index]['totalSeat']) { this.eveBookList[index]['totalSeat'] = 0; }
-          if (element.eventBooking && element.eventBooking.rows && element.eventBooking.rows.length > 0) {
-            element.eventBooking.rows.forEach((item, ind) => {
+          if (element.booking && element.booking.rows && element.booking.rows.length > 0) {
+            element.booking.rows.forEach((item, ind) => {
               if (item.seats) {
                 this.eveBookList[index]['totalSeat'] += item.seats;
               }
-              if (item.ecube_event_timeslote) {
-                this.eveBookList[index]['slotCancelled'] = item.ecube_event_timeslote.isCancelled;
-                this.eveBookList[index]['slotFull'] = item.ecube_event_timeslote.isFull;
-                this.eveBookList[index]['slotTid'] = item.ecube_event_timeslote.id;
-              }
+              // if (item.ecube_event_timeslote) {
+              //   this.eveBookList[index]['slotCancelled'] = item.ecube_event_timeslote.isCancelled;
+              //   this.eveBookList[index]['slotFull'] = item.ecube_event_timeslote.isFull;
+              //   this.eveBookList[index]['slotTid'] = item.ecube_event_timeslote.id;
+              // }
             });
           }
           // set time slot
           if (!this.eveBookList[index]['myTimeSlots']) { this.eveBookList[index]['myTimeSlots'] = []; }
-          if (element.timeSlote && element.timeSlote !== undefined) {
-            const obj = element.timeSlote;
-            for (const prop in obj) {
-              if (obj.hasOwnProperty(prop)) { // console.log('obj[prop]', obj[prop][0]);
-                this.eveBookList[index]['myTimeSlots'].push(obj[prop][0]);
-              }
-            }
+          if (element.eventId && element.eventId !== undefined) {
+            const obj = element.eventId;
+            this.eveBookList[index]['myTimeSlots'] = this.eveBookList.filter(x => x.eventId === element.eventId);
+            // for (const prop in obj) {
+            //   if (obj.hasOwnProperty(prop)) { // console.log('obj[prop]', obj[prop][0]);
+            //     this.eveBookList[index]['myTimeSlots'].push(obj[prop][0]);
+            //   }
+            // }
           }
         });
         this.resetTable();
@@ -111,34 +111,30 @@ export class EventBookingComponent implements OnInit, OnDestroy {
 
   markFullBooking(book, value) {
     console.log('Mark Full booking...', book);
-    console.log('Mark book.slotFull : ', book.slotFull, value);
-    if (book.eventBooking && book.eventBooking.rows && book.eventBooking.rows.length > 0) {
+    console.log('Mark book.isFull : ', book.isFull, value);
+    if (book && book.id) {
       const param = { isMarkfull: value };
-      if (book.eventBooking.rows[0].timesloteId && book.eventBooking.rows[0].timesloteId !== '') {
-        var timeSlotId = book.eventBooking.rows[0].timesloteId;
-        console.log(' timeSlotId : ', timeSlotId);
-        this.apiService.postMethodAPI(true, VariableService.API_MARK_FULL_EVENT_BOOK + timeSlotId, param, (response) => {
-          console.log('Event booking mark full response : ', response);
-          if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
-            console.log(response);
-            this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'Update success');
-            this.getEventBooking();
-          }
-        });
-      } else {
-        this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'No TimeSlot id found');
-      }
+      var timeSlotId = book.id;
+      console.log(' timeSlotId : ', timeSlotId);
+      this.apiService.postMethodAPI(true, VariableService.API_MARK_FULL_EVENT_BOOK + timeSlotId, param, (response) => {
+        console.log('Event booking mark full response : ', response);
+        if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+          console.log(response);
+          this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'Update success');
+          this.getEventBooking();
+        }
+      });
     } else {
-      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Can not Mark full');
+      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'TimeSlot id found, Can not Mark full');
     }
   }
 
   showBooking(book) {
     console.log('show booking...', book);
-    if (book.eventBooking && book.eventBooking.count && book.eventBooking.count > 0) {
+    if (book.booking && book.booking.count && book.booking.count > 0) {
       this.title = book.eName;
       this.eveBookObj = book;
-      this.eventShowBookList = book.eventBooking.rows;
+      this.eventShowBookList = book.booking.rows;
       console.log('this.eventShowBookList : ', this.eventShowBookList);
       $('#showbook').modal({ keyboard: false, backdrop: 'static' });
     }
@@ -195,31 +191,27 @@ export class EventBookingComponent implements OnInit, OnDestroy {
   // outSide cancel
   cancelBooking(book) {
     console.log('cancel booking...', book);
-    if (book.eventBooking && book.eventBooking.rows && book.eventBooking.rows.length > 0) {
+    if (book && book.id) {
       const param = { isRefund: this.isRefund };
-      if (book.eventBooking.rows[0].timesloteId && book.eventBooking.rows[0].timesloteId !== '') {
-        this.cancelModelOpen(book.eventBooking.rows[0]);
-        // var timeSlotId = book.eventBooking.rows[0].timesloteId;
-        // console.log(' timeSlotId : ', timeSlotId);
-        // this.apiService.postMethodAPI(true, VariableService.API_CANCEL_EVENT_BOOK + timeSlotId, param, (response) => {
-        //   console.log('Event booking cancel book response : ', response);
-        //   if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
-        //     console.log(response);
-        //     this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'Update success');
-        //     this.getEventBooking();
-        //   }
-        // });
-      } else {
-        this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'No TimeSlot id found');
-      }
+      this.cancelModelOpen(book);
+      // var timeSlotId = book.eventBooking.rows[0].timesloteId;
+      // console.log(' timeSlotId : ', timeSlotId);
+      // this.apiService.postMethodAPI(true, VariableService.API_CANCEL_EVENT_BOOK + timeSlotId, param, (response) => {
+      //   console.log('Event booking cancel book response : ', response);
+      //   if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+      //     console.log(response);
+      //     this.methodUtils.setConfigAndDisplayPopUpNotification('success', '', 'Update success');
+      //     this.getEventBooking();
+      //   }
+      // });
     } else {
-      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'No Bookings to Cancel');
+      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'No Bookings TimeSlot to Cancel');
     }
   }
 
   cancelModelOpen(book) {
     console.log('single cancel booking...', book);
-    if (book.timesloteId) {
+    if (book.id) {
       this.bookCancelObj = book;
       $('#cancelModel').modal({ keyboard: false, backdrop: 'static' });
     } else {
@@ -235,9 +227,9 @@ export class EventBookingComponent implements OnInit, OnDestroy {
 
   cancel() {
     console.log('single cancel this.bookCancelObj...', this.bookCancelObj);
-    if (this.bookCancelObj.timesloteId) {
+    if (this.bookCancelObj.id) {
       const param = { isRefund: this.isRefund };
-      var timeSlotId = this.bookCancelObj.timesloteId;
+      var timeSlotId = this.bookCancelObj.timesloteId || this.bookCancelObj.id;
       console.log(' timeSlotId : ', timeSlotId);
       this.apiService.postMethodAPI(true, VariableService.API_CANCEL_EVENT_BOOK + timeSlotId, param, (response) => {
         console.log('Event booking cancel book response : ', response);

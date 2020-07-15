@@ -133,8 +133,19 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- days -->
+
+                                    <!-- Batch -->
                                     <div class="row" *ngIf="isShowRepeatDay">
+                                        <div class="col-xs-12 col-12 col-md-12 form-group">
+                                            <label class="switch">
+                                                <input type="checkbox" [(ngModel)]="isBatch">
+                                                <span class="slider"></span>
+                                            </label>
+                                            <label> : Batch </label>
+                                        </div>
+                                    </div>
+                                    <!-- days -->
+                                    <div class="row" *ngIf="isShowRepeatDay" style="border: 1px solid #959191;">
                                         <div class="col-xs-12 col-12 col-md-12 form-group">
                                             <label class="switch">
                                                 <input type="checkbox" [(ngModel)]="isMultiDay">
@@ -142,11 +153,9 @@
                                             </label>
                                             <label> : Repetitive event </label>
                                         </div>
-                                    </div>
-                                    <!-- Repeated days  -->
-                                    <div class="row" *ngIf="isMultiDay">
-                                        <label class="mrglf15">Event Repeat Days : </label>
-                                        <div class="col-xs-12 col-12 col-md-12 form-group">
+                                        <!-- Repeated days  -->
+                                        <div class="col-xs-12 col-12 col-md-12 form-group" *ngIf="isMultiDay">
+                                            <p>Event Repeat Days : </p>
                                             <span class="pr10" *ngFor="let day of repeatDays;let i=index;">
                                                 <label class="switch">
                                                     <input type="checkbox" [(ngModel)]="day.value">
@@ -154,6 +163,7 @@
                                                 </label>
                                             </span>
                                         </div>
+
                                     </div>
 
                                     <!-- Event from time -->
@@ -281,8 +291,8 @@
                                     <!-- Event eImage1 -->
                                     <div class="row">
                                         <div class="col-md-12" style="  padding-bottom: 10px;">
-                                            <input id="fileEvt" placeholder="Event Imagee" type="file" accept="image/*" multiple
-                                                (change)="fileChange($event)">
+                                            <input id="fileEvt" placeholder="Event Imagee" type="file" accept="image/*"
+                                                multiple (change)="fileChange($event)">
                                             <span class="pull-right">Max. Limit: 5 files - 2 mb each</span>
                                         </div>
                                         <div class="col-md-12">

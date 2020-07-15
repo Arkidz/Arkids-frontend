@@ -46,7 +46,7 @@
                                                 {{player.status?player.status:'-'}}
                                             </span>
                                         </td>
-                                        <td> {{player.wallet?player.wallet:'0'}} </td>
+                                        <td> {{player.wallet_amount?player.wallet_amount:'0'}} </td>
                                         <td>
                                             <button class="bnt btn-primary mrg5" (click)="refillWallet(player)"
                                                 title="Refill Wallet">
@@ -507,16 +507,16 @@
                                             <!-- <label>fname Name</label> -->
                                             <mat-form-field class="example-full-width">
                                                 <input matInput placeholder="Enter Amount" type="text"
-                                                    [(ngModel)]="refillObj.amount"
-                                                    [formControl]="refillForm.controls['amount']">
+                                                    [(ngModel)]="refillObj.wallet_amount"
+                                                    [formControl]="refillForm.controls['wallet_amount']">
                                             </mat-form-field>
                                             <div class="text-danger">
                                                 <small class="text-danger"
-                                                    *ngIf="refillForm.controls['amount'].hasError('required') && refillForm.controls['amount'].touched">
+                                                    *ngIf="refillForm.controls['wallet_amount'].hasError('required') && refillForm.controls['wallet_amount'].touched">
                                                     Amount is required.
                                                 </small>
                                                 <small class="text-danger"
-                                                    *ngIf="!refillForm.controls['amount'].hasError('required') && !refillForm.controls['amount'].valid && refillForm.controls['amount'].touched">
+                                                    *ngIf="!refillForm.controls['wallet_amount'].hasError('required') && !refillForm.controls['wallet_amount'].valid && refillForm.controls['wallet_amount'].touched">
                                                     Please Enter valid Amount.
                                                 </small>
                                             </div>
