@@ -54,12 +54,17 @@ export class EventsComponent implements OnInit, OnDestroy {
   @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
   isDtInitialized: boolean = false;
 
+  // pagination page=1&results=5
+  perPageList = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+  totalRecords: number = 0;
+  recordsPerPage: number = 5;
+  pages: number[] = [];
+  activePage: number = 1;
+
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
   ngOnInit() {
-    this.dtOptions = {
-      pagingType: 'full_numbers' // , destroy: false // ,pageLength: 2
-    };
+    // this.dtOptions = { pagingType: 'full_numbers' // , destroy: false // ,pageLength: 2};
     // $('#eventTable').DataTable();
     this.applyValidation();
     this.getEvents();
@@ -105,25 +110,19 @@ export class EventsComponent implements OnInit, OnDestroy {
   isValidToDate(value) {
     return ((value !== 'Invalid Date') && (value instanceof Date) && value !== null);
   }
-  resetTable() {
-    if (this.isDtInitialized) {
-      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        dtInstance.destroy();
-        this.dtTrigger.next();
-      });
-    } else {
-      this.isDtInitialized = true;
-      this.dtTrigger.next();
-    }
-  }
+
   getEvents() {
-    this.apiService.postMethodAPI(false, VariableService.API_GET_EVENT, {}, (response) => {
+    const getAPI = VariableService.API_GET_EVENT + '?page=' + this.activePage + '&results=' + this.recordsPerPage;
+    this.apiService.postMethodAPI(false, getAPI, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+        this.totalRecords = response['count'];
+        const pageCount = this.getPageCount();
+        this.pages = this.getArrayOfPage(pageCount);
         this.eventList = response['rows'];
-        this.resetTable();
+        // this.resetTable();
       } else {
         this.eventList = [];
-        this.resetTable();
+        // this.resetTable();
       }
       console.log('eventList response : ', this.eventList);
     });
@@ -346,6 +345,58 @@ export class EventsComponent implements OnInit, OnDestroy {
     return urlimg;
   }
 
+  // pagination
+  private getPageCount(): number {
+    // console.log('get total pages : getPageCount()');
+    let totalPage: number = 0;
+    if (this.totalRecords > 0 && this.recordsPerPage > 0) {
+      const pageCount = this.totalRecords / this.recordsPerPage;
+      const roundedPageCount = Math.floor(pageCount);
+      totalPage = roundedPageCount < pageCount ? roundedPageCount + 1 : roundedPageCount;
+    }
+    // console.log('totalPage : ', totalPage);
+    return totalPage;
+  }
+  private getArrayOfPage(pageCount: number): number[] {
+    // console.log('pageCount in getArrayOfPage() : ', pageCount);
+    let pageArray: number[] = [];
+    if (pageCount > 0) {
+      for (var i = 1; i <= pageCount; i++) {
+        pageArray.push(i);
+      }
+    }
+    // console.log('pageArray : ', pageArray);
+    return pageArray;
+  }
+
+  onClickPage(pageNumber: number, val) {
+    if (pageNumber < 1) { return; }
+    if (pageNumber > this.pages.length) { return; }
+    if (pageNumber === this.activePage && val !== 'page') { return; }
+    this.activePage = pageNumber;
+    this.getEvents();
+  }
+  onClickPrevNextPage(val) {
+    let pageNumber;
+    if (val === 'prev') { pageNumber = this.activePage - 1; }
+    if (val === 'next') { pageNumber = this.activePage + 1; }
+    if (pageNumber < 1) { return; }
+    if (pageNumber > this.pages.length) { return; }
+    if (pageNumber === this.activePage) { return; }
+    this.activePage = pageNumber;
+    this.getEvents();
+  }
+  resetTable() {
+    if (this.isDtInitialized) {
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.destroy();
+        this.dtTrigger.next();
+      });
+    } else {
+      this.isDtInitialized = true;
+      this.dtTrigger.next();
+    }
+  }
   ngOnDestroy() {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();

@@ -49,12 +49,17 @@ export class PlayersComponent implements OnInit, OnDestroy {
   @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
   isDtInitialized: boolean = false;
 
+  // pagination page=1&results=5
+  perPageList = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+  totalRecords: number = 0;
+  recordsPerPage: number = 5;
+  pages: number[] = [];
+  activePage: number = 1;
+
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
   ngOnInit() {
-    this.dtOptions = {
-      pagingType: 'full_numbers' // , destroy: false // ,pageLength: 2
-    };
+    // this.dtOptions = {pagingType: 'full_numbers' // , destroy: false // ,pageLength: 2 };
     this.applyValidation();
     this.applyValidationRefill();
     this.getPlayerList();
@@ -99,25 +104,19 @@ export class PlayersComponent implements OnInit, OnDestroy {
       // remark: new FormControl('', [Validators.required])
     });
   }
-  resetTable() {
-    if (this.isDtInitialized) {
-      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        dtInstance.destroy();
-        this.dtTrigger.next();
-      });
-    } else {
-      this.isDtInitialized = true;
-      this.dtTrigger.next();
-    }
-  }
+
   getPlayerList() {
-    this.apiService.postMethodAPI(false, VariableService.API_GET_PLAYER, {}, (response) => {
+    const getAPI = VariableService.API_GET_PLAYER + '?page=' + this.activePage + '&results=' + this.recordsPerPage;
+    this.apiService.postMethodAPI(false, getAPI, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+        this.totalRecords = response['count'];
+        const pageCount = this.getPageCount();
+        this.pages = this.getArrayOfPage(pageCount);
         this.playerList = response['rows'];
-        this.resetTable();
+        // this.resetTable();
       } else {
         this.playerList = [];
-        this.resetTable();
+        // this.resetTable();
       }
       console.log('playerList response : ', this.playerList);
     });
@@ -218,12 +217,28 @@ export class PlayersComponent implements OnInit, OnDestroy {
 
   walletHistory(player) {
     console.log('walletHistory ', player);
-    $('#playerWalletHistory').modal({ keyboard: false, backdrop: 'static' });
+    this.playerObj = player;
+    if (player && player.id) {
+      const apiWalHistory = VariableService.API_WALLET_HISTORY_PLAYER + player.id;
+      this.apiService.postMethodAPI(true, apiWalHistory, {}, (response) => {
+        console.log('UserType delete response : ', response);
+        if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+          console.log('response wllaet histoy of player : ', response);
+          $('#playerWalletHistory').modal({ keyboard: false, backdrop: 'static' });
+          if (response && response['rows'] && response['rows']['length'] > 0) {
+            this.walletHistList = response['rows'];
+          }
+        }
+      });
+    } else {
+      this.methodUtils.setConfigAndDisplayPopUpNotification('error', '', 'Fails get player wallet history.');
+    }
   }
 
   walletModelClose() {
     $('#playerWalletHistory').modal('hide');
-    // this.walletHistList = [];
+    this.walletHistList = [];
+    this.playerObj = {};
   }
 
   gamesHistory(player) {
@@ -238,13 +253,13 @@ export class PlayersComponent implements OnInit, OnDestroy {
   // refill
   refillWallet(player) {
     console.log('refillWallet ', player);
-    this.refillObj = player;
-    this.refillObj.wallet_amount = 0;
+    this.playerId = player.id; // this.refillObj.wallet_amount = 0;
     $('#playerRefillWallet').modal({ keyboard: false, backdrop: 'static' });
   }
   refillModelClose() {
     $('#playerRefillWallet').modal('hide');
     this.refillObj = {};
+    this.playerId = '';
     this.applyValidationRefill();
   }
   saveRefill() {
@@ -259,9 +274,9 @@ export class PlayersComponent implements OnInit, OnDestroy {
     //     }
     //   }
     // });
-    // 
-    if (this.refillObj && this.refillObj.id && this.refillForm.valid) {
-      var param = { 'remark': this.refillObj.remark, 'amount': this.refillObj.wallet_amount, 'type': 'credit', 'playerId': this.refillObj.id };
+    //
+    if (this.playerId && this.refillForm.valid) {
+      var param = { 'remark': this.refillObj.remark, 'amount': this.refillObj.wallet_amount, 'type': 'credit', 'playerId': this.playerId };
       this.apiService.postMethodAPI(true, VariableService.API_WALLET_SAVE_PLAYER, param, (response) => {
         console.log('UserType delete response : ', response);
         if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
@@ -275,6 +290,59 @@ export class PlayersComponent implements OnInit, OnDestroy {
     }
   }
 
+  // pagination
+  private getPageCount(): number {
+    // console.log('get total pages : getPageCount()');
+    let totalPage: number = 0;
+    if (this.totalRecords > 0 && this.recordsPerPage > 0) {
+      const pageCount = this.totalRecords / this.recordsPerPage;
+      const roundedPageCount = Math.floor(pageCount);
+      totalPage = roundedPageCount < pageCount ? roundedPageCount + 1 : roundedPageCount;
+    }
+    // console.log('totalPage : ', totalPage);
+    return totalPage;
+  }
+  private getArrayOfPage(pageCount: number): number[] {
+    // console.log('pageCount in getArrayOfPage() : ', pageCount);
+    let pageArray: number[] = [];
+    if (pageCount > 0) {
+      for (var i = 1; i <= pageCount; i++) {
+        pageArray.push(i);
+      }
+    }
+    // console.log('pageArray : ', pageArray);
+    return pageArray;
+  }
+
+  onClickPage(pageNumber: number, val) {
+    if (pageNumber < 1) { return; }
+    if (pageNumber > this.pages.length) { return; }
+    if (pageNumber === this.activePage && val !== 'page') { return; }
+    this.activePage = pageNumber;
+    this.getPlayerList();
+  }
+  onClickPrevNextPage(val) {
+    let pageNumber;
+    if (val === 'prev') { pageNumber = this.activePage - 1; }
+    if (val === 'next') { pageNumber = this.activePage + 1; }
+    if (pageNumber < 1) { return; }
+    if (pageNumber > this.pages.length) { return; }
+    if (pageNumber === this.activePage) { return; }
+    this.activePage = pageNumber;
+    this.getPlayerList();
+  }
+
+  resetTable() {
+    if (this.isDtInitialized) {
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.destroy();
+        this.dtTrigger.next();
+      });
+    } else {
+      this.isDtInitialized = true;
+      this.dtTrigger.next();
+    }
+  }
   ngOnDestroy() {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();

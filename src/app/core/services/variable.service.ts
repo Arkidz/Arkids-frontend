@@ -53,6 +53,7 @@ export class VariableService {
   static API_UPDATE_PLAYER = '/admin/user/player/update'; // patch
   static API_DELETE_PLAYER = '/admin/user/player/delete'; // delete
   static API_WALLET_SAVE_PLAYER = '/admin/master/wallet/create'; // post
+  static API_WALLET_HISTORY_PLAYER = '/admin/master/wallet/list?playerId='; // post - /admin/master/wallet/list?playerId=id
 
   // game
   static API_CREATE_GAME = '/admin/master/game/create'; // post

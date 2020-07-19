@@ -39,12 +39,17 @@ export class GamesComponent implements OnInit, OnDestroy {
   @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
   isDtInitialized: boolean = false;
 
+  // pagination page=1&results=5
+  perPageList = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+  totalRecords: number = 0;
+  recordsPerPage: number = 5;
+  pages: number[] = [];
+  activePage: number = 1;
+
   constructor(public apiService: APIService, public methodUtils: MethodUtilityService) { }
 
   ngOnInit() {
-    this.dtOptions = {
-      pagingType: 'full_numbers' // , destroy: false // ,pageLength: 2
-    };
+    // this.dtOptions = {  pagingType: 'full_numbers' }; // , destroy: false // ,pageLength: 2
     this.applyValidation();
     this.getGames();
     this.getGameZones();
@@ -77,25 +82,18 @@ export class GamesComponent implements OnInit, OnDestroy {
     });
   }
 
-  resetTable() {
-    if (this.isDtInitialized) {
-      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        dtInstance.destroy();
-        this.dtTrigger.next();
-      });
-    } else {
-      this.isDtInitialized = true;
-      this.dtTrigger.next();
-    }
-  }
   getGames() {
-    this.apiService.postMethodAPI(false, VariableService.API_GET_GAME, {}, (response) => {
+    const getAPI = VariableService.API_GET_GAME + '?page=' + this.activePage + '&results=' + this.recordsPerPage;
+    this.apiService.postMethodAPI(false, getAPI, {}, (response) => {
       if (!this.methodUtils.isNullUndefinedOrBlank(response)) {
+        this.totalRecords = response['count'];
+        const pageCount = this.getPageCount();
+        this.pages = this.getArrayOfPage(pageCount);
         this.gameList = response['rows'];
-        this.resetTable();
+        // this.resetTable();
       } else {
         this.gameList = [];
-        this.resetTable();
+        // this.resetTable();
       }
       console.log('gameList response : ', this.gameList);
     });
@@ -285,6 +283,60 @@ export class GamesComponent implements OnInit, OnDestroy {
     // set attributes and src 
     img.setAttribute('crossOrigin', 'anonymous'); //
     img.src = imgUrl;
+  }
+
+  resetTable() {
+    if (this.isDtInitialized) {
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.destroy();
+        this.dtTrigger.next();
+      });
+    } else {
+      this.isDtInitialized = true;
+      this.dtTrigger.next();
+    }
+  }
+
+  // pagination
+  private getPageCount(): number {
+    // console.log('get total pages : getPageCount()');
+    let totalPage: number = 0;
+    if (this.totalRecords > 0 && this.recordsPerPage > 0) {
+      const pageCount = this.totalRecords / this.recordsPerPage;
+      const roundedPageCount = Math.floor(pageCount);
+      totalPage = roundedPageCount < pageCount ? roundedPageCount + 1 : roundedPageCount;
+    }
+    // console.log('totalPage : ', totalPage);
+    return totalPage;
+  }
+  private getArrayOfPage(pageCount: number): number[] {
+    // console.log('pageCount in getArrayOfPage() : ', pageCount);
+    let pageArray: number[] = [];
+    if (pageCount > 0) {
+      for (var i = 1; i <= pageCount; i++) {
+        pageArray.push(i);
+      }
+    }
+    // console.log('pageArray : ', pageArray);
+    return pageArray;
+  }
+
+  onClickPage(pageNumber: number, val) {
+    if (pageNumber < 1) { return; }
+    if (pageNumber > this.pages.length) { return; }
+    if (pageNumber === this.activePage && val !== 'page') { return; }
+    this.activePage = pageNumber;
+    this.getGames();
+  }
+  onClickPrevNextPage(val) {
+    let pageNumber;
+    if (val === 'prev') { pageNumber = this.activePage - 1; }
+    if (val === 'next') { pageNumber = this.activePage + 1; }
+    if (pageNumber < 1) { return; }
+    if (pageNumber > this.pages.length) { return; }
+    if (pageNumber === this.activePage) { return; }
+    this.activePage = pageNumber;
+    this.getGames();
   }
 
   ngOnDestroy() {

@@ -11,8 +11,8 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover" id="userTbl" datatable [dtOptions]="dtOptions"
-                                [dtTrigger]="dtTrigger">
+                            <!-- <table class="table table-hover" id="userTbl" datatable [dtOptions]="dtOptions"  [dtTrigger]="dtTrigger"-->
+                            <table class="table table-hover" id="userTbl">
                                 <thead class=" text-primary">
                                     <tr>
                                         <th> # </th>
@@ -56,6 +56,24 @@
                                     </tr>
                                 </tfoot> -->
                             </table>
+                            <!-- custome pagination -->
+                            <div class="">
+                                <div class="pull-left">
+                                    <label>Per Page: </label>
+                                    <select id="req_per_page" [(ngModel)]="recordsPerPage"
+                                        (change)="onClickPage(activePage, 'page')">
+                                        <option *ngFor="let page of perPageList;" [value]="page">
+                                            {{page}}</option>
+                                    </select>
+                                </div>
+                                <div class="pagination pull-right">
+                                    <a title="Previous" (click)="onClickPrevNextPage('prev')">&laquo;</a>
+                                    <a *ngFor="let page of pages;" [ngClass]="page === activePage?'active':''"
+                                        (click)="onClickPage(page, '')">{{page}}</a>
+                                    <a title="Next" (click)="onClickPrevNextPage('next')">&raquo;</a>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
